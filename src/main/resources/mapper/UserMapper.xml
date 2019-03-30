@@ -24,7 +24,7 @@
         select <include refid="base_column_list"/>
         from user where taken = #{taken}
     </select>
-    <select id="checkname" resultType="java.lang.Integer">
+    <select id="checkName" resultType="java.lang.Integer">
         select count(1) from user where name = #{name};
     </select>
     <select id="checkEmail" resultType="java.lang.Integer">

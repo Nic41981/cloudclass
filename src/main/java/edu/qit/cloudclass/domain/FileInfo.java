@@ -10,13 +10,11 @@ import java.util.Date;
  * @version 1.0
  */
 @Data
-public class File {
+public class FileInfo {
     private String id;
 
     @JsonIgnore
     private String realName;
-
-    private String encryptedName;
 
     private String suffix;
 
