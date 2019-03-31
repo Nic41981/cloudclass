@@ -8,5 +8,5 @@ import edu.qit.cloudclass.tool.ServerResponse;
  * @version 1.0
  */
 public interface PermissionService {
-    ServerResponse checkCourseOwnerPermission(User user, String courseId);
+    ServerResponse checkCourseOwnerPermission(String userId, String courseId);
 }
