@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.Date;
 
 @Controller
-@RequestMapping("/tcourse")
+@RequestMapping("/teacher/course")
 @Slf4j
 public class TCourseController {
     @Autowired
