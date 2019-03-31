@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class ServerResponse<T> implements Serializable {
     private int status;
     private String msg = "";
-    private T date;
+    private T data;
 
     private ServerResponse(int status){
         this.status = status;
@@ -26,14 +26,14 @@ public class ServerResponse<T> implements Serializable {
         this.msg = msg;
     }
 
-    private ServerResponse(int status,T date){
+    private ServerResponse(int status,T data){
         this(status);
-        this.date = date;
+        this.data = data;
     }
 
-    private ServerResponse(int status,String msg,T date){
+    private ServerResponse(int status,String msg,T data){
         this(status,msg);
-        this.date = date;
+        this.data = data;
     }
 
     @JsonIgnore
@@ -45,12 +45,12 @@ public class ServerResponse<T> implements Serializable {
         return new ServerResponse<>(ResponseCode.SUCCESS.getStatus());
     }
 
-    public static <T> ServerResponse<T> createBySuccess(T date){
-        return new ServerResponse<>(ResponseCode.SUCCESS.getStatus(),date);
+    public static <T> ServerResponse<T> createBySuccess(T data){
+        return new ServerResponse<>(ResponseCode.SUCCESS.getStatus(),data);
     }
 
-    public static <T> ServerResponse<T> createBySuccess(String msg,T date){
-        return new ServerResponse<>(ResponseCode.SUCCESS.getStatus(),msg,date);
+    public static <T> ServerResponse<T> createBySuccess(String msg,T data){
+        return new ServerResponse<>(ResponseCode.SUCCESS.getStatus(),msg,data);
     }
 
     public static <T> ServerResponse<T> createBySuccessMsg(String msg){
