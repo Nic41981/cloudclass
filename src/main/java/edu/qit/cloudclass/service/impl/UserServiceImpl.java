@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
         switch (type) {
             case User.NAME: {
                 //用户名唯一性检查
-                int count = userMapper.checkname(str);
+                int count = userMapper.checkName(str);
                 if (count > 0) {
                     return ServerResponse.createByError("用户名已存在");
                 }

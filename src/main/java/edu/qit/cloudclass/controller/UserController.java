@@ -25,7 +25,7 @@ import java.util.Map;
 @Slf4j
 public class UserController {
 
-    private static final String SESSION_KEY = "correct_user";
+    public static final String SESSION_KEY = "correct_user";
     private static final String AUTO_LOGIN_KEY = "auto_login_taken";
 
     private final UserService userServer;

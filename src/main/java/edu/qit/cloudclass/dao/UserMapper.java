@@ -18,7 +18,7 @@ public interface UserMapper {
 
     User autoLogin(@Param("taken") String taken);
 
-    int checkname(@Param("name") String username);
+    int checkName(@Param("name") String username);
 
     int checkEmail(@Param("email") String email);
 }
