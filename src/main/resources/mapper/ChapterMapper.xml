@@ -130,8 +130,4 @@
     update chapter set name=#{name,jdbcType=VARCHAR},info=#{info,jdbcType=LONGVARCHAR},test=#{test,jdbcType=VARCHAR} where id = #{id};
   </update>
 
-  <select id="SearchNum" resultType="java.lang.Integer">
-    select max(num)+1 from chapter where course=#{course}
-  </select>
-
 </mapper>
