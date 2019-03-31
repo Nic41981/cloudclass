@@ -33,4 +33,5 @@ public interface ChapterMapper {
     int selectChapter(@Param("id") String id);
 
     int deleteChapter(@Param("id") String id);
+
 }
