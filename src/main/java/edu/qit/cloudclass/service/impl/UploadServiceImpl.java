@@ -16,7 +16,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -39,7 +38,7 @@ public class UploadServiceImpl implements UploadService {
             log.error("==========文件名解析失败==========");
             return fileInfoResult;
         }
-        FileInfo fileInfo = fileInfoResult.getDate();
+        FileInfo fileInfo = fileInfoResult.getData();
         log.info("文件名:" + fileInfo.getRealName() + "." + fileInfo.getSuffix());
         if (!Tool.checkSupportImageType(fileInfo.getSuffix())){
             log.error("==========文件类型不支持==========");
@@ -52,13 +51,13 @@ public class UploadServiceImpl implements UploadService {
         }
         log.info("安全检查:PASS");
         //渲染处理
-        ServerResponse<BufferedImage> buffImgResult = securityProcessor(imageResult.getDate());
+        ServerResponse<BufferedImage> buffImgResult = securityProcessor(imageResult.getData());
         if (!buffImgResult.isSuccess()){
             return buffImgResult;
         }
         log.info("图片渲染:PASS");
         //文件存储
-        return storageImage(buffImgResult.getDate(),fileInfo,courseId);
+        return storageImage(buffImgResult.getData(),fileInfo,courseId);
 
     }
 

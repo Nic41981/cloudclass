@@ -26,7 +26,7 @@
     {
         "status":0,
         "msg":"登录成功",
-        "date":{
+        "data":{
             "name":"XXX",
             "identity":X(0=学生,1=教师),
             "email":"XXX"
@@ -42,7 +42,7 @@
     {
         "status":0,
         "msg":"登录成功",
-        "date":{
+        "data":{
             "name":"XXX",
             "identity":X(0=学生,1=教师),
             "email":"XXX"
