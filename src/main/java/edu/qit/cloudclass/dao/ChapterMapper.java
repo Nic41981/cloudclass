@@ -26,6 +26,11 @@ public interface ChapterMapper {
 
     List<Chapter> chapterList(@Param("course") String course);
 
-    int SearchNum(@Param("course") String course);
+    int searchNum(@Param("course") String course);
 
+    int chapterModify(Chapter chapter);
+
+    int selectChapter(@Param("id") String id);
+
+    int deleteChapter(@Param("id") String id);
 }

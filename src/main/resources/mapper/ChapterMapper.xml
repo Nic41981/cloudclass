@@ -107,6 +107,9 @@
     </trim>
   </insert>
 
+  <delete id="deleteChapter">
+    delete from chapter where id = #{id}
+  </delete>
 
   <select resultMap="BaseResultMap" id="chapterList" parameterType="String">
     SELECT <include refid="Blob_Column_List" />
@@ -115,8 +118,16 @@
     order by if(isnull(num),1,0),num;
   </select>
 
-  <select id="SearchNum" resultType="java.lang.Integer">
+  <select id="searchNum" resultType="java.lang.Integer">
     select max(num)+1 from chapter where course=#{course}
   </select>
+
+  <select id="selectChapter" resultType="java.lang.Integer">
+    select count(*) from chapter where id=#{id}
+  </select>
+
+  <update id="chapterModify" parameterType="edu.qit.cloudclass.domain.Chapter">
+    update chapter set name=#{name,jdbcType=VARCHAR},info=#{info,jdbcType=LONGVARCHAR},test=#{test,jdbcType=VARCHAR} where id = #{id};
+  </update>
 
 </mapper>
