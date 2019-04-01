@@ -43,4 +43,8 @@ public class UploadController {
         }
         return uploadService.uploadImage(image,courseId);
     }
+
+    public ServerResponse videoUpload(){
+        return null;
+    }
 }

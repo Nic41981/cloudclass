@@ -39,11 +39,7 @@ public class UploadServiceImpl implements UploadService {
             return fileInfoResult;
         }
         FileInfo fileInfo = fileInfoResult.getData();
-        log.info("文件名:" + fileInfo.getRealName() + "." + fileInfo.getSuffix());
-        if (!Tool.checkSupportImageType(fileInfo.getSuffix())){
-            log.error("==========文件类型不支持==========");
-            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"不支持的文件类型");
-        }
+        log.info("文件名:" + fileInfo.getRealName());
         //安全检查
         ServerResponse<Image> imageResult = decodeImage(multipartFile);
         if (!imageResult.isSuccess()){
@@ -72,10 +68,12 @@ public class UploadServiceImpl implements UploadService {
             return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"不支持的文件类型");
         }
         String suffix = filename.substring(suffixIndex + 1);
-        String prefix = filename.substring(0,suffixIndex);
+        if (!Tool.checkSupportImageType(suffix)){
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"不支持的文件类型");
+        }
         FileInfo fileInfo = new FileInfo();
-        fileInfo.setRealName(prefix);
-        fileInfo.setSuffix(suffix);
+        fileInfo.setRealName(filename);
+        fileInfo.setType(FileInfo.TYPE_IMAGE);
         return ServerResponse.createBySuccess(fileInfo);
     }
 
@@ -124,7 +122,7 @@ public class UploadServiceImpl implements UploadService {
     @Override
     public ServerResponse storageImage(BufferedImage buffImg,FileInfo fileInfo,String courseId) {
         fileInfo.setId(Tool.uuid());
-        File file = new File("/usr/cloudclass/files/" + courseId + "/image/" + fileInfo.getId() + "." + fileInfo.getSuffix());
+        File file = new File("/usr/cloudclass/files/" + courseId + "/image/" + fileInfo.getId() + ".jpg");
         File dir = file.getParentFile();
         //检查父文件夹
         if (!dir.exists()){
@@ -142,10 +140,10 @@ public class UploadServiceImpl implements UploadService {
         try {
             if (file.createNewFile()) {
                 OutputStream os = new FileOutputStream(file);
-                ImageIO.write(buffImg, fileInfo.getSuffix(), os);
+                ImageIO.write(buffImg, "jpg", os);
                 fileMapper.insert(fileInfo);
                 log.info("==========图片上传结束==========");
-                return ServerResponse.createBySuccessMsg("上传成功");
+                return ServerResponse.createBySuccess("上传成功",fileInfo.getId());
             }
         } catch (Exception e) {
             log.error("==========文件存储失败==========", e);
