@@ -1,6 +1,7 @@
 package edu.qit.cloudclass.dao;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author nic
@@ -8,6 +9,8 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface CourseMapper {
-
-    String selectTeacherId(String courseId);
+    /**
+     * 董悦
+     */
+    String findTeacherIdByPrimaryKey(@Param("id") String id);
 }

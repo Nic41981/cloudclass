@@ -10,5 +10,8 @@ import org.apache.ibatis.annotations.Param;
  */
 @Mapper
 public interface FileMapper {
+    /**
+     * 董悦
+     */
     void insert(@Param("file") FileInfo fileInfo);
 }

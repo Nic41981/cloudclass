@@ -8,7 +8,7 @@
         id,name,image,createTime,teacher,tag
     </sql>
 
-    <select id="selectTeacherId" resultType="java.lang.String">
-        select teacher from course where id = #{courseId};
+    <select id="findTeacherIdByPrimaryKey" resultType="java.lang.String">
+        select teacher from course where id = #{id};
     </select>
 </mapper>

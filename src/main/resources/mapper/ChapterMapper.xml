@@ -116,6 +116,9 @@
   <select id="selectChapter" resultType="java.lang.Integer">
     select count(*) from chapter where id=#{id}
   </select>
+  <select id="findCourseIdByPrimaryKey" resultType="java.lang.String">
+    select course from chapter where id = #{id};
+  </select>
 
   <update id="chapterModify" parameterType="edu.qit.cloudclass.domain.Chapter">
     update chapter set name=#{name,jdbcType=VARCHAR},info=#{info,jdbcType=LONGVARCHAR},test=#{test,jdbcType=VARCHAR} where id = #{id};

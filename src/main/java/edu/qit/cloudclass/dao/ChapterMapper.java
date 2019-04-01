@@ -34,4 +34,9 @@ public interface ChapterMapper {
 
     int deleteChapter(@Param("id") String id);
 
+    /**
+     * 董悦
+     */
+    String findCourseIdByPrimaryKey(@Param("id") String id);
+
 }
