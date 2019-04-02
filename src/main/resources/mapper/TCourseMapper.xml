@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.qit.cloudclass.dao.TCourseMapper">
-    <select id="findCourseById" resultType="edu.qit.cloudclass.domain.TCourse">
+    <select id="findCourseById" resultType="edu.qit.cloudclass.domain.Course">
         select * from cloudclass.course where id=#{id}
     </select>
 
-    <update id="modify" parameterType="edu.qit.cloudclass.domain.TCourse">
+    <update id="modify" parameterType="edu.qit.cloudclass.domain.Course">
         update cloudclass.course
         <set>
             <if test="name != null">name = #{name}</if>
@@ -24,7 +24,7 @@
     </delete>
 
     <!-- 增加课程 -->
-    <insert id="add" parameterType="edu.qit.cloudclass.domain.TCourse">
+    <insert id="add" parameterType="edu.qit.cloudclass.domain.Course">
         insert into cloudclass.course (id,name,image,createTime,teacher,tag)
         values (#{id},#{name}, #{image},now(), #{teacher},#{tag})
     </insert>

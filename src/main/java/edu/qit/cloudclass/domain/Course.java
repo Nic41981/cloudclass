@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Data//该注解会自动生成 get set toString 方法
 
-public class TCourse {
+public class Course {
     private String id;
     private String name;
     private String image;
@@ -18,10 +18,10 @@ public class TCourse {
     private String teacher;
     private String tag;
 
-    public TCourse() {
+    public Course() {
     }
 
-    public TCourse(String id, String name, String image, Date createTime, String teacher, String tag) {
+    public Course(String id, String name, String image, Date createTime, String teacher, String tag) {
         this.id = id;
         this.name = name;
         this.image = image;

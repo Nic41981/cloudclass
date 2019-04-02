@@ -1,9 +1,8 @@
 package edu.qit.cloudclass.controller;
 
-import edu.qit.cloudclass.domain.TCourse;
+import edu.qit.cloudclass.domain.Course;
 import edu.qit.cloudclass.service.impl.TCourseService;
 import edu.qit.cloudclass.tool.ServerResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,7 +22,7 @@ public class TCourseController {
 
     @RequestMapping(value = "findCourseById.do",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse<TCourse> findCourseById(String id) {
+    public ServerResponse<Course> findCourseById(String id) {
         return tCourseService.findCourseById(id);
     }
 
@@ -43,14 +42,14 @@ public class TCourseController {
                                  @RequestParam(value = "teacher", required = false) String teacher,
                                  @RequestParam(value = "tag",required = false) String tag) {
         //需要允许另一条件的参数为空。否则没传另一条件的参数会报错 @RequestParam required = false;
-        TCourse tCourse = new TCourse(id,name,image,createTime,teacher,tag);
-//        return tCourseService.modify(tCourse);
-        ServerResponse response = tCourseService.modify(tCourse);
+        Course course = new Course(id,name,image,createTime,teacher,tag);
+//        return tCourseService.modify(course);
+        ServerResponse response = tCourseService.modify(course);
         return response;
     }
     @RequestMapping(value = "add.do",method = RequestMethod.POST)
     @ResponseBody
-    public ServerResponse add(TCourse tCourse){
-        return tCourseService.add(tCourse);
+    public ServerResponse add(Course course){
+        return tCourseService.add(course);
     }
 }
