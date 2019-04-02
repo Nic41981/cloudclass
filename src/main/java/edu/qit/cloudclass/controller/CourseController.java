@@ -1,10 +1,8 @@
 package edu.qit.cloudclass.controller;
 
 import edu.qit.cloudclass.domain.Course;
-import edu.qit.cloudclass.service.impl.TCourseService;
 
 import com.github.pagehelper.PageHelper;
-import edu.qit.cloudclass.domain.Course;
 import edu.qit.cloudclass.service.impl.CourseServiceImpl;
 import edu.qit.cloudclass.tool.ServerResponse;
 import lombok.extern.slf4j.Slf4j;
