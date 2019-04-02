@@ -1,6 +1,7 @@
 package edu.qit.cloudclass.dao;
 
 import edu.qit.cloudclass.domain.Chapter;
+import edu.qit.cloudclass.domain.ChapterSpinner;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -38,5 +39,5 @@ public interface ChapterMapper {
      * 董悦
      */
     String findCourseIdByPrimaryKey(@Param("id") String id);
-
+    List<ChapterSpinner> getChapterList(String courseId);
 }

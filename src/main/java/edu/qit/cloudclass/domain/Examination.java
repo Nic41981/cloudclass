@@ -1,16 +1,15 @@
 package edu.qit.cloudclass.domain;
 
-/**
- * Created by Root
- */
-
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Data
+
 public class Examination {
+
 
     public String type;
     public String target;

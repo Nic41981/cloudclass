@@ -6,4 +6,10 @@
     <sql id="base_column_list">
         id,course,name,createTime,startTime,stopTime,timeLength
     </sql>
+
+    <!--查询考试名称列表-->
+    <select id="getExaminationList" resultType="edu.qit.cloudclass.domain.ExamSpinner">
+        select id,course,num,name from chapter where course = #{course} order by if(isnull(num),1,0),num;
+    </select>
+
 </mapper>

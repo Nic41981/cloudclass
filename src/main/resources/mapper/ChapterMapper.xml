@@ -124,4 +124,9 @@
     update chapter set name=#{name,jdbcType=VARCHAR},info=#{info,jdbcType=LONGVARCHAR},test=#{test,jdbcType=VARCHAR} where id = #{id};
   </update>
 
+  <!--查询章节列表-->
+  <select id="getChapterList" resultType="edu.qit.cloudclass.domain.ChapterSpinner" >
+    select id,course,num,name from chapter where course = #{course} and num is not null order by num asc ;
+  </select>
+
 </mapper>
