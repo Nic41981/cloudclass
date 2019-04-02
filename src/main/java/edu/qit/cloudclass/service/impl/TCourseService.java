@@ -1,6 +1,6 @@
 package edu.qit.cloudclass.service.impl;
 
-import edu.qit.cloudclass.dao.TCourseMapper;
+import edu.qit.cloudclass.dao.CourseMapper;
 import edu.qit.cloudclass.domain.Course;
 import edu.qit.cloudclass.tool.ServerResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TCourseService implements edu.qit.cloudclass.service.TCourseService {
 
-    private final TCourseMapper tCourseMapper;
+    private final CourseMapper tCourseMapper;
     @Override
     public ServerResponse add(Course course) {
         if (course == null) {
