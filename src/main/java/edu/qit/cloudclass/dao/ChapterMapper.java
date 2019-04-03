@@ -24,15 +24,17 @@ public interface ChapterMapper {
      */
     int insertSelective(Chapter record);
 
-    List<Chapter> chapterList(@Param("course") String course);
+    List<Chapter> chapterList(@Param("courseId") String courseId);
 
-    int searchNum(@Param("course") String course);
+    int searchNum(@Param("courseId") String courseId);
 
     int chapterModify(Chapter chapter);
 
-    int selectChapter(@Param("id") String id);
+    int selectChapter(@Param("chapterId") String chapterId);
 
-    int deleteChapter(@Param("id") String id);
+    int deleteChapter(@Param("chapterId") String chapterId);
+
+    String findChapterAndCourseId(@Param("courseId")String courseId,@Param("chapterId")String chapterId);
 
     /**
      * 董悦

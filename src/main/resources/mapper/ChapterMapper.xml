@@ -99,25 +99,30 @@
   </insert>
 
   <delete id="deleteChapter">
-    delete from chapter where id = #{id}
+    delete from chapter where id = #{chapterId}
   </delete>
 
   <select resultMap="base_result_map" id="chapterList" parameterType="String">
     SELECT <include refid="base_column_list" />
     from chapter
-    where course=#{course}
+    where course=#{courseId}
     order by if(isnull(num),1,0),num;
   </select>
 
   <select id="searchNum" resultType="java.lang.Integer">
-    select max(num)+1 from chapter where course=#{course}
+    select max(num)+1 from chapter where course=#{courseId}
   </select>
 
   <select id="selectChapter" resultType="java.lang.Integer">
-    select count(*) from chapter where id=#{id}
+    select count(*) from chapter where id=#{chapterId}
   </select>
+
   <select id="findCourseIdByPrimaryKey" resultType="java.lang.String">
     select course from chapter where id = #{id};
+  </select>
+
+  <select id="findChapterAndCourseId" resultType="java.lang.String">
+    select course from chapter where course=#{courseId} and id=#{chapterId};
   </select>
 
   <update id="chapterModify" parameterType="edu.qit.cloudclass.domain.Chapter">
