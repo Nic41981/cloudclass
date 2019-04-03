@@ -9,10 +9,14 @@
     </sql>
 
     <select id="findTeacherIdByPrimaryKey" resultType="java.lang.String">
-        select teacher from course where id = #{id};
+        select teacher from cloudclass.course where id = #{id};
     </select>
 
-    <select id="findCourseById" resultType="java.lang.String">
+    <!--<select id="findCourseById">-->
+        <!--select * from course where id = #{id};-->
+    <!--</select>-->
+
+    <select id="findCourseById" resultType="edu.qit.cloudclass.domain.Course">
         select * from course where id = #{id};
     </select>
 

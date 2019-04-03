@@ -1,6 +1,6 @@
 # 设置80端口可能会导致运行失败
-# server:
-#   port: 80
+#server:
+   #port: 80
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
