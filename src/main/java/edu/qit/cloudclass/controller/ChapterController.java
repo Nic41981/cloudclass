@@ -4,6 +4,7 @@ import edu.qit.cloudclass.domain.Chapter;
 import edu.qit.cloudclass.domain.Teacher;
 import edu.qit.cloudclass.domain.User;
 import edu.qit.cloudclass.service.ChapterService;
+import edu.qit.cloudclass.service.PermissionService;
 import edu.qit.cloudclass.tool.ResponseCode;
 import edu.qit.cloudclass.tool.ServerResponse;
 import edu.qit.cloudclass.tool.Tool;
@@ -26,58 +27,74 @@ public class ChapterController {
 
     private final ChapterService chapterService;
 
+    private final PermissionService permissionService;
+
     @RequestMapping(value = "/chapter/list",method = RequestMethod.POST)
     public ServerResponse<List<Chapter>> chapterList(@RequestBody(required = false) Map<String,String> params){
         //TODO 权限验证
-        String course = params.get("course");
+        String courseId = params.get("courseId");
 
-        if (course == null){
+        if (courseId == null){
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
         }
 
-        return chapterService.chapterList(course);
+        return chapterService.chapterList(courseId);
 
     }
 
     @RequestMapping(value = "/chapter",method = RequestMethod.POST)
-    public ServerResponse<Map> chapter(@RequestBody(required = false) Map<String,String> params){
+    public ServerResponse<Map> chapter(@RequestBody(required = false) Map<String,String> params,HttpSession session){
         //TODO 权限验证
+        User user = (User) session.getAttribute(UserController.SESSION_KEY);
         Chapter chapter = new Chapter();
-
         String name = params.get("name");
         String info = params.get("info");
-        String course = params.get("course");
+        String courseId = params.get("courseId");
         String video = params.get("video");
         String test = params.get("test");
 
-        if (!Tool.checkParamsNotNull(name,info,course)){
+        if (!Tool.checkParamsNotNull(name,info,courseId)){
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
         }
 
+        ServerResponse resultResponse = permissionService.checkCourseOwnerPermission(user.getId(),courseId);
+
+        if (!resultResponse.isSuccess()){
+            return resultResponse;
+        }
+
         chapter.setId(Tool.uuid());
-        chapter.setCourse(course);
+        chapter.setCourse(courseId);
         chapter.setInfo(info);
         chapter.setName(name);
         chapter.setVideo(video);
         chapter.setTest(test);
 
         return chapterService.chapter(chapter);
+
     }
 
-    @RequestMapping(value = "/chapter/{id}",method = RequestMethod.PUT)
-    public ServerResponse chapterModify(@PathVariable("id") String id,@RequestBody(required = false) Map<String,String> params,HttpSession session){
+    @RequestMapping(value = "/chapter/{chapterId}",method = RequestMethod.PUT)
+    public ServerResponse chapterModify(@PathVariable("chapterId") String chapterId,@RequestBody(required = false) Map<String,String> params,HttpSession session){
         //TODO 权限验证
+        User user = (User) session.getAttribute(UserController.SESSION_KEY);
         Chapter chapter = new Chapter();
-        System.out.println(params.get("name"));
         String name = params.get("name");
         String info = params.get("info");
         String test = params.get("test");
+        String courseId = params.get("courseId");
 
-        if (id == null){
+        if (chapterId == null){
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
         }
 
-        chapter.setId(id);
+        ServerResponse resultResponse = permissionService.checkChapterCoursePermission(courseId,chapterId,user.getId());
+
+        if (!resultResponse.isSuccess()){
+            return resultResponse;
+        }
+
+        chapter.setId(chapterId);
         chapter.setName(name);
         chapter.setTest(test);
         chapter.setInfo(info);
@@ -86,13 +103,61 @@ public class ChapterController {
 
     }
 
-    @RequestMapping(value = "/chapter/{id}",method = RequestMethod.DELETE)
-    public ServerResponse chapterDelete(@PathVariable("id") String id,HttpSession session){
+
+    @RequestMapping(value = "/chapter/{chapterId}/{courseId}",method = RequestMethod.DELETE)
+    public ServerResponse chapterDelete(@PathVariable("chapterId") String chapterId,@PathVariable("courseId") String courseId,HttpSession session){
         //TODO 权限验证
-        if (id == null){
+        User user = (User) session.getAttribute(UserController.SESSION_KEY);
+
+        if (!Tool.checkParamsNotNull(chapterId,courseId)){
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
         }
-        return chapterService.chapterDelete(id);
+
+        ServerResponse resultResponse = permissionService.checkChapterCoursePermission(courseId,chapterId,user.getId());
+
+        if (!resultResponse.isSuccess()){
+            return resultResponse;
+        }
+
+        return chapterService.chapterDelete(chapterId);
 
     }
+
+//    @RequestMapping(value = "/chapter",method = RequestMethod.POST)
+//    public ServerResponse<Map> chapter(@RequestBody(required = false) Map<String,String> params){
+//        Chapter chapter = new Chapter();
+//
+//        String name = params.get("course");
+//        String info = params.get("info");
+//        String course = params.get("course");
+//        String video = params.get("video");
+//        String test = params.get("test");
+//
+//        if (!Tool.checkParamsNotNull(name,info,course)){
+//            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+//        }
+//
+//        chapter.setId(Tool.uuid());
+//        chapter.setCourse(course);
+//        chapter.setInfo(info);
+//        chapter.setName(name);
+//        chapter.setVideo(video);
+//        chapter.setTest(test);
+//
+//        return chapterService.chapter(chapter);
+//    }
+
+//    @RequestMapping(value = "/chapter/{num}",method = RequestMethod.POST)
+//    public ServerResponse<List<Chapter>> chapter(@PathVariable("num") int num){
+//
+//        String course = params.get("co);
+//
+//        if (course == null){
+//            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+//        }
+//
+//        return chapterService.chapterList(course);
+//
+//    }
+
 }

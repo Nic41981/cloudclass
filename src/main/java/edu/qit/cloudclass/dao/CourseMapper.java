@@ -7,14 +7,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-/**
- * @author nic
- * @version 1.0
- */
 @Mapper
 public interface CourseMapper {
     /**
-     * 董悦
+     * 李九龙
      */
     String findTeacherIdByPrimaryKey(@Param("id") String id);
 

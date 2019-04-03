@@ -12,6 +12,10 @@
         select teacher from course where id = #{id};
     </select>
 
+    <select id="findCourseById" resultType="java.lang.String">
+        select * from course where id = #{id};
+    </select>
+
     <select id="getCourses" resultType="edu.qit.cloudclass.domain.Course">
         select * from cloudclass.course where teacher = #{teacher}
     </select>
