@@ -95,4 +95,42 @@ public class ChapterController {
         return chapterService.chapterDelete(id);
 
     }
+
+//    @RequestMapping(value = "/chapter",method = RequestMethod.POST)
+//    public ServerResponse<Map> chapter(@RequestBody(required = false) Map<String,String> params){
+//        Chapter chapter = new Chapter();
+//
+//        String name = params.get("course");
+//        String info = params.get("info");
+//        String course = params.get("course");
+//        String video = params.get("video");
+//        String test = params.get("test");
+//
+//        if (!Tool.checkParamsNotNull(name,info,course)){
+//            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+//        }
+//
+//        chapter.setId(Tool.uuid());
+//        chapter.setCourse(course);
+//        chapter.setInfo(info);
+//        chapter.setName(name);
+//        chapter.setVideo(video);
+//        chapter.setTest(test);
+//
+//        return chapterService.chapter(chapter);
+//    }
+
+//    @RequestMapping(value = "/chapter/{num}",method = RequestMethod.POST)
+//    public ServerResponse<List<Chapter>> chapter(@PathVariable("num") int num){
+//
+//        String course = params.get("co);
+//
+//        if (course == null){
+//            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+//        }
+//
+//        return chapterService.chapterList(course);
+//
+//    }
+
 }
