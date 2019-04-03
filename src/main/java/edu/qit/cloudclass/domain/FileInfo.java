@@ -11,15 +11,17 @@ import java.util.Date;
  */
 @Data
 public class FileInfo {
-    public static final String TYPE_VIDEO = "video";
-    public static final String TYPE_IMAGE = "image";
+    @JsonIgnore
+    public static final String IMAGE_FILE_TYPE = "image";
+    @JsonIgnore
+    public static final String VIDEO_FILE_TYPE = "video";
 
     private String id;
 
     @JsonIgnore
     private String realName;
 
-    private String type;
+    private String suffix;
 
     private Date uploadTime;
 }

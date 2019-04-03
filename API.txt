@@ -132,7 +132,7 @@
       1.1 请求方式:GET
       1.2 请求参数:
       {
-       "courseId":"XXX",
+        "courseId":"XXX",
       }
       1.3 正常返回:
       {
