@@ -1,16 +1,17 @@
 package edu.qit.cloudclass.tool;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.*;
 
 /**
  * @author nic
  * @version 1.0
  */
+@Slf4j
 public class Tool {
     private final static List<String> SUPPORT_IMAGE_TYPES = new ArrayList<>(Arrays.asList("JPG","JPEG","PNG","GIF"));
+    private final static List<String> SUPPORT_VIDEO_TYPES = new ArrayList<>(Arrays.asList("MP4","FLV"));
 
     /**
      * 获取随机UUID
@@ -42,4 +43,15 @@ public class Tool {
     public static boolean checkSupportImageType(String suffix){
         return SUPPORT_IMAGE_TYPES.contains(suffix.toUpperCase());
     }
+
+    /**
+     * 通过后缀名检查视频文件类型是否支持
+     * @param suffix 视频文件后缀名
+     * @return 检查结果
+     */
+    public static boolean checkSupportVideoType(String suffix){
+        return SUPPORT_VIDEO_TYPES.contains(suffix.toUpperCase());
+    }
+
+
 }

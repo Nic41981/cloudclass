@@ -132,7 +132,7 @@
       1.1 请求方式:GET
       1.2 请求参数:
       {
-       "courseId":"XXX",
+        "courseId":"XXX",
       }
       1.3 正常返回:
       {
@@ -156,3 +156,87 @@
       1.4 异常返回
       -1:查询考试名称列表失败
       -3:缺少参数
+
+10.获取章节列表(李广源)-/teacher/chapter/list
+      1.1 请求方式:POST
+      1.2 请求参数:
+      {
+       "courseId":"XXX",
+      }
+      1.3 正常返回:
+      {
+          "status": 0,
+          "msg": "XXXXX",
+          "data": [
+              {
+                  "id": "XXX",
+                  "course": null,
+                  "num": null,
+                  "name": "XXX"
+                  "video": "XXX",
+                  "test": "XXX",
+                  "createtime": null,
+                  "info": "XXX"
+              },
+             {
+                  "id": "XXX",
+                  "course": null,
+                  "num": null,
+                  "name": "XXX"
+                  "video": "XXX",
+                  "test": "XXX",
+                  "createtime": null,
+                  "info": "XXX"
+              }
+          ]
+      }
+      1.4 异常返回
+      -3:缺少参数
+11.添加章节(李广源)-/teacher/chapter
+      1.1 请求方式:POST
+      1.2 请求参数:
+      {
+         "name":"XXX",
+         "info":"XXX",
+         "test":"XXX",
+         "courseId":"XXX",
+         "video":"XXX"
+      }
+      1.2 正常返回:
+      {
+          "status": 0,
+          "msg": "XXXXX",
+          "data": {
+               "id":"XXXX"
+          }
+      }
+      1.3 异常返回
+      -3:缺少参数
+      -4:权限错误
+12.修改章节(李广源)-/teacher/chapter/{章节Id}
+      1.1 请求方式:POST
+      1.2 请求参数:
+      {
+         "name":"XXX",
+         "info":"XXX",
+         "test":"XXX",
+         "courseId":"XXX"
+      }
+      1.2 正常返回:
+      {
+          "status": 0,
+          "msg": "XXXXX",
+      }
+      1.3 异常返回
+      -3:缺少参数
+      -4:权限错误
+13.删除章节(李广源)-/teacher/chapter/{章节Id}/{删除章节}
+      1.1 请求方式:POST
+      1.2 正常返回:
+      {
+          "status": 0,
+          "msg": "XXXXX",
+      }
+      1.3 异常返回
+      -3:缺少参数
+      -4:权限错误
