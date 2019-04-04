@@ -23,16 +23,16 @@ public class ChapterServiceImpl implements ChapterService {
 
 
     @Override
-    public ServerResponse<List<Chapter>> chapterList(String course) {
-        List<Chapter> chapterList = chapterMapper.chapterList(course);
-        System.out.println(course);
+    public ServerResponse<List<Chapter>> chapterList(String courseId) {
+        List<Chapter> chapterList = chapterMapper.chapterList(courseId);
+
         if (chapterList.size()==0){
             log.info("查询内容为空!");
             return ServerResponse.createBySuccessMsg("查询内容为空");
         }
 
         log.info("查询成功!");
-        return ServerResponse.createBySuccess(chapterList);
+        return ServerResponse.createBySuccess("查询成功",chapterList);
 
     }
 
@@ -43,13 +43,13 @@ public class ChapterServiceImpl implements ChapterService {
 
         log.info(chapter.getCourse()+"章节为"+chapter.getNum());
         if (chapterMapper.insert(chapter)==0){
-            ServerResponse.createByError("插入失败!");
+            ServerResponse.createByError("插入失败");
         }
 
-        log.info(chapter.getCourse()+"课程插入"+chapter.getNum()+"章节成功!");
+        log.info(chapter.getCourse()+"课程插入"+chapter.getNum()+"章节成功");
         Map<String,String> map = new HashMap<>();
         map.put("id",chapter.getId());
-        return ServerResponse.createBySuccess("插入成功!",map);
+        return ServerResponse.createBySuccess("插入成功",map);
 
     }
 
@@ -57,29 +57,29 @@ public class ChapterServiceImpl implements ChapterService {
     public ServerResponse chapterModify(Chapter chapter) {
         //判断章节存不存在
         if (chapterMapper.selectChapter(chapter.getId())==0){
-            log.info(chapter.getId()+"章节不存在!");
-            ServerResponse.createBySuccessMsg("该章节不存在!");
+            log.info(chapter.getId()+"章节不存在");
+            ServerResponse.createBySuccessMsg("该章节不存在");
         }
         log.info(chapter.getId()+"该章节修改成功!");
         if (chapterMapper.chapterModify(chapter)==1){
-            return ServerResponse.createBySuccessMsg("该章节修改成功!");
+            return ServerResponse.createBySuccessMsg("该章节修改成功");
         }
-        return ServerResponse.createByError(ResponseCode.ERROR.getStatus(),"修改异常！");
+        return ServerResponse.createByError(ResponseCode.ERROR.getStatus(),"修改异常");
     }
 
     @Override
-    public ServerResponse chapterDelete(String id) {
+    public ServerResponse chapterDelete(String chapterId) {
         //判断章节存不存在
-        if (chapterMapper.selectChapter(id)==0){
-            log.info(id+"章节不存在!");
-            ServerResponse.createByError("该章节不存在!");
+        if (chapterMapper.selectChapter(chapterId)==0){
+            log.info(chapterId+"章节不存在!");
+            ServerResponse.createByError("该章节不存在");
         }
 
-        log.info(id+"章节删除成功!");
-        if (chapterMapper.deleteChapter(id)==1){
-            return ServerResponse.createBySuccessMsg("该章节删除成功!");
+        log.info(chapterId+"章节删除成功!");
+        if (chapterMapper.deleteChapter(chapterId)==1){
+            return ServerResponse.createBySuccessMsg("该章节删除成功");
         }
-        return ServerResponse.createByError(ResponseCode.ERROR.getStatus(),"删除异常!");
+        return ServerResponse.createByError(ResponseCode.ERROR.getStatus(),"删除异常");
     }
 
 }

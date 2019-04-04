@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface ChapterService {
-    ServerResponse<List<Chapter>> chapterList(String course);
+    ServerResponse<List<Chapter>> chapterList(String courseId);
     ServerResponse<Map> chapter(Chapter chapter);
     ServerResponse chapterModify(Chapter chapter);
-    ServerResponse chapterDelete(String id);
+    ServerResponse chapterDelete(String chapterId);
 }
