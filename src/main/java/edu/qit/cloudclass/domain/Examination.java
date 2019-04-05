@@ -19,7 +19,4 @@ public class Examination {
     public int timeLength;
     public List<Choice> choiceList;
     public List<Judgment> judgmentList;
-
-
-
 }

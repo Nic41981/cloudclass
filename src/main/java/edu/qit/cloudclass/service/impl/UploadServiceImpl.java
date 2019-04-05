@@ -1,5 +1,6 @@
 package edu.qit.cloudclass.service.impl;
 
+import edu.qit.cloudclass.dao.ChapterMapper;
 import edu.qit.cloudclass.dao.FileMapper;
 import edu.qit.cloudclass.domain.FileInfo;
 import edu.qit.cloudclass.service.UploadService;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,6 +29,7 @@ public class UploadServiceImpl implements UploadService {
 
     private static final String FILE_BASE_PATH = "/usr/cloudclass/files";
     private final FileMapper fileMapper;
+    private final ChapterMapper chapterMapper;
 
     @Override
     public ServerResponse uploadImage(MultipartFile multipartFile,String courseId) {
@@ -47,15 +48,8 @@ public class UploadServiceImpl implements UploadService {
             return securityCheckResult;
         }
         log.info("安全检查:PASS");
-        //渲染处理
-        ServerResponse<BufferedImage> buffImgResult = renderProcessing(multipartFile);
-        if (!buffImgResult.isSuccess()){
-            log.error("==========图片渲染失败==========");
-            return buffImgResult;
-        }
-        log.info("图片渲染:PASS");
         //文件存储
-        ServerResponse storageResult = storageImage(buffImgResult.getData(),fileInfo,courseId);
+        ServerResponse storageResult = storageImage(multipartFile,fileInfo,courseId);
         if (!storageResult.isSuccess()){
             log.error("==========图片存储出错==========");
             return storageResult;
@@ -129,43 +123,16 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public ServerResponse<BufferedImage> renderProcessing(MultipartFile multipartFile) {
-        BufferedImage image;
-        try {
-            //解码文件
-            image = ImageIO.read(multipartFile.getInputStream());
-            if (image == null || image.getHeight(null) <= 0 || image.getWidth(null) <= 0){
-                return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"不支持的文件类型");
-            }
-            log.info("图片尺寸:" + image.getWidth(null) + "x" + image.getHeight(null));
-            //绘制水印
-            Graphics2D g = image.createGraphics();
-            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            g.drawImage(
-                    image.getScaledInstance(image.getWidth(null), image.getHeight(null), Image.SCALE_SMOOTH),
-                    0, 0, null);
-            g.setColor(Color.BLACK);
-            g.setFont(new Font("宋体", Font.BOLD, 30));
-            g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 0));
-            g.drawString("Cloud Class",image.getWidth(null) / 2,image.getHeight(null) / 2);
-            g.dispose();
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
-            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"不支持的文件类型");
-        }
-        return ServerResponse.createBySuccess(image);
-    }
-
-    @Override
     public ServerResponse securityCheck(MultipartFile multipartFile, FileInfo fileInfo) {
         //TODO 安全检查待完善
         return ServerResponse.createBySuccess();
     }
 
     @Override
-    public ServerResponse storageImage(BufferedImage buffImg,FileInfo fileInfo,String courseId) {
+    public ServerResponse storageImage(MultipartFile multipartFile,FileInfo fileInfo,String courseId) {
         fileInfo.setId(Tool.uuid());
-        String path = FILE_BASE_PATH + File.separator
+        String path =
+                FILE_BASE_PATH + File.separator
                 + courseId + File.separator
                 + "image" + File.separator
                 + fileInfo.getId() + "." + fileInfo.getSuffix();
@@ -180,12 +147,18 @@ public class UploadServiceImpl implements UploadService {
             if (file.exists()) {
                 return ServerResponse.createByError("上传失败");
             }
+            //读取文件流
+            BufferedImage image = ImageIO.read(multipartFile.getInputStream());
+            if (image == null || image.getHeight(null) <= 0 || image.getWidth(null) <= 0){
+                return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"不支持的文件类型");
+            }
+            log.info("图片尺寸:" + image.getWidth(null) + "x" + image.getHeight(null));
             //存储文件
             if (!file.createNewFile()){
                 return ServerResponse.createByError("上传失败");
             }
             OutputStream os = new FileOutputStream(file);
-            ImageIO.write(buffImg, fileInfo.getSuffix(), os);
+            ImageIO.write(image, fileInfo.getSuffix(), os);
             fileMapper.insert(fileInfo);
             return ServerResponse.createBySuccess("上传成功", fileInfo);
         } catch (Exception e) {
@@ -197,7 +170,8 @@ public class UploadServiceImpl implements UploadService {
     @Override
     public ServerResponse storageVideo(MultipartFile multipartFile,FileInfo fileInfo,String courseId,String chapterId) {
         fileInfo.setId(Tool.uuid());
-        String path = FILE_BASE_PATH + File.separator
+        String path =
+                FILE_BASE_PATH + File.separator
                 + chapterId + File.separator
                 + "video" + File.separator
                 + chapterId + File.separator
@@ -215,12 +189,13 @@ public class UploadServiceImpl implements UploadService {
             }
             //存储文件
             multipartFile.transferTo(video);
+            //更新数据库
             fileMapper.insert(fileInfo);
+            chapterMapper.updateVideoIdAfterUpload(chapterId,fileInfo.getId());
             return ServerResponse.createBySuccess("上传成功",fileInfo);
         }catch (Exception e){
             log.error(e.getMessage(),e);
         }
         return ServerResponse.createByError("上传失败");
     }
-
 }
