@@ -11,10 +11,9 @@
     <select id="findTeacherIdByPrimaryKey" resultType="java.lang.String">
         select teacher from cloudclass.course where id = #{id};
     </select>
-
-    <!--<select id="findCourseById">-->
-        <!--select * from course where id = #{id};-->
-    <!--</select>-->
+    <select id="getCourseList" resultType="edu.qit.cloudclass.domain.Course">
+      select * from course
+    </select>
 
     <select id="findCourseById" resultType="edu.qit.cloudclass.domain.Course">
         select * from course where id = #{id};
@@ -27,11 +26,11 @@
     <update id="modify" parameterType="edu.qit.cloudclass.domain.Course">
         update cloudclass.course
         <set>
-            <if test="name != null">name = #{name}</if>
-            <if test="image != null">image = #{image}</if>
-            <!--<if test="createTime != null">createTime = #{createTime}</if>-->
-            <if test="teacher != null">teacher = #{teacher}</if>
-            <if test="tag != null">tag  = #{tag }</if>
+            <if test= "name != null"> name = #{name}</if>
+            <if test= "image != null"> image = #{image}</if>
+            <if test ="createTime != null"> createTime = #{createTime}</if>
+            <if test= "teacher != null"> teacher = #{teacher}</if>
+            <if test= "tag != null"> tag = #{tag}</if>
         </set>
         where id = #{id}
     </update>

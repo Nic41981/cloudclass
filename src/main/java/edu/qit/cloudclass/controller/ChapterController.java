@@ -39,7 +39,6 @@ public class ChapterController {
         }
 
         return chapterService.chapterList(courseId);
-
     }
 
     @RequestMapping(value = "/chapter",method = RequestMethod.POST)
@@ -83,24 +82,18 @@ public class ChapterController {
         String info = params.get("info");
         String test = params.get("test");
         String courseId = params.get("courseId");
-
         if (chapterId == null){
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
         }
-
         ServerResponse resultResponse = permissionService.checkChapterCoursePermission(courseId,chapterId,user.getId());
-
         if (!resultResponse.isSuccess()){
             return resultResponse;
         }
-
         chapter.setId(chapterId);
         chapter.setName(name);
         chapter.setTest(test);
         chapter.setInfo(info);
-
         return chapterService.chapterModify(chapter);
-
     }
 
 

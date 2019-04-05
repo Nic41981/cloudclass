@@ -26,6 +26,7 @@ public class PermissionServiceImpl implements PermissionService {
         if (teacher == null){
             return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"课程不存在");
         }
+
         if (teacher.equals(userId)){
             return ServerResponse.createBySuccess();
         }

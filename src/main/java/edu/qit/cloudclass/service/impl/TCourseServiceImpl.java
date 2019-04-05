@@ -7,6 +7,7 @@ import edu.qit.cloudclass.domain.Course;
 import edu.qit.cloudclass.domain.User;
 import edu.qit.cloudclass.service.CourseService;
 import edu.qit.cloudclass.service.PermissionService;
+import edu.qit.cloudclass.tool.ResponseCode;
 import edu.qit.cloudclass.tool.ServerResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +23,6 @@ public class TCourseServiceImpl implements CourseService {
 
     private final CourseMapper tcourseMapper;
 
-    private final PermissionMapper permissionMapper;
-    private final PermissionService permissionService;
     @Override
     public ServerResponse add(Course course) {
         if (course == null) {
@@ -35,30 +34,26 @@ public class TCourseServiceImpl implements CourseService {
     }
 
     @Override
-    public ServerResponse modify(Course course) {
+    public ServerResponse modify(Course ttCourse) {
         /**
          * 修改时判断课程是否存在
          */
-        String string = tcourseMapper.findTeacherIdByPrimaryKey(course.getId());
+        String string = tcourseMapper.findTeacherIdByPrimaryKey(ttCourse.getId());
         if ( string == null) {
             log.info("课程已经不存在，请检查是否输入错误" );
             return ServerResponse.createByError("课程已经不存在，请检查是否输入错误");
         }
-        Course ttCourse = new Course();
-        ttCourse.setId(course.getId());
-        ttCourse.setName(course.getName());
-        ttCourse.setImage(course.getImage());
-        ttCourse.setTeacher(course.getTeacher());
-        ttCourse.setTag(course.getTag());
-        ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(ttCourse.getTeacher(), ttCourse.getId());
-        if (!permissionResult.isSuccess()){
-            tcourseMapper.modify(ttCourse);
-            log.info("更新课程成功" + course.getName());
+
+       if (tcourseMapper.modify(ttCourse)==1){
+            log.info("更新课程成功 " + ttCourse.getName());
+
             return ServerResponse.createBySuccess("更新课程信息成功", ttCourse);
         }else{
-            return ServerResponse.createByError("权限不足");
+            return ServerResponse.createByError(ResponseCode.ERROR.getStatus(),"修改失败");
         }
     }
+
+
     @Override
     public ServerResponse deleteCourseById(String id) {
         String string = tcourseMapper.findTeacherIdByPrimaryKey(id);
@@ -83,6 +78,18 @@ public class TCourseServiceImpl implements CourseService {
         log.info("Successful" + course.getName() );
         return ServerResponse.createBySuccess(course);
     }
+
+    @Override
+    public ServerResponse<List<Course>> getCourseList() {
+        List<Course> list = tcourseMapper.getCourseList();
+        if(!list.isEmpty()){
+            log.info("当前课程查询成功");
+            return ServerResponse.createBySuccess(list);
+        }
+        log.info("查询内容为空!");
+        return ServerResponse.createBySuccessMsg("查询内容为空");
+    }
+
     @Override
     public ServerResponse<List<Course>> getCourses(int pageNo, int pageSize, String teacher) {
 
@@ -92,6 +99,7 @@ public class TCourseServiceImpl implements CourseService {
             return ServerResponse.createBySuccess(list);
         }
         log.info("当前老师没有课程" );
-        return ServerResponse.createByError("当前老师的无课程");
+        log.info("查询内容为空!");
+        return ServerResponse.createBySuccessMsg("当前老师没有课程");
     }
 }
