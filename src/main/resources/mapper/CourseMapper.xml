@@ -51,7 +51,7 @@
     </insert>
 
     <!--查询课程列表-->
-    <select id="getCourseList" resultType="edu.qit.cloudclass.domain.CourseSpinner">
+    <select id="getCourseSpinnerList" resultType="edu.qit.cloudclass.domain.CourseSpinner">
         select id,name from course;
     </select>
 
