@@ -20,5 +20,9 @@ public interface CourseMapper {
     void deleteCourseById(String id);
     Course findCourseById(@Param("id") String id);
     List<Course> getCourses(@RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "5") int pageSize, @Param("teacher") String teacher);
-    List<CourseSpinner> getCourseList();
+
+    /**
+     * 王恺
+     */
+    List<CourseSpinner> getCourseSpinnerList();
 }
