@@ -116,7 +116,6 @@
   <select id="selectChapter" resultType="java.lang.Integer">
     select count(*) from chapter where id=#{chapterId}
   </select>
-
   <select id="findCourseIdByPrimaryKey" resultType="java.lang.String">
     select course from chapter where id = #{id};
   </select>

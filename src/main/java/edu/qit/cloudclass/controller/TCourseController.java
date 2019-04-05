@@ -43,8 +43,11 @@ public class TCourseController {
         ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getName(),id);
 
         /**
-         * 没有判断出 没有这个课程 返回的json字符  还有当前用户没有登录
+         * 没有判断出 没有这个课程 返回的json字符 没有实现没有用户登录时 判断
          */
+        if(user == null){
+            return ServerResponse.createByError("你当前没有登录,请登录后再试");
+        }
         if (!permissionResult.isSuccess()){
             return ServerResponse.createByError("权限不足");
         }else{

@@ -23,6 +23,10 @@
         select * from cloudclass.course where teacher = #{teacher}
     </select>
 
+    <select id="selectCourseId" resultType="java.lang.Integer">
+    select count(*) from course where id=#{id}
+  </select>
+
     <update id="modify" parameterType="edu.qit.cloudclass.domain.Course">
         update cloudclass.course
         <set>

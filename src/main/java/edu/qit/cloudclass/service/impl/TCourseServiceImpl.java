@@ -25,12 +25,15 @@ public class TCourseServiceImpl implements CourseService {
 
     @Override
     public ServerResponse add(Course course) {
-        if (course == null) {
-            return ServerResponse.createByError(-1, "没有添加课程");
+
+       int temp = tcourseMapper.selectCourseId(course.getId());
+        if (temp == 1) {
+            return ServerResponse.createByError("添加课程失败,当前已有此ID");
+        }else{
+            tcourseMapper.add(course);
+            log.info("课程" + course.getId() + "添加成功!");
+            return ServerResponse.createBySuccessMsg("课程添加成功");
         }
-        tcourseMapper.add(course);
-        log.info("课程" + course.getId() + "添加成功!");
-        return ServerResponse.createBySuccessMsg("课程添加成功");
     }
 
     @Override
@@ -72,8 +75,8 @@ public class TCourseServiceImpl implements CourseService {
        Course course = tcourseMapper.findCourseById(id);
        String string = tcourseMapper.findTeacherIdByPrimaryKey(id);
         if ( string == null) {
-            log.info("找不到当前课程信息" + course.getName() );
-            return ServerResponse.createByError("找不到当前课程信息");
+            log.info("查询内容为空!");
+            return ServerResponse.createBySuccessMsg("当前老师没有课程");
         }
         log.info("Successful" + course.getName() );
         return ServerResponse.createBySuccess(course);
