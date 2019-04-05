@@ -1,6 +1,8 @@
 package edu.qit.cloudclass.service.impl;
 
-import edu.qit.cloudclass.dao.SpinnerMapper;
+import edu.qit.cloudclass.dao.ChapterMapper;
+import edu.qit.cloudclass.dao.CourseMapper;
+import edu.qit.cloudclass.dao.ExamMapper;
 import edu.qit.cloudclass.domain.ChapterSpinner;
 import edu.qit.cloudclass.domain.CourseSpinner;
 import edu.qit.cloudclass.domain.ExamSpinner;
@@ -23,11 +25,13 @@ import java.util.List;
 @Slf4j
 public class SpinnerServiceImpl implements SpinnerService {
 
-    private final SpinnerMapper spinnerMapper;
+    private final CourseMapper courseMapper;
+    private final ChapterMapper chapterMapper;
+    private final ExamMapper examMapper;
 
     @Override
     public ServerResponse<List<CourseSpinner>> getCourseList() {
-       List<CourseSpinner> courseList = spinnerMapper.getCourseList();
+       List<CourseSpinner> courseList = courseMapper.getCourseList();
        if (courseList!=null){
            return ServerResponse.createBySuccess("查询课程列表成功",courseList);
        }
@@ -40,7 +44,7 @@ public class SpinnerServiceImpl implements SpinnerService {
         if (courseId==null){
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
         }
-        List<ChapterSpinner> courseList = spinnerMapper.getChapterList(courseId);
+        List<ChapterSpinner> courseList = chapterMapper.getChapterList(courseId);
         if (courseList!=null&&courseList.size()!=0){
             return ServerResponse.createBySuccess("查询章节列表成功",courseList);
         }
@@ -49,7 +53,7 @@ public class SpinnerServiceImpl implements SpinnerService {
 
     @Override
     public ServerResponse<List<ExamSpinner>> getExaminationList(String courseId) {
-        List<ExamSpinner> examinationList = spinnerMapper.getExaminationList(courseId);
+        List<ExamSpinner> examinationList = examMapper.getExaminationList(courseId);
         if (courseId==null){
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
         }

@@ -1,6 +1,7 @@
 package edu.qit.cloudclass.dao;
 
 import edu.qit.cloudclass.domain.Course;
+import edu.qit.cloudclass.domain.CourseSpinner;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,5 +23,5 @@ public interface CourseMapper {
     List<Course> getCourseList();
 
     List<Course> getCourses(@RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "5") int pageSize, @Param("teacher") String teacher);
-
+    List<CourseSpinner> getCourseList();
 }

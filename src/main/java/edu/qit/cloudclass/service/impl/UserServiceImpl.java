@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.autoLogin(taken);
         if (user != null){
             log.info("用户" + user.getId() + "自动登录成功!");
-            return ServerResponse.createBySuccess("登录成功",user);
+            return ServerResponse.createBySuccess(user);
         }
         return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"登录失败");
     }

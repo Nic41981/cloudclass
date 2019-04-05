@@ -3,16 +3,13 @@ package edu.qit.cloudclass.service.impl;
 import edu.qit.cloudclass.dao.ChapterMapper;
 import edu.qit.cloudclass.domain.Chapter;
 import edu.qit.cloudclass.service.ChapterService;
-import edu.qit.cloudclass.tool.ResponseCode;
 import edu.qit.cloudclass.tool.ServerResponse;
+import edu.qit.cloudclass.tool.Tool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -25,61 +22,51 @@ public class ChapterServiceImpl implements ChapterService {
     @Override
     public ServerResponse<List<Chapter>> chapterList(String courseId) {
         List<Chapter> chapterList = chapterMapper.chapterList(courseId);
-
-        if (chapterList.size()==0){
-            log.info("查询内容为空!");
-            return ServerResponse.createBySuccessMsg("查询内容为空");
-        }
-
-        log.info("查询成功!");
         return ServerResponse.createBySuccess("查询成功",chapterList);
-
     }
 
     @Override
-    public ServerResponse<Map> chapter(Chapter chapter) {
-        int num = chapterMapper.searchNum(chapter.getCourse());
-        chapter.setNum(num);
-
-        log.info(chapter.getCourse()+"章节为"+chapter.getNum());
-        if (chapterMapper.insert(chapter)==0){
-            ServerResponse.createByError("插入失败");
+    public ServerResponse chapter(Chapter chapter) {
+        chapter.setId(Tool.uuid());
+        if (chapter.getNum() == 0) {
+            //追加章节-章节序号递增
+            chapter.setNum(chapterMapper.findNextNum(chapter.getCourse()));
         }
-
-        log.info(chapter.getCourse()+"课程插入"+chapter.getNum()+"章节成功");
-        Map<String,String> map = new HashMap<>();
-        map.put("id",chapter.getId());
-        return ServerResponse.createBySuccess("插入成功",map);
-
+        else {
+            //指定章节-后面的章节序号递增
+            chapterMapper.updateNumBeforeInster(chapter.getNum(),chapter.getCourse());
+        }
+        log.info("创建章节:" + chapter.toString());
+        if (chapterMapper.insert(chapter) == 0){
+            log.error("创建失败");
+            ServerResponse.createByError("创建失败");
+        }
+        log.info("创建成功");
+        return ServerResponse.createBySuccessMsg("创建成功");
     }
 
     @Override
     public ServerResponse chapterModify(Chapter chapter) {
-        //判断章节存不存在
-        if (chapterMapper.selectChapter(chapter.getId())==0){
-            log.info(chapter.getId()+"章节不存在");
-            ServerResponse.createBySuccessMsg("该章节不存在");
+        log.info("修改章节:" + chapter.toString());
+        if (chapterMapper.chapterModify(chapter) == 1){
+            log.info("修改成功");
+            return ServerResponse.createBySuccessMsg("修改成功");
         }
-        log.info(chapter.getId()+"该章节修改成功!");
-        if (chapterMapper.chapterModify(chapter)==1){
-            return ServerResponse.createBySuccessMsg("该章节修改成功");
-        }
-        return ServerResponse.createByError(ResponseCode.ERROR.getStatus(),"修改异常");
+        log.error("修改异常");
+        return ServerResponse.createByError("修改异常");
     }
 
     @Override
-    public ServerResponse chapterDelete(String chapterId) {
-        //判断章节存不存在
-        if (chapterMapper.selectChapter(chapterId)==0){
-            log.info(chapterId+"章节不存在!");
-            ServerResponse.createByError("该章节不存在");
+    public ServerResponse chapterDelete(String courseId,String chapterId) {
+        log.info("删除章节:" + chapterId);
+        int num = chapterMapper.findNumByPrimaryKey(chapterId);
+        if (chapterMapper.deleteChapter(chapterId)!=1){
+            log.error("删除异常");
+            return ServerResponse.createByError("删除异常");
         }
-
-        log.info(chapterId+"章节删除成功!");
-        if (chapterMapper.deleteChapter(chapterId)==1){
-            return ServerResponse.createBySuccessMsg("该章节删除成功");
-        }
-        return ServerResponse.createByError(ResponseCode.ERROR.getStatus(),"删除异常");
+        chapterMapper.updateNumAfterDelete(num,courseId);
+        log.info("删除成功");
+        return ServerResponse.createBySuccessMsg("删除成功");
     }
 
 }

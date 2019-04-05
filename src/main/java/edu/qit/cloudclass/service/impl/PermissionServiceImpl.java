@@ -34,21 +34,21 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public ServerResponse checkChapterOwnerPermission(String userId, String chapterId) {
-        String course = chapterMapper.findCourseIdByPrimaryKey(chapterId);
-        if (course == null){
+    public ServerResponse checkChapterOwnerPermission(String userId,String courseId, String chapterId) {
+        String targetCourse = chapterMapper.findCourseIdByPrimaryKey(chapterId);
+        if (targetCourse == null || !targetCourse.equals(courseId)){
             return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"章节不存在");
         }
-        return checkCourseOwnerPermission(userId,course);
+        return checkCourseOwnerPermission(userId,targetCourse);
     }
 
-    @Override
-    public ServerResponse checkChapterCoursePermission(String courseId, String chapterId,String userId) {
-        String course = chapterMapper.findChapterAndCourseId(courseId,chapterId);
-        if (course == null){
-            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"该章节不属于该课程");
-        }
-        return checkCourseOwnerPermission(userId,course);
-    }
+//    @Override
+//    public ServerResponse checkChapterCoursePermission(String courseId, String chapterId,String userId) {
+//        String course = chapterMapper.findChapterAndCourseId(courseId,chapterId);
+//        if (course == null){
+//            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"该章节不属于该课程");
+//        }
+//        return checkCourseOwnerPermission(userId,course);
+//    }
 
 }
