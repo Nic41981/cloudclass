@@ -1,5 +1,6 @@
 package edu.qit.cloudclass.controller;
 
+import edu.qit.cloudclass.dao.CourseMapper;
 import edu.qit.cloudclass.domain.Course;
 
 import com.github.pagehelper.PageHelper;
@@ -26,6 +27,7 @@ import java.util.Map;
 public class TCourseController {
 
     private final TCourseServiceImpl tCourseServiceImpl;
+    private final CourseMapper courseMapper;
     private final PermissionService permissionService;
 
     @RequestMapping(value = "/course/{id}",method = RequestMethod.GET)
@@ -39,15 +41,19 @@ public class TCourseController {
     @ResponseBody
     public ServerResponse deleteCourseById(@PathVariable("id") String id, HttpSession session){
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        System.out.println(user.getName());
-        ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getName(),id);
 
         /**
-         * 没有判断出 没有这个课程 返回的json字符 没有实现没有用户登录时 判断
+         * 判断 有没有这个课程 返回的json字符 有没有用户登录时情况
          */
-        if(user == null){
-            return ServerResponse.createByError("你当前没有登录,请登录后再试");
+        int temp = courseMapper.selectCourseId(id);
+        if (temp == 0) {
+            return ServerResponse.createByError("没有此课程");
         }
+        if (user == null){
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"当前用户没有登录");
+        }
+        ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getName(),id);
+
         if (!permissionResult.isSuccess()){
             return ServerResponse.createByError("权限不足");
         }else{
@@ -61,12 +67,15 @@ public class TCourseController {
     public ServerResponse modify(@PathVariable("CourseId") String CourseId, @RequestBody(required = false) Map<String,String> params, HttpSession session) {
         //需要允许另一条件的参数为空。否则没传另一条件的参数会报错 @RequestParam required = false;
 
-        if (CourseId == null){
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
-        }
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        //System.out.println(user.getName());
 
+        int temp = courseMapper.selectCourseId(CourseId);
+        if (temp == 0) {
+            return ServerResponse.createByError("没有此课程");
+        }
+        if (user == null){
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"当前用户没有登录");
+        }
         ServerResponse resultResponse = permissionService.checkCourseOwnerPermission(user.getName(),CourseId);
         if (!resultResponse.isSuccess()){
             log.info("权限不足");
@@ -89,8 +98,13 @@ public class TCourseController {
 
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     @ResponseBody
-    public ServerResponse getCourses(@RequestParam(defaultValue = "1" ) int pageNo, @RequestParam(defaultValue = "5") int pageSize,@Param("teacher")String teacher){
+    public ServerResponse getCourses(@RequestParam(defaultValue = "1" ) int pageNo, @RequestParam(defaultValue = "5") int pageSize,@Param("teacher") String teacher,HttpSession session){
+        User user = (User) session.getAttribute(UserController.SESSION_KEY);
         PageHelper.startPage(pageNo,pageSize);
+        /**
+         * 登录进去之后 才能查寻当前老师的所有课程信息
+         */
+        teacher = user.getName();
         return tCourseServiceImpl.getCourses(pageNo,pageSize,teacher);//这个查询不会分页
     }
     @RequestMapping(value = "/course/list",method = RequestMethod.GET)

@@ -23,9 +23,5 @@ public interface CourseMapper {
     List<Course> getCourseList();
 
     List<Course> getCourses(@RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "5") int pageSize, @Param("teacher") String teacher);
-
-    /**
-     * 王恺
-     */
     List<CourseSpinner> getCourseSpinnerList();
 }
