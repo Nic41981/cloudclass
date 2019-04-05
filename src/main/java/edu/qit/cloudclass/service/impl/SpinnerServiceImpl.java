@@ -1,8 +1,8 @@
 package edu.qit.cloudclass.service.impl;
 
+import edu.qit.cloudclass.dao.ChapterExamMapper;
 import edu.qit.cloudclass.dao.ChapterMapper;
 import edu.qit.cloudclass.dao.CourseMapper;
-import edu.qit.cloudclass.dao.ExamMapper;
 import edu.qit.cloudclass.domain.ChapterSpinner;
 import edu.qit.cloudclass.domain.CourseSpinner;
 import edu.qit.cloudclass.domain.ExamSpinner;
@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 /**
@@ -27,40 +26,40 @@ public class SpinnerServiceImpl implements SpinnerService {
 
     private final CourseMapper courseMapper;
     private final ChapterMapper chapterMapper;
-    private final ExamMapper examMapper;
+    private final ChapterExamMapper chapterExamMapper;
 
     @Override
     public ServerResponse<List<CourseSpinner>> getCourseList() {
-       List<CourseSpinner> courseList = courseMapper.getCourseList();
-       if (courseList!=null){
-           return ServerResponse.createBySuccess("查询课程列表成功",courseList);
-       }
-
-        return ServerResponse.createByError("查询课程列表失败");
+       List<CourseSpinner> courseList = courseMapper.getCourseSpinnerList();
+       return ServerResponse.createBySuccess("查询成功",courseList);
     }
 
     @Override
-    public ServerResponse<List<ChapterSpinner>> getChapterList(String courseId) {
-        if (courseId==null){
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+    public ServerResponse getChapterList(String courseId) {
+        ServerResponse existResult = checkCourseExist(courseId);
+        if (!existResult.isSuccess()){
+            return existResult;
         }
-        List<ChapterSpinner> courseList = chapterMapper.getChapterList(courseId);
-        if (courseList!=null&&courseList.size()!=0){
-            return ServerResponse.createBySuccess("查询章节列表成功",courseList);
-        }
-        return ServerResponse.createByError("查询章节列表失败");
+        List<ChapterSpinner> courseList = chapterMapper.getChapterSpinnerList(courseId);
+        return ServerResponse.createBySuccess("查询成功",courseList);
     }
 
     @Override
-    public ServerResponse<List<ExamSpinner>> getExaminationList(String courseId) {
-        List<ExamSpinner> examinationList = examMapper.getExaminationList(courseId);
-        if (courseId==null){
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+    public ServerResponse getExaminationList(String courseId) {
+        ServerResponse existResult = checkCourseExist(courseId);
+        if (!existResult.isSuccess()){
+            return existResult;
         }
-        if (examinationList!=null&&examinationList.size()!=0){
-            return ServerResponse.createBySuccess("查询考试名称列表成功",examinationList);
-        }
+        List<ExamSpinner> examinationList = chapterExamMapper.getExamSpinnerList(courseId);
+        return ServerResponse.createBySuccess("查询成功",examinationList);
+    }
 
-        return ServerResponse.createByError("查询考试名称列表失败");
+    @Override
+    public ServerResponse checkCourseExist(String courseId) {
+        int flag = courseMapper.checkCourseExist(courseId);
+        if (flag == 0){
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"课程不存在");
+        }
+        return ServerResponse.createBySuccess();
     }
 }

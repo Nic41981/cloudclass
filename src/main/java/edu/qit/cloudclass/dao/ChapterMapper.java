@@ -41,5 +41,5 @@ public interface ChapterMapper {
     /**
      * 王恺
      */
-    List<ChapterSpinner> getChapterList(String courseId);
+    List<ChapterSpinner> getChapterSpinnerList(String courseId);
 }

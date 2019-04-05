@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.qit.cloudclass.dao.ChapterExamMapper">
+
+    <select id="getExamSpinnerList" resultType="edu.qit.cloudclass.domain.ExamSpinner">
+        select exam.id,exam.name from chapter,exam
+        where chapter.test = exam.id and chapter.course = #{course}
+        order by if(isnull(chapter.num),1,0),num;
+    </select>
+</mapper>

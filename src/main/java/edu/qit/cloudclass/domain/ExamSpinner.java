@@ -9,7 +9,5 @@ import lombok.Data;
 @Data
 public class ExamSpinner {
     private String id;
-    private String course;
-    private int num;
     private String name;
 }

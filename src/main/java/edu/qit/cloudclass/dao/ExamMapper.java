@@ -9,8 +9,4 @@ import java.util.List;
  * @version 1.0
  */
 public interface ExamMapper {
-    /**
-     * 王恺
-     */
-    List<ExamSpinner> getExaminationList(String courseId);
 }

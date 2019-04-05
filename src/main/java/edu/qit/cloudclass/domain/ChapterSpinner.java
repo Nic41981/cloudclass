@@ -10,7 +10,6 @@ import lombok.Data;
 @Data
 public class ChapterSpinner {
     private String id;
-    private String course;
     private int num;
     private String name;
 }

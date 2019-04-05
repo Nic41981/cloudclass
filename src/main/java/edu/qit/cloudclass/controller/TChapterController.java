@@ -18,7 +18,7 @@ import java.util.Map;
 @RequestMapping("/teacher")
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class ChapterController {
+public class TChapterController {
 
     private final ChapterService chapterService;
     private final PermissionService permissionService;
@@ -26,7 +26,7 @@ public class ChapterController {
     @RequestMapping(value = "/chapter/list",method = RequestMethod.GET)
     public ServerResponse chapterList(@RequestParam(value = "course",required = false) String courseId,HttpSession session){
         //参数检查
-        if (courseId == null){
+        if (!Tool.checkParamsNotNull(courseId)){
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
         }
         //权限判断

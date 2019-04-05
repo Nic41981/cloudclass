@@ -23,4 +23,9 @@ public interface CourseMapper {
 
     List<Course> getCourses(@RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "5") int pageSize, @Param("teacher") String teacher);
     List<CourseSpinner> getCourseSpinnerList();
+
+    /**
+     * 董悦
+     */
+    int checkCourseExist(@Param("course") String course);
 }
