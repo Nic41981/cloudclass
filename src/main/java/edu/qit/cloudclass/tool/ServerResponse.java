@@ -10,7 +10,10 @@ import java.io.Serializable;
  * @author nic
  * @version 1.0
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
+
+//TODO 日期格式化
+//TODO null没有正常忽略
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Getter
 public class ServerResponse<T> implements Serializable {
     private int status;

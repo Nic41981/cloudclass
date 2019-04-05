@@ -35,16 +35,16 @@ public class UploadController {
         if (!Tool.checkParamsNotNull(courseId) || image == null || image.isEmpty()){
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
         }
-//        //登录判断
-//        User user = (User) session.getAttribute(UserController.SESSION_KEY);
-//        if (user == null){
-//            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"用户未登录");
-//        }
-//        //用户权限判断
-//        ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(),courseId);
-//        if (!permissionResult.isSuccess()){
-//            return permissionResult;
-//        }
+        //登录判断
+        User user = (User) session.getAttribute(UserController.SESSION_KEY);
+        if (user == null){
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"用户未登录");
+        }
+        //用户权限判断
+        ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(),courseId);
+        if (!permissionResult.isSuccess()){
+            return permissionResult;
+        }
         return uploadService.uploadImage(image,courseId);
     }
 
@@ -58,16 +58,16 @@ public class UploadController {
         if(!Tool.checkParamsNotNull(chapterId,chapterId) || video == null || video.isEmpty()){
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
         }
-//        //登录判断
-//        User user = (User) session.getAttribute(UserController.SESSION_KEY);
-//        if (user == null){
-//            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"用户未登录");
-//        }
-//        //用户权限判断
-//        ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(),courseId);
-//        if (!permissionResult.isSuccess()){
-//            return permissionResult;
-//        }
+        //登录判断
+        User user = (User) session.getAttribute(UserController.SESSION_KEY);
+        if (user == null){
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"用户未登录");
+        }
+        //用户权限判断
+        ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(),courseId);
+        if (!permissionResult.isSuccess()){
+            return permissionResult;
+        }
         return uploadService.uploadVideo(video,courseId,chapterId);
     }
 }

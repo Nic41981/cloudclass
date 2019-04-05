@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface ChapterService {
     ServerResponse<List<Chapter>> chapterList(String courseId);
-    ServerResponse<Map> chapter(Chapter chapter);
+    ServerResponse chapter(Chapter chapter);
     ServerResponse chapterModify(Chapter chapter);
-    ServerResponse chapterDelete(String chapterId);
+    ServerResponse chapterDelete(String courseId,String chapterId);
 }
