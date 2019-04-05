@@ -38,5 +38,8 @@ public interface ChapterMapper {
      */
     int updateVideoIdAfterUpload(@Param("id") String id,@Param("video") String videoId);
 
+    /**
+     * 王恺
+     */
     List<ChapterSpinner> getChapterList(String courseId);
 }
