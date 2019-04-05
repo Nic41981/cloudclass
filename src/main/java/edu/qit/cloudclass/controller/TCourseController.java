@@ -60,25 +60,24 @@ public class TCourseController {
     @ResponseBody
     public ServerResponse modify(@PathVariable("CourseId") String CourseId, @RequestBody(required = false) Map<String,String> params, HttpSession session) {
         //需要允许另一条件的参数为空。否则没传另一条件的参数会报错 @RequestParam required = false;
-        User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        System.out.println(user.getName());
-
-        Course ttCourse = new Course();
-        ttCourse.setId(CourseId);
-        ttCourse.setName(params.get("name"));
-        ttCourse.setImage(params.get("image"));
-        ttCourse.setTeacher(params.get("teacher"));
-        ttCourse.setTag(params.get("tag"));
 
         if (CourseId == null){
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
         }
+        User user = (User) session.getAttribute(UserController.SESSION_KEY);
+        //System.out.println(user.getName());
 
         ServerResponse resultResponse = permissionService.checkCourseOwnerPermission(user.getName(),CourseId);
         if (!resultResponse.isSuccess()){
             log.info("权限不足");
             return resultResponse;
         }
+        Course ttCourse = new Course();
+        ttCourse.setId(CourseId);
+        ttCourse.setName(params.get("name"));
+        ttCourse.setImage(params.get("image"));
+        ttCourse.setTeacher(params.get("teacher"));
+        ttCourse.setTag(params.get("tag"));
         return tCourseServiceImpl.modify(ttCourse);
 
     }

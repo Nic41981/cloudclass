@@ -15,11 +15,12 @@ public interface CourseMapper {
     String findTeacherIdByPrimaryKey(@Param("id") String id);
 
     void add(Course course);
-    int modify(Course course);
+    void modify(Course course);
     int selectCourseId(@Param("id") String id);
     void deleteCourseById(String id);
     Course findCourseById(@Param("id") String id);
     List<Course> getCourseList();
+
     List<Course> getCourses(@RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "5") int pageSize, @Param("teacher") String teacher);
 
 }

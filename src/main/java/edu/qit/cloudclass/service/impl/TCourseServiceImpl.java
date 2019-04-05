@@ -15,7 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
+import java.util.*;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -47,13 +48,10 @@ public class TCourseServiceImpl implements CourseService {
             return ServerResponse.createByError("课程已经不存在，请检查是否输入错误");
         }
 
-       if (tcourseMapper.modify(ttCourse)==1){
-            log.info("更新课程成功 " + ttCourse.getName());
+        tcourseMapper.modify(ttCourse);
+        log.info("更新课程成功 " + ttCourse.getName());
+        return ServerResponse.createBySuccess(ttCourse);
 
-            return ServerResponse.createBySuccess("更新课程信息成功", ttCourse);
-        }else{
-            return ServerResponse.createByError(ResponseCode.ERROR.getStatus(),"修改失败");
-        }
     }
 
 
@@ -84,8 +82,9 @@ public class TCourseServiceImpl implements CourseService {
 
     @Override
     public ServerResponse<List<Course>> getCourseList() {
-        List<Course> list = tcourseMapper.getCourseList();
-        if(!list.isEmpty()){
+        List<Course> list = new ArrayList<Course>();
+        list =  tcourseMapper.getCourseList();
+        if(list.size() != 0){
             log.info("当前课程查询成功");
             return ServerResponse.createBySuccess(list);
         }

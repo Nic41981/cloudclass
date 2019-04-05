@@ -360,3 +360,29 @@
     }
 18.修改课程:(李九龙)/teacher/course/{课程号}
     1.1请求方式:PUT
+    1.2请求参数:
+    {
+        "name":"000001",
+        "image":"XXX",
+        "teacher":"XXX",
+        "createTime":"XXXXXX",
+        "tag":"XXXXXX"
+     }
+    1.3正确返回
+    {
+        "status": 0,
+        "msg": "",
+        "data": {
+            "id": "77",
+            "name": "000001",
+            "image": null,
+            "createTime": null,
+            "teacher": null,
+            "tag": null
+        }
+    }
+    1.4错误返回
+     {
+        "status": -4,
+        "msg": "课程不存在"
+     }
