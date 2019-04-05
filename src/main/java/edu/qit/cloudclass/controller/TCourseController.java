@@ -107,12 +107,5 @@ public class TCourseController {
         teacher = user.getName();
         return tCourseServiceImpl.getCourses(pageNo,pageSize,teacher);//这个查询不会分页
     }
-    @RequestMapping(value = "/course/list",method = RequestMethod.GET)
-    public ServerResponse getCourseList(){
 
-//        if (teacher == null){
-//            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
-//        }
-        return tCourseServiceImpl.getCourseList();
-    }
 }

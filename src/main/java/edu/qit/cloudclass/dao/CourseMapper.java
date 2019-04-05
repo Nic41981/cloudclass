@@ -20,7 +20,6 @@ public interface CourseMapper {
     int selectCourseId(@Param("id") String id);
     void deleteCourseById(String id);
     Course findCourseById(@Param("id") String id);
-    List<Course> getCourseList();
 
     List<Course> getCourses(@RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "5") int pageSize, @Param("teacher") String teacher);
     List<CourseSpinner> getCourseSpinnerList();

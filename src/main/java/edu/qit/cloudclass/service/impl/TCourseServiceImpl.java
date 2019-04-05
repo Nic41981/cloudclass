@@ -79,19 +79,7 @@ public class TCourseServiceImpl implements CourseService {
         log.info("Successful" + course.getName() );
         return ServerResponse.createBySuccess(course);
     }
-
-    @Override
-    public ServerResponse<List<Course>> getCourseList() {
-        List<Course> list = new ArrayList<Course>();
-        list =  tcourseMapper.getCourseList();
-        if(list.size() != 0){
-            log.info("当前课程查询成功");
-            return ServerResponse.createBySuccess(list);
-        }
-        log.info("查询内容为空!");
-        return ServerResponse.createBySuccessMsg("查询内容为空");
-    }
-
+    
     @Override
     public ServerResponse<List<Course>> getCourses(int pageNo, int pageSize, String teacher) {
 
