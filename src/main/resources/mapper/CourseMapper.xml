@@ -38,6 +38,9 @@
         </set>
         where id = #{id}
     </update>
+    <update id="updateImageIdAfterUpdate">
+        update course set image = #{image} where id = #{id};
+    </update>
 
     <!-- 根据id删除课程信息 -->
     <delete id="deleteCourseById" parameterType="String">

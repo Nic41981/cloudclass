@@ -14,4 +14,6 @@ public interface FileMapper {
      * 董悦
      */
     void insert(@Param("file") FileInfo fileInfo);
+
+    FileInfo findAllByPrimaryKey(@Param("id") String id);
 }

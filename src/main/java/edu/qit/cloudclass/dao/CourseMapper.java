@@ -28,4 +28,9 @@ public interface CourseMapper {
      * 董悦
      */
     int checkCourseExist(@Param("course") String course);
+
+    /**
+     * 董悦
+     */
+    int updateImageIdAfterUpdate(@Param("id") String id,@Param("image") String image);
 }

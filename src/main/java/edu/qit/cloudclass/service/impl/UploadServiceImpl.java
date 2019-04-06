@@ -1,6 +1,7 @@
 package edu.qit.cloudclass.service.impl;
 
 import edu.qit.cloudclass.dao.ChapterMapper;
+import edu.qit.cloudclass.dao.CourseMapper;
 import edu.qit.cloudclass.dao.FileMapper;
 import edu.qit.cloudclass.domain.FileInfo;
 import edu.qit.cloudclass.service.UploadService;
@@ -30,6 +31,7 @@ public class UploadServiceImpl implements UploadService {
     private static final String FILE_BASE_PATH = "/usr/cloudclass/files";
     private final FileMapper fileMapper;
     private final ChapterMapper chapterMapper;
+    private final CourseMapper courseMapper;
 
     @Override
     public ServerResponse uploadImage(MultipartFile multipartFile,String courseId) {
@@ -131,10 +133,8 @@ public class UploadServiceImpl implements UploadService {
     @Override
     public ServerResponse storageImage(MultipartFile multipartFile,FileInfo fileInfo,String courseId) {
         fileInfo.setId(Tool.uuid());
-        String path =
-                FILE_BASE_PATH + File.separator
-                + courseId + File.separator
-                + "image" + File.separator
+        String path = FILE_BASE_PATH + File.separator
+                + FileInfo.IMAGE_FILE_TYPE + File.separator
                 + fileInfo.getId() + "." + fileInfo.getSuffix();
         File file = new File(path);
         File dir = file.getParentFile();
@@ -160,7 +160,8 @@ public class UploadServiceImpl implements UploadService {
             OutputStream os = new FileOutputStream(file);
             ImageIO.write(image, fileInfo.getSuffix(), os);
             fileMapper.insert(fileInfo);
-            return ServerResponse.createBySuccess("上传成功", fileInfo);
+            courseMapper.updateImageIdAfterUpdate(courseId,fileInfo.getId());
+            return ServerResponse.createBySuccess("上传成功");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -170,11 +171,8 @@ public class UploadServiceImpl implements UploadService {
     @Override
     public ServerResponse storageVideo(MultipartFile multipartFile,FileInfo fileInfo,String courseId,String chapterId) {
         fileInfo.setId(Tool.uuid());
-        String path =
-                FILE_BASE_PATH + File.separator
-                + chapterId + File.separator
-                + "video" + File.separator
-                + chapterId + File.separator
+        String path = FILE_BASE_PATH + File.separator
+                + FileInfo.VIDEO_FILE_TYPE + File.separator
                 + fileInfo.getId() + "." + fileInfo.getSuffix();
         File video = new File(path);
         File dir = video.getParentFile();
@@ -192,7 +190,7 @@ public class UploadServiceImpl implements UploadService {
             //更新数据库
             fileMapper.insert(fileInfo);
             chapterMapper.updateVideoIdAfterUpload(chapterId,fileInfo.getId());
-            return ServerResponse.createBySuccess("上传成功",fileInfo);
+            return ServerResponse.createBySuccess("上传成功");
         }catch (Exception e){
             log.error(e.getMessage(),e);
         }

@@ -38,7 +38,7 @@ public class UploadController {
         //登录判断
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
         if (user == null){
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"用户未登录");
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"权限不足");
         }
         //用户权限判断
         ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(),courseId);

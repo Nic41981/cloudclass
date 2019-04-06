@@ -1,7 +1,10 @@
 package edu.qit.cloudclass.tool;
 
+import edu.qit.cloudclass.domain.FileInfo;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
+import java.text.MessageFormat;
 import java.util.*;
 
 /**

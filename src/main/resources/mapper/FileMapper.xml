@@ -10,6 +10,10 @@
         insert into file (<include refid="base_column_list"/>)
         values (#{file.id},#{file.realName},#{file.suffix},now());
     </insert>
+    <select id="findAllByPrimaryKey" resultType="edu.qit.cloudclass.domain.FileInfo">
+        select <include refid="base_column_list"/>
+        from file where id = #{id};
+    </select>
 
 
 </mapper>
