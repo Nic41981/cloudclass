@@ -5,9 +5,10 @@ import edu.qit.cloudclass.tool.ServerResponse;
 import java.util.List;
 import java.util.Map;
 
-public interface ChapterService {
+public interface TChapterService {
     ServerResponse<List<Chapter>> chapterList(String courseId);
     ServerResponse chapter(Chapter chapter);
     ServerResponse chapterModify(Chapter chapter);
     ServerResponse chapterDelete(String courseId,String chapterId);
+    ServerResponse associateDelete(String courseId);
 }

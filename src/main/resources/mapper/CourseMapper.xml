@@ -11,46 +11,40 @@
     <select id="findTeacherIdByPrimaryKey" resultType="java.lang.String">
         select teacher from cloudclass.course where id = #{id};
     </select>
-    <select id="getCourseList" resultType="edu.qit.cloudclass.domain.Course">
-      select * from course
+
+    <select id="findCourseByPrimaryKey" resultType="edu.qit.cloudclass.domain.Course">
+        select <include refid="base_column_list"/>
+        from course where id = #{id};
     </select>
 
-    <select id="findCourseById" resultType="edu.qit.cloudclass.domain.Course">
-        select * from course where id = #{id};
+    <select id="coursesList" resultType="edu.qit.cloudclass.domain.Course">
+        select <include refid="base_column_list"/>
+        from cloudclass.course where teacher = #{teacher}
     </select>
-
-    <select id="getCourses" resultType="edu.qit.cloudclass.domain.Course">
-        select * from cloudclass.course where teacher = #{teacher}
-    </select>
-
-    <select id="selectCourseId" resultType="java.lang.Integer">
-    select count(*) from course where id=#{id}
-  </select>
 
     <update id="modify" parameterType="edu.qit.cloudclass.domain.Course">
-        update cloudclass.course
-        <set>
-            <if test= "name != null"> name = #{name}</if>
-            <if test= "image != null"> image = #{image}</if>
-            <if test ="createTime != null"> createTime = #{createTime}</if>
-            <if test= "teacher != null"> teacher = #{teacher}</if>
-            <if test= "tag != null"> tag = #{tag}</if>
-        </set>
-        where id = #{id}
+        update course
+        <trim prefix="set" suffixOverrides=",">
+            <if test="course.id != null">id = #{course.id},</if>
+            <if test= "course.name != null"> name = #{course.name},</if>
+            <if test= "course.tag != null"> tag = #{course.tag},</if>
+        </trim>
+        where id = #{course.id}
     </update>
+
     <update id="updateImageIdAfterUpdate">
         update course set image = #{image} where id = #{id};
     </update>
 
     <!-- 根据id删除课程信息 -->
-    <delete id="deleteCourseById" parameterType="String">
-        delete from cloudclass.course where id = #{id}
+    <delete id="delete" parameterType="String">
+        delete from course where id = #{id}
     </delete>
 
     <!-- 增加课程 -->
-    <insert id="add" parameterType="edu.qit.cloudclass.domain.Course">
-        insert into cloudclass.course (id,name,image,createTime,teacher,tag)
-        values (#{id},#{name}, #{image},now(), #{teacher},#{tag})
+    <insert id="insert" parameterType="edu.qit.cloudclass.domain.Course">
+        insert into cloudclass.course (id,name,createTime,teacher,tag)
+        values (#{course.id},#{course.name},now(), #{course.teacher},#{course.tag})
     </insert>
 
     <!--查询课程列表-->
@@ -58,7 +52,7 @@
         select id,name from course;
     </select>
     <select id="checkCourseExist" resultType="java.lang.Integer">
-        select count(1) from course where id = #{course};
+        select count(1) from course where id = #{id};
     </select>
 
 </mapper>

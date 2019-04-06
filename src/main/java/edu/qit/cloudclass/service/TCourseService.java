@@ -7,11 +7,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-public interface CourseService {
+public interface TCourseService {
     ServerResponse add(Course course);
     ServerResponse modify(Course course);
-
     ServerResponse deleteCourseById(String id);
-    ServerResponse findCourseById(@Param("id") String id);
-    ServerResponse<List<Course>> getCourses(@RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "5") int pageSize, @Param("teacher")String teacher);
+    ServerResponse<List<Course>> getCourses(String teacher);
 }

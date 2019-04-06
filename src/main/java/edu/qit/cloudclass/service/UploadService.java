@@ -18,8 +18,6 @@ public interface UploadService {
 
     ServerResponse securityCheck(MultipartFile multipartFile, FileInfo fileInfo);
 
-    ServerResponse storageImage(MultipartFile multipartFile,FileInfo fileInfo,String courseId);
-
-    ServerResponse storageVideo(MultipartFile multipartFile,FileInfo fileInfo,String courseId,String chapterId);
+    ServerResponse storageFile(MultipartFile multipartFile,FileInfo fileInfo,String targetId);
 
 }

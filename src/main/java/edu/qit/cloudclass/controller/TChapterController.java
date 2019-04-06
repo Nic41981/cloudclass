@@ -2,7 +2,7 @@ package edu.qit.cloudclass.controller;
 
 import edu.qit.cloudclass.domain.Chapter;
 import edu.qit.cloudclass.domain.User;
-import edu.qit.cloudclass.service.ChapterService;
+import edu.qit.cloudclass.service.TChapterService;
 import edu.qit.cloudclass.service.PermissionService;
 import edu.qit.cloudclass.tool.ResponseCode;
 import edu.qit.cloudclass.tool.ServerResponse;
@@ -20,7 +20,7 @@ import java.util.Map;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TChapterController {
 
-    private final ChapterService chapterService;
+    private final TChapterService TChapterService;
     private final PermissionService permissionService;
 
     @RequestMapping(value = "/chapter/list",method = RequestMethod.GET)
@@ -39,7 +39,7 @@ public class TChapterController {
             return resultResponse;
         }
         //查询列表
-        return chapterService.chapterList(courseId);
+        return TChapterService.chapterList(courseId);
 
     }
 
@@ -60,7 +60,7 @@ public class TChapterController {
             return resultResponse;
         }
         //创建章节
-        return chapterService.chapter(chapter);
+        return TChapterService.chapter(chapter);
     }
 
     @RequestMapping(value = "/chapter/{chapterId}",method = RequestMethod.PUT)
@@ -80,7 +80,7 @@ public class TChapterController {
         }
         chapter.setId(chapterId);
         //修改章节
-        return chapterService.chapterModify(chapter);
+        return TChapterService.chapterModify(chapter);
     }
 
 
@@ -104,6 +104,6 @@ public class TChapterController {
             return resultResponse;
         }
         //删除章节
-        return chapterService.chapterDelete(courseId,chapterId);
+        return TChapterService.chapterDelete(courseId,chapterId);
     }
 }

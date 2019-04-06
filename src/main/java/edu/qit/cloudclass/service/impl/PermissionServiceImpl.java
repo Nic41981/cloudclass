@@ -42,13 +42,4 @@ public class PermissionServiceImpl implements PermissionService {
         return checkCourseOwnerPermission(userId,targetCourse);
     }
 
-//    @Override
-//    public ServerResponse checkChapterCoursePermission(String courseId, String chapterId,String userId) {
-//        String course = chapterMapper.findChapterAndCourseId(courseId,chapterId);
-//        if (course == null){
-//            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"该章节不属于该课程");
-//        }
-//        return checkCourseOwnerPermission(userId,course);
-//    }
-
 }

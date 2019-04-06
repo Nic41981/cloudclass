@@ -13,21 +13,30 @@ public interface CourseMapper {
     /**
      * 李九龙
      */
-    String findTeacherIdByPrimaryKey(@Param("id") String id);
+    int insert(@Param("course") Course course);
 
-    void add(Course course);
-    void modify(Course course);
-    int selectCourseId(@Param("id") String id);
-    void deleteCourseById(String id);
-    Course findCourseById(@Param("id") String id);
+    int delete(@Param("id") String id);
 
-    List<Course> getCourses(@RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "5") int pageSize, @Param("teacher") String teacher);
+    int modify(@Param("course") Course course);
+
+    List<Course> coursesList(@Param("teacher") String teacher);
+
+    Course findCourseByPrimaryKey(@Param("id") String id);
+
+    /**
+     * 王恺
+     */
     List<CourseSpinner> getCourseSpinnerList();
 
     /**
      * 董悦
      */
-    int checkCourseExist(@Param("course") String course);
+    int checkCourseExist(@Param("id") String id);
+
+    /**
+     * 董悦
+     */
+    String findTeacherIdByPrimaryKey(@Param("id")String id);
 
     /**
      * 董悦

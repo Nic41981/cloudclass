@@ -12,4 +12,6 @@ public interface FileService {
     ServerResponse<FileInfo> getFileInfo(String fileId);
 
     ServerResponse getFileNames(String fileId);
+
+    ServerResponse associateDelete(String fileId);
 }

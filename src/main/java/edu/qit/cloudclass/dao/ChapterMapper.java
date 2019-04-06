@@ -10,23 +10,21 @@ import java.util.List;
 @Mapper
 public interface ChapterMapper {
 
-    int insert(Chapter record);
+    int insert(@Param("chapter") Chapter chapter);
 
-    int insertSelective(Chapter record);
+    int delete(@Param("id") String id);
 
-    List<Chapter> chapterList(@Param("courseId") String courseId);
+    int modify(@Param("chapter") Chapter chapter);
 
-    int findNextNum(@Param("courseId") String courseId);
+    List<Chapter> chapterList(@Param("course") String course);
 
-    int chapterModify(@Param("chapter") Chapter chapter);
+    Chapter findChapterByPrimaryKey(@Param("id") String id);
 
-    int findNumByPrimaryKey(@Param("id") String id);
-
-    int deleteChapter(@Param("chapterId") String chapterId);
+    int findNextNum(@Param("course") String course);
 
     int updateNumAfterDelete(@Param("num") int num,@Param("course")String course);
 
-    int updateNumBeforeInster(@Param("num") int num, @Param("course")String course);
+    int updateNumBeforeInsert(@Param("num") int num, @Param("course")String course);
 
     /**
      * 董悦
@@ -36,10 +34,10 @@ public interface ChapterMapper {
     /**
      * 董悦
      */
-    int updateVideoIdAfterUpload(@Param("id") String id,@Param("video") String videoId);
+    int updateVideoIdAfterUpload(@Param("id") String id,@Param("video") String video);
 
     /**
      * 王恺
      */
-    List<ChapterSpinner> getChapterSpinnerList(String courseId);
+    List<ChapterSpinner> getChapterSpinnerList(@Param("course") String course);
 }

@@ -21,6 +21,9 @@ public class FileInfo {
     @JsonIgnore
     private String realName;
 
+    @JsonIgnore
+    private String type;
+
     private String suffix;
 
     private Date uploadTime;
