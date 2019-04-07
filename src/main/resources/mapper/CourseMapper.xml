@@ -8,7 +8,52 @@
         id,name,image,createTime,teacher,tag
     </sql>
 
-    <select id="selectTeacherId" resultType="java.lang.String">
-        select teacher from course where id = #{courseId};
+    <select id="findTeacherIdByPrimaryKey" resultType="java.lang.String">
+        select teacher from cloudclass.course where id = #{id};
     </select>
+
+    <select id="findCourseByPrimaryKey" resultType="edu.qit.cloudclass.domain.Course">
+        select <include refid="base_column_list"/>
+        from course where id = #{id};
+    </select>
+
+    <select id="coursesList" resultType="edu.qit.cloudclass.domain.Course">
+        select <include refid="base_column_list"/>
+        from cloudclass.course where teacher = #{teacher}
+        order by createTime desc;
+    </select>
+
+    <update id="modify" parameterType="edu.qit.cloudclass.domain.Course">
+        update course
+        <trim prefix="set" suffixOverrides=",">
+            <if test="course.id != null">id = #{course.id},</if>
+            <if test= "course.name != null"> name = #{course.name},</if>
+            <if test= "course.tag != null"> tag = #{course.tag},</if>
+        </trim>
+        where id = #{course.id}
+    </update>
+
+    <update id="updateImageIdAfterUpdate">
+        update course set image = #{image} where id = #{id};
+    </update>
+
+    <!-- 根据id删除课程信息 -->
+    <delete id="delete" parameterType="String">
+        delete from course where id = #{id}
+    </delete>
+
+    <!-- 增加课程 -->
+    <insert id="insert" parameterType="edu.qit.cloudclass.domain.Course">
+        insert into cloudclass.course (id,name,createTime,teacher,tag)
+        values (#{course.id},#{course.name},now(), #{course.teacher},#{course.tag})
+    </insert>
+
+    <!--查询课程列表-->
+    <select id="getCourseSpinnerList" resultType="edu.qit.cloudclass.domain.CourseSpinner">
+        select id,name from course;
+    </select>
+    <select id="checkCourseExist" resultType="java.lang.Integer">
+        select count(1) from course where id = #{id};
+    </select>
+
 </mapper>

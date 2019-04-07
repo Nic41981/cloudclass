@@ -61,10 +61,10 @@ public class UserController {
             return result;
         }
         //记录会话信息
-        session.setAttribute(SESSION_KEY,result.getDate());
+        session.setAttribute(SESSION_KEY,result.getData());
         if (autoLogin) {
             //Cookie中写入自动登录凭证
-            String taken = result.getDate().getTaken();
+            String taken = result.getData().getTaken();
             Cookie cookie = new Cookie(AUTO_LOGIN_KEY, taken);
             cookie.setMaxAge(60 * 60 * 24 * 30);
             response.addCookie(cookie);
@@ -73,7 +73,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/login/auto",method = RequestMethod.POST)
-    public ServerResponse autoLogin(HttpServletRequest request){
+    public ServerResponse autoLogin(HttpServletRequest request,HttpSession session){
         //获取Cookie
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
@@ -83,9 +83,14 @@ public class UserController {
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals(AUTO_LOGIN_KEY)) {
                 //调用Service方法自动登录
-                return userServer.autoLogin(cookie.getValue());
+                ServerResponse<User> autoLoginResult = userServer.autoLogin(cookie.getValue());
+                if (autoLoginResult.isSuccess()){
+                    session.setAttribute(SESSION_KEY,autoLoginResult.getData());
+                    return ServerResponse.createBySuccess("登陆成功",autoLoginResult.getData());
+                }
             }
         }
         return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"未找到凭证");
     }
+
 }

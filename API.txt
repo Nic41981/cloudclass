@@ -26,7 +26,7 @@
     {
         "status":0,
         "msg":"登录成功",
-        "date":{
+        "data":{
             "name":"XXX",
             "identity":X(0=学生,1=教师),
             "email":"XXX"
@@ -42,7 +42,7 @@
     {
         "status":0,
         "msg":"登录成功",
-        "date":{
+        "data":{
             "name":"XXX",
             "identity":X(0=学生,1=教师),
             "email":"XXX"
@@ -69,9 +69,335 @@
     {
         "status": 0,
         "msg": "上传成功"
+        "data":"视频ID"
     }
     1.4 异常返回
     -1:上传失败
     -2:用户未登录,权限不足
     -3:未接收到文件
     -4:课程不存在,不支持的文件类型
+7.获取课程列表(王恺)-/course/list
+      1.1 请求方式:GET
+      1.2 请求参数:无
+      1.3 正常返回:
+      {
+          "status": XXX,
+          "msg": "XXX",
+          "data": [
+              {
+                  "id": "XXX",
+                  "course": "XXX",
+                  "num": X,
+                  "name": "XXX"
+              },
+              {
+                  "id": "XXX",
+                  "course": "XXX",
+                  "num": X,
+                  "name": "XXX"
+              }
+          ]
+      }
+      1.4 异常返回
+      -1:查询课程列表失败
+8.获取章节列表(王恺)-/chapter/list
+      1.1 请求方式:GET
+      1.2 请求参数:
+      {
+       "courseId":"XXX",
+      }
+      1.3 正常返回:
+      {
+          "status": X,
+          "msg": "XXXXX",
+          "data": [
+              {
+                  "id": "XXX",
+                  "course": "XXX",
+                  "num": X,
+                  "name": "XXX"
+              },
+              {
+                  "id": "XXX",
+                  "course": "XXX",
+                  "num": X,
+                  "name": "XXX"
+              }
+          ]
+      }
+      1.4 异常返回
+      -1:查询章节列表失败
+      -3:缺少参数
+9.获取考试名称列表(王恺)-/examination/list
+      1.1 请求方式:GET
+      1.2 请求参数:
+      {
+        "courseId":"XXX",
+      }
+      1.3 正常返回:
+      {
+          "status": X,
+          "msg": "XXXXX",
+          "data": [
+              {
+                  "id": "XXX",
+                  "course": "XXX",
+                  "num": X,
+                  "name": "XXX"
+              },
+              {
+                  "id": "XXX",
+                  "course": "XXX",
+                  "num": X,
+                  "name": "XXX"
+              }
+          ]
+      }
+      1.4 异常返回
+      -1:查询考试名称列表失败
+      -3:缺少参数
+
+10.获取章节列表(李广源)-/teacher/chapter/list
+      1.1 请求方式:POST
+      1.2 请求参数:
+      {
+       "courseId":"XXX",
+      }
+      1.3 正常返回:
+      {
+          "status": 0,
+          "msg": "XXXXX",
+          "data": [
+              {
+                  "id": "XXX",
+                  "course": null,
+                  "num": null,
+                  "name": "XXX"
+                  "video": "XXX",
+                  "test": "XXX",
+                  "createtime": null,
+                  "info": "XXX"
+              },
+             {
+                  "id": "XXX",
+                  "course": null,
+                  "num": null,
+                  "name": "XXX"
+                  "video": "XXX",
+                  "test": "XXX",
+                  "createtime": null,
+                  "info": "XXX"
+              }
+          ]
+      }
+      1.4 异常返回
+      -3:缺少参数
+11.添加章节(李广源)-/teacher/chapter
+      1.1 请求方式:POST
+      1.2 请求参数:
+      {
+         "name":"XXX",
+         "info":"XXX",
+         "test":"XXX",
+         "courseId":"XXX",
+         "video":"XXX"
+      }
+      1.2 正常返回:
+      {
+          "status": 0,
+          "msg": "XXXXX",
+          "data": {
+               "id":"XXXX"
+          }
+      }
+      1.3 异常返回
+      -3:缺少参数
+      -4:权限错误
+12.修改章节(李广源)-/teacher/chapter/{章节Id}
+      1.1 请求方式:POST
+      1.2 请求参数:
+      {
+         "name":"XXX",
+         "info":"XXX",
+         "test":"XXX",
+         "courseId":"XXX"
+      }
+      1.2 正常返回:
+      {
+          "status": 0,
+          "msg": "XXXXX",
+      }
+      1.3 异常返回
+      -3:缺少参数
+      -4:权限错误
+13.删除章节(李广源)-/teacher/chapter/{章节Id}/{删除章节}
+      1.1 请求方式:POST
+      1.2 正常返回:
+      {
+          "status": 0,
+          "msg": "XXXXX",
+      }
+      1.3 异常返回
+      -3:缺少参数
+      -4:权限错误
+14.查询课程(李九龙)/teacher/course/{课程号}
+    1.1 请求方式:GET
+    1.2 请求参数:
+    {
+       "courseId":"XXX"
+    }
+    1.2 正常返回:
+    {
+        "status": 0,
+        "msg": "",
+        "data": {
+            "id": "010",
+            "name": "sf",
+            "image": "04",
+            "createTime": "2019-04-03T04:06:13.000+0000",
+            "teacher": "010",
+            "tag": "fdh"
+        }
+    }
+    1.3错误返回:
+    {
+        "status": 0,
+        "msg": "当前老师没有课程"
+    }
+15.删除课程(李九龙)/teacher/course/{课程号}
+    1.1 请求方式:DELETE
+    1.2 请求参数:
+    {
+       "courseId":"XXX"
+    }
+    1.2 正常返回：
+    {
+        "status": 0,
+        "msg": "课程删除成功"
+    }
+    1.3 错误返回:
+    {
+        "status": -1,
+        "msg": "没有此课程"
+    }
+    {
+        "status": -3,
+        "msg": "当前用户没有登录"
+    }
+    {
+        "status": -1,
+        "msg": "权限不足"
+    }
+16.添加课程(李九龙)/teacher/course
+    1.1请求方式:POST
+    1.2 请求参数:
+    {
+         "id":"XXX",
+         "name":"XXX",
+         "image":"XXX",
+         "createTime":"XXX",
+         "teacher":"XXX",
+         "Tag":"XXX"
+    }
+    1.3正常返回:
+    {
+        "status": 0,
+        "msg": "课程添加成功"
+    }
+    1.4错误返回:
+    {
+        "status": -1,
+        "msg": "添加课程失败,当前已有此ID "
+    }
+17.查询所有课程:(李九龙)/teacher/course/list
+    1.1请求方式:GET
+    1.2请求参数 无
+    1.3正确返回
+
+18.查询指定老师的课程:(李九龙)/teaher/list
+    1.1请求方式:GET
+    1.2请求参数:
+    {
+        "pageNo":"3",
+        "pageSize":"4"
+    }
+    1.3正常返回:
+    {
+        "status": 0,
+        "msg": "",
+        "data": [
+            {
+                "id": "0010",
+                "name": "Mryue",
+                "image": "05",
+                "createTime": "2019-04-03T09:19:00.000+0000",
+                "teacher": "abc",
+                "tag": "haida"
+            },
+            {
+                "id": "0012",
+                "name": "Mryue",
+                "image": "05",
+                "createTime": "2019-04-03T12:33:51.000+0000",
+                "teacher": "abc",
+                "tag": "haida"
+            },
+            {
+                "id": "0015",
+                "name": "Mryue",
+                "image": "05",
+                "createTime": "2019-04-03T14:50:52.000+0000",
+                "teacher": "abc",
+                "tag": "haida"
+            },
+            {
+                "id": "008",
+                "name": "Mryue",
+                "image": "05",
+                "createTime": "2019-04-01T23:43:44.000+0000",
+                "teacher": "abc",
+                "tag": "haida"
+            }
+        ]
+    }
+    1.4返回错误:
+    {
+        "status": -1,
+        "msg": "当前老师的无课程"
+    }
+18.修改课程:(李九龙)/teacher/course/{课程号}
+    1.1请求方式:PUT
+    1.2请求参数:
+    {
+        "name":"000001",
+        "image":"XXX",
+        "teacher":"XXX",
+        "createTime":"XXXXXX",
+        "tag":"XXXXXX"
+     }
+    1.3正确返回
+    {
+        "status": 0,
+        "msg": "",
+        "data": {
+            "id": "77",
+            "name": "000001",
+            "image": null,
+            "createTime": null,
+            "teacher": null,
+            "tag": null
+        }
+    }
+    1.4错误返回
+    {
+        "status": -1,
+        "msg": "没有此课程"
+    }
+    {
+        "status": -3,
+        "msg": "当前用户没有登录"
+    }
+     {
+        "status": -4,
+        "msg": "课程不存在"
+     }

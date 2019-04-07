@@ -1,6 +1,5 @@
 package edu.qit.cloudclass.service;
 
-import edu.qit.cloudclass.domain.User;
 import edu.qit.cloudclass.tool.ServerResponse;
 
 /**
@@ -9,4 +8,5 @@ import edu.qit.cloudclass.tool.ServerResponse;
  */
 public interface PermissionService {
     ServerResponse checkCourseOwnerPermission(String userId, String courseId);
+    ServerResponse checkChapterOwnerPermission(String userId,String courseId, String chapterId);
 }

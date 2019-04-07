@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.qit.cloudclass.dao.ChapterMapper">
+  <resultMap id="base_result_map" type="edu.qit.cloudclass.domain.Chapter">
+    <result column="id" jdbcType="VARCHAR" property="id" />
+    <result column="course" jdbcType="VARCHAR" property="course" />
+    <result column="num" jdbcType="INTEGER" property="num" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="video" jdbcType="VARCHAR" property="video" />
+    <result column="test" jdbcType="VARCHAR" property="test" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="base_column_list">
+    id,course,num,name,video,info,test,createTime
+  </sql>
+
+  <insert id="insert" parameterType="edu.qit.cloudclass.domain.Chapter">
+    insert into chapter (id, course, num, name, info,createTime)
+    values (#{chapter.id}, #{chapter.course}, #{chapter.num},#{chapter.name}, #{chapter.info},now())
+  </insert>
+
+  <delete id="delete">
+    delete from chapter where id = #{id}
+  </delete>
+
+  <select resultMap="base_result_map" id="chapterList" parameterType="String">
+    SELECT <include refid="base_column_list" />
+    from chapter
+    where course=#{course} and num is not null
+    order by num;
+  </select>
+
+  <select id="findMaxNum" resultType="java.lang.Integer">
+    select if(isnull(max(num)),0,max(num))
+    from chapter where course=#{course}
+  </select>
+
+  <select id="findCourseIdByPrimaryKey" resultType="java.lang.String">
+    select course from chapter where id = #{id};
+  </select>
+
+    <select id="findChapterByPrimaryKey" resultType="edu.qit.cloudclass.domain.Chapter">
+        select <include refid="base_column_list"/>
+        from chapter where id = #{id};
+    </select>
+
+  <update id="modify" parameterType="edu.qit.cloudclass.domain.Chapter">
+    update chapter
+    <trim prefix="set" suffixOverrides=",">
+      <if test="chapter.id != null">id = #{chapter.id},</if>
+      <if test="chapter.name != null">name = #{chapter.name},</if>
+      <if test="chapter.info != null">info = #{chapter.info},</if>
+    </trim>
+    where id = #{chapter.id};
+  </update>
+    <update id="updateNumAfterDelete">
+        update chapter set num = num - 1 where course = #{course} and num > #{num};
+    </update>
+  <update id="updateNumBeforeInsert">
+    update chapter set num = num + 1 where course = #{course} and num >= #{num}
+  </update>
+  <update id="updateVideoIdAfterUpload">
+    update chapter set video = #{video} where id = #{id};
+  </update>
+
+  <!--查询章节列表-->
+  <select id="getChapterSpinnerList" resultType="edu.qit.cloudclass.domain.ChapterSpinner" >
+    select id,num,name from chapter where course = #{course} and num is not null order by num asc ;
+  </select>
+
+</mapper>

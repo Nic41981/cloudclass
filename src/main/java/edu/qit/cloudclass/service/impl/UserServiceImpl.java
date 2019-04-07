@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Date;
 
 /**
  * @author nic
@@ -53,7 +52,7 @@ public class UserServiceImpl implements UserService {
             log.info("用户" + user.getId() + "登录成功!");
             if (autoLogin){
                 //将自动登录凭证写入数据库和用户信息
-                user.setTaken(registerAutoLogin(user).getDate());
+                user.setTaken(registerAutoLogin(user).getData());
             }
             return ServerResponse.createBySuccess("登录成功",user);
         }
@@ -66,7 +65,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.autoLogin(taken);
         if (user != null){
             log.info("用户" + user.getId() + "自动登录成功!");
-            return ServerResponse.createBySuccess("登录成功",user);
+            return ServerResponse.createBySuccess(user);
         }
         return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"登录失败");
     }
