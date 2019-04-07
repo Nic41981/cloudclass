@@ -3,7 +3,10 @@ package edu.qit.cloudclass.service.impl;
 import edu.qit.cloudclass.dao.ChapterMapper;
 import edu.qit.cloudclass.dao.CourseMapper;
 import edu.qit.cloudclass.dao.FileMapper;
+import edu.qit.cloudclass.domain.Chapter;
+import edu.qit.cloudclass.domain.Course;
 import edu.qit.cloudclass.domain.FileInfo;
+import edu.qit.cloudclass.service.FileService;
 import edu.qit.cloudclass.service.UploadService;
 import edu.qit.cloudclass.tool.ResponseCode;
 import edu.qit.cloudclass.tool.ServerResponse;
@@ -32,6 +35,7 @@ public class UploadServiceImpl implements UploadService {
     private final FileMapper fileMapper;
     private final ChapterMapper chapterMapper;
     private final CourseMapper courseMapper;
+    private final FileService fileService;
 
     @Override
     public ServerResponse uploadImage(MultipartFile multipartFile,String courseId) {
@@ -50,6 +54,12 @@ public class UploadServiceImpl implements UploadService {
             return securityCheckResult;
         }
         log.info("安全检查:PASS");
+        //读取图片信息
+        ServerResponse imageInfoResult = parserImageInfo(multipartFile);
+        if (!imageInfoResult.isSuccess()){
+            log.error("==========图片信息读取失败==========");
+            return imageInfoResult;
+        }
         //文件存储
         ServerResponse storageResult = storageFile(multipartFile,fileInfo,courseId);
         if (!storageResult.isSuccess()){
@@ -77,6 +87,12 @@ public class UploadServiceImpl implements UploadService {
             return securityCheckResult;
         }
         log.info("安全检查:PASS");
+        //读取视频信息
+        ServerResponse videoInfoResult = parserVideoInfo(multipartFile);
+        if (!videoInfoResult.isSuccess()){
+            log.error("==========图片信息读取失败==========");
+            return videoInfoResult;
+        }
         //文件存储
         ServerResponse storageResult = storageFile(multipartFile,fileInfo,chapterId);
         if (!storageResult.isSuccess()){
@@ -129,6 +145,27 @@ public class UploadServiceImpl implements UploadService {
         return ServerResponse.createBySuccess();
     }
 
+    @Override
+    public ServerResponse parserImageInfo(MultipartFile multipartFile) {
+        try {
+            BufferedImage image = ImageIO.read(multipartFile.getInputStream());
+            if (image == null || image.getHeight(null) <= 0 || image.getWidth(null) <= 0) {
+                return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "不支持的文件类型");
+            }
+            log.info("图片尺寸:" + image.getWidth(null) + "x" + image.getHeight(null));
+        } catch (Exception e){
+            log.error(e.getMessage(),e);
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "不支持的文件类型");
+        }
+        return ServerResponse.createBySuccess();
+    }
+
+    @Override
+    public ServerResponse parserVideoInfo(MultipartFile multipartFile) {
+        //TODO 视频信息读取待完善
+        return ServerResponse.createBySuccess();
+    }
+
     public ServerResponse storageFile(MultipartFile multipartFile,FileInfo fileInfo,String target){
         String path = FILE_BASE_PATH + File.separator
                 + fileInfo.getType() + File.separator
@@ -140,30 +177,26 @@ public class UploadServiceImpl implements UploadService {
             if (!dir.exists() && !dir.mkdirs()) {
                 return ServerResponse.createByError("上传失败");
             }
-            //检查文件冲突
-            if (file.exists()) {
-                return ServerResponse.createByError("上传失败");
-            }
             switch (fileInfo.getType()){
                 case FileInfo.IMAGE_FILE_TYPE: {
-                    //读取文件流
-                    BufferedImage image = ImageIO.read(multipartFile.getInputStream());
-                    if (image == null || image.getHeight(null) <= 0 || image.getWidth(null) <= 0) {
-                        return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "不支持的文件类型");
+                    //冲突处理
+                    Course course = courseMapper.findCourseByPrimaryKey(target);
+                    if (course.getImage() != null){
+                        fileService.associateDelete(course.getImage());
                     }
-                    log.info("图片尺寸:" + image.getWidth(null) + "x" + image.getHeight(null));
                     //存储文件
-                    if (!file.createNewFile()) {
-                        return ServerResponse.createByError("上传失败");
-                    }
-                    OutputStream os = new FileOutputStream(file);
-                    ImageIO.write(image, fileInfo.getSuffix(), os);
+                    multipartFile.transferTo(file);
                     //更新数据库
                     fileMapper.insert(fileInfo);
                     courseMapper.updateImageIdAfterUpdate(target, fileInfo.getId());
                     break;
                 }
                 case FileInfo.VIDEO_FILE_TYPE: {
+                    //冲突处理
+                    Chapter chapter = chapterMapper.findChapterByPrimaryKey(target);
+                    if (chapter.getVideo() != null){
+                        fileService.associateDelete(chapter.getVideo());
+                    }
                     //存储文件
                     multipartFile.transferTo(file);
                     //更新数据库
