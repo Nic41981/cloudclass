@@ -38,7 +38,7 @@ public class TCourseController {
 
 
     @RequestMapping(value = "/course",method = RequestMethod.POST)
-    public ServerResponse add(Course course,HttpSession session){
+    public ServerResponse add(@RequestBody(required = false) Course course,HttpSession session){
         //参数检查
         if (!Tool.checkParamsNotNull(course.getName())){
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
@@ -55,10 +55,6 @@ public class TCourseController {
 
     @RequestMapping(value = "/course/{courseId}",method = RequestMethod.PUT)
     public ServerResponse modify(@PathVariable("courseId") String courseId, @RequestBody(required = false) Course course, HttpSession session) {
-        //参数检查
-        if(!Tool.checkParamsNotNull(courseId)){
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
-        }
         //权限检查
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
         if (user == null){
@@ -66,7 +62,7 @@ public class TCourseController {
         }
         ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(),courseId);
         if (!permissionResult.isSuccess()){
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"权限不足");
+            return permissionResult;
         }
         course.setId(courseId);
         //修改课程
@@ -76,10 +72,6 @@ public class TCourseController {
 
     @RequestMapping(value = "/course/{courseId}",method = RequestMethod.DELETE)
     public ServerResponse deleteCourseById(@PathVariable("courseId") String courseId, HttpSession session){
-        //参数检查
-        if (Tool.checkParamsNotNull(courseId)){
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
-        }
         //权限检查
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
         if (user == null){
@@ -87,7 +79,7 @@ public class TCourseController {
         }
         ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(),courseId);
         if (!permissionResult.isSuccess()){
-            return ServerResponse.createByError("权限不足");
+            return permissionResult;
         }
         //删除课程
         return tCourseService.deleteCourseById(courseId);

@@ -20,6 +20,7 @@
     <select id="coursesList" resultType="edu.qit.cloudclass.domain.Course">
         select <include refid="base_column_list"/>
         from cloudclass.course where teacher = #{teacher}
+        order by createTime desc;
     </select>
 
     <update id="modify" parameterType="edu.qit.cloudclass.domain.Course">
