@@ -12,7 +12,7 @@ public class Chapter {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String course;
 
-    private Integer num;
+    private int num;
 
     private String name;
 

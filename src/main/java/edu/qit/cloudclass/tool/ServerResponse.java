@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 //TODO 日期格式化
 //TODO null没有正常忽略
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 public class ServerResponse<T> implements Serializable {
     private int status;

@@ -30,8 +30,9 @@
     order by num;
   </select>
 
-  <select id="findNextNum" resultType="java.lang.Integer">
-    select max(num)+1 from chapter where course=#{course}
+  <select id="findMaxNum" resultType="java.lang.Integer">
+    select if(isnull(max(num)),0,max(num))
+    from chapter where course=#{course}
   </select>
 
   <select id="findCourseIdByPrimaryKey" resultType="java.lang.String">

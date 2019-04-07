@@ -145,30 +145,37 @@ public class UploadServiceImpl implements UploadService {
                 return ServerResponse.createByError("上传失败");
             }
             switch (fileInfo.getType()){
-                case FileInfo.IMAGE_FILE_TYPE:
+                case FileInfo.IMAGE_FILE_TYPE: {
                     //读取文件流
                     BufferedImage image = ImageIO.read(multipartFile.getInputStream());
-                    if (image == null || image.getHeight(null) <= 0 || image.getWidth(null) <= 0){
-                        return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"不支持的文件类型");
+                    if (image == null || image.getHeight(null) <= 0 || image.getWidth(null) <= 0) {
+                        return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "不支持的文件类型");
                     }
                     log.info("图片尺寸:" + image.getWidth(null) + "x" + image.getHeight(null));
                     //存储文件
-                    if (!file.createNewFile()){
+                    if (!file.createNewFile()) {
                         return ServerResponse.createByError("上传失败");
                     }
                     OutputStream os = new FileOutputStream(file);
                     ImageIO.write(image, fileInfo.getSuffix(), os);
                     //更新数据库
                     fileMapper.insert(fileInfo);
-                    courseMapper.updateImageIdAfterUpdate(target,fileInfo.getId());
-                case FileInfo.VIDEO_FILE_TYPE:
+                    courseMapper.updateImageIdAfterUpdate(target, fileInfo.getId());
+                    break;
+                }
+                case FileInfo.VIDEO_FILE_TYPE: {
                     //存储文件
                     multipartFile.transferTo(file);
                     //更新数据库
                     fileMapper.insert(fileInfo);
-                    chapterMapper.updateVideoIdAfterUpload(target,fileInfo.getId());
+                    chapterMapper.updateVideoIdAfterUpload(target, fileInfo.getId());
+                    break;
+                }
+                default: {
+                    return ServerResponse.createByError("上传失败");
+                }
             }
-            return ServerResponse.createBySuccess("上传成功");
+            return ServerResponse.createBySuccessMsg("上传成功");
         }catch (Exception e){
             log.error(e.getMessage(),e);
         }

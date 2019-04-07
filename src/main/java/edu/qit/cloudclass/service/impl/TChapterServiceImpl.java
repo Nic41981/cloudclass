@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Slf4j
@@ -30,9 +31,10 @@ public class TChapterServiceImpl implements TChapterService {
     @Override
     public ServerResponse chapter(Chapter chapter) {
         chapter.setId(Tool.uuid());
-        if (chapter.getNum() == 0) {
+        int maxNum = chapterMapper.findMaxNum(chapter.getCourse());
+        if (chapter.getNum() == 0 || chapter.getNum() > maxNum) {
             //追加章节-章节序号递增
-            chapter.setNum(chapterMapper.findNextNum(chapter.getCourse()));
+            chapter.setNum(maxNum + 1);
         }
         else {
             //指定章节-后面的章节序号递增
@@ -58,15 +60,17 @@ public class TChapterServiceImpl implements TChapterService {
 
     @Override
     public ServerResponse chapterDelete(String courseId,String chapterId) {
+        log.info("==========删除章节开始==========");
         //查找记录
         Chapter chapter = chapterMapper.findChapterByPrimaryKey(chapterId);
         if (chapter == null){
+            log.error("==========获取章节记录失败==========");
             return ServerResponse.createByError("删除失败");
         }
         //删除记录
         log.info("删除章节:" + chapter.toString());
         if (chapterMapper.delete(chapterId) == 0){
-            log.error("删除失败");
+            log.error("==========删除章节记录失败==========");
             return ServerResponse.createByError("删除失败");
         }
         chapterMapper.updateNumAfterDelete(chapter.getNum(),courseId);
@@ -78,6 +82,7 @@ public class TChapterServiceImpl implements TChapterService {
             log.info("习题级联删除未完成");
             //TODO 删除章节习题
         }
+        log.info("==========删除章节结束==========");
         return ServerResponse.createBySuccessMsg("删除成功");
     }
 

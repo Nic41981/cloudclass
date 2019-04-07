@@ -20,7 +20,7 @@ public interface ChapterMapper {
 
     Chapter findChapterByPrimaryKey(@Param("id") String id);
 
-    int findNextNum(@Param("course") String course);
+    int findMaxNum(@Param("course") String course);
 
     int updateNumAfterDelete(@Param("num") int num,@Param("course")String course);
 
