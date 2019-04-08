@@ -1,7 +1,9 @@
 package edu.qit.cloudclass.dao;
 
 import edu.qit.cloudclass.domain.Course;
+import edu.qit.cloudclass.domain.Study;
 import edu.qit.cloudclass.domain.spinner.CourseSpinner;
+import edu.qit.cloudclass.domain.spinner.SCourseSpinner;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -41,4 +43,24 @@ public interface CourseMapper {
      * 董悦
      */
     int updateImageIdAfterUpdate(@Param("id") String id,@Param("image") String image);
+
+    /**
+     *李广源
+     */
+    List<SCourseSpinner> getSCourseList(@Param("studentId") String studentId);
+
+    /**
+     *李广源
+     */
+    int insertScourseByCourseIdAndStudentId(Study study);
+
+    /**
+     *李广源
+     */
+    int checkStudyByCourseIdAndStudentId(Study study);
+
+    /**
+     *李广源
+     */
+    int deletScourseByCourseIdAndStudentId(Study study);
 }
