@@ -1,6 +1,6 @@
 package edu.qit.cloudclass.dao;
 
-import edu.qit.cloudclass.domain.ExamSpinner;
+import edu.qit.cloudclass.domain.spinner.ExamSpinner;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

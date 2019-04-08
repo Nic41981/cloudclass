@@ -1,10 +1,9 @@
 package edu.qit.cloudclass.dao;
 
 import edu.qit.cloudclass.domain.Course;
-import edu.qit.cloudclass.domain.CourseSpinner;
+import edu.qit.cloudclass.domain.spinner.CourseSpinner;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 

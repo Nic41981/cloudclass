@@ -64,7 +64,7 @@
   </update>
 
   <!--查询章节列表-->
-  <select id="getChapterSpinnerList" resultType="edu.qit.cloudclass.domain.ChapterSpinner" >
+  <select id="getChapterSpinnerList" resultType="edu.qit.cloudclass.domain.spinner.ChapterSpinner" >
     select id,num,name from chapter where course = #{course} and num is not null order by num asc ;
   </select>
 

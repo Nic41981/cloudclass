@@ -12,7 +12,6 @@ import java.util.Date;
 public class Study {
     private int id;
     private String student;
-    private String no;
     private String course;
     private Date createTime;
 

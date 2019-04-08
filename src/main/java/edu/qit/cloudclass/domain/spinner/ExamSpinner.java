@@ -1,4 +1,4 @@
-package edu.qit.cloudclass.domain;
+package edu.qit.cloudclass.domain.spinner;
 
 import lombok.Data;
 

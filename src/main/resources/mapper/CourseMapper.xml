@@ -49,7 +49,7 @@
     </insert>
 
     <!--查询课程列表-->
-    <select id="getCourseSpinnerList" resultType="edu.qit.cloudclass.domain.CourseSpinner">
+    <select id="getCourseSpinnerList" resultType="edu.qit.cloudclass.domain.spinner.CourseSpinner">
         select id,name from course;
     </select>
     <select id="checkCourseExist" resultType="java.lang.Integer">

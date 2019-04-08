@@ -1,6 +1,6 @@
 package edu.qit.cloudclass.service;
 
-import edu.qit.cloudclass.domain.CourseSpinner;
+import edu.qit.cloudclass.domain.spinner.CourseSpinner;
 import edu.qit.cloudclass.tool.ServerResponse;
 
 import java.util.List;
