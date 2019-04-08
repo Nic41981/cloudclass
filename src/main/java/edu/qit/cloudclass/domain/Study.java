@@ -14,6 +14,4 @@ public class Study {
     private String student;
     private String course;
     private Date createTime;
-
-
 }
