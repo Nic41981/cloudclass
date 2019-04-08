@@ -40,7 +40,7 @@ public class TCourseController {
     @RequestMapping(value = "/course",method = RequestMethod.POST)
     public ServerResponse add(@RequestBody(required = false) Course course,HttpSession session){
         //参数检查
-        if (!Tool.checkParamsNotNull(course.getName())){
+        if (course == null || !Tool.checkParamsNotNull(course.getName())){
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
         }
         //权限判断
@@ -55,6 +55,10 @@ public class TCourseController {
 
     @RequestMapping(value = "/course/{courseId}",method = RequestMethod.PUT)
     public ServerResponse modify(@PathVariable("courseId") String courseId, @RequestBody(required = false) Course course, HttpSession session) {
+        //参数检查
+        if (course == null){
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+        }
         //权限检查
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
         if (user == null){

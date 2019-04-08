@@ -46,7 +46,7 @@ public class TChapterController {
     @RequestMapping(value = "/chapter",method = RequestMethod.POST)
     public ServerResponse chapter(@RequestBody(required = false) Chapter chapter,HttpSession session){
         //参数检查
-        if (!Tool.checkParamsNotNull(chapter.getName(),chapter.getInfo(),chapter.getCourse())){
+        if (chapter == null || !Tool.checkParamsNotNull(chapter.getName(),chapter.getInfo(),chapter.getCourse())){
             log.warn(chapter.toString());
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
         }
@@ -66,7 +66,7 @@ public class TChapterController {
     @RequestMapping(value = "/chapter/{chapterId}",method = RequestMethod.PUT)
     public ServerResponse chapterModify(@PathVariable("chapterId") String chapterId,@RequestBody(required = false) Chapter chapter,HttpSession session){
         //参数检查
-        if (!Tool.checkParamsNotNull(chapterId,chapter.getCourse())){
+        if (chapter == null || !Tool.checkParamsNotNull(chapterId,chapter.getCourse())){
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
         }
         //权限判断

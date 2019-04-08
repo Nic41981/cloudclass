@@ -32,11 +32,8 @@ public class UserController {
 
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public ServerResponse register(@RequestBody(required = false) User user){
-        //接收并检查参数
-        if (user == null){
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
-        }
-        if (!Tool.checkParamsNotNull(user.getName(),user.getPassword(),user.getEmail())) {
+        //参数检查
+        if (user == null || !Tool.checkParamsNotNull(user.getName(),user.getPassword(),user.getEmail())){
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
         }
         //调用service方法注册信息
