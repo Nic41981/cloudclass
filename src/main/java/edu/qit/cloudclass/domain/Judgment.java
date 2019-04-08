@@ -8,7 +8,9 @@ import lombok.Data;
 
 @Data
 public class Judgment {
+    private int id;
+    private String exam;
     private String question;
-    private boolean answer;
     private int score;
+    private int answer;
 }
