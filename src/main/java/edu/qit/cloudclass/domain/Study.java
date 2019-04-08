@@ -15,4 +15,6 @@ public class Study {
     private String no;
     private String course;
     private Date createTime;
+
+
 }
