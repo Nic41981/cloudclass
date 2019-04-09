@@ -7,7 +7,7 @@
     <result column="num" jdbcType="INTEGER" property="num" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="video" jdbcType="VARCHAR" property="video" />
-    <result column="test" jdbcType="VARCHAR" property="test" />
+    <result column="test" jdbcType="VARCHAR" property="chapterExam" />
     <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="base_column_list">
@@ -26,8 +26,7 @@
   <select resultMap="base_result_map" id="chapterList" parameterType="String">
     SELECT <include refid="base_column_list" />
     from chapter
-    where course=#{course} and num is not null
-    order by num;
+    where course=#{course} order by num;
   </select>
 
   <select id="findMaxNum" resultType="java.lang.Integer">
@@ -62,10 +61,13 @@
   <update id="updateVideoIdAfterUpload">
     update chapter set video = #{video} where id = #{id};
   </update>
+  <update id="updateChapterExamAfterUpload">
+    update chapter set chapterExam = #{chapterExam} where id = #{id};
+  </update>
 
   <!--查询章节列表-->
   <select id="getChapterSpinnerList" resultType="edu.qit.cloudclass.domain.spinner.ChapterSpinner" >
-    select id,num,name from chapter where course = #{course} and num is not null order by num asc ;
+    select id,num,name from chapter where course = #{course} order by num asc ;
   </select>
 
 <!-- 查询课程章节列表（播放页列表数据） 李九龙-->

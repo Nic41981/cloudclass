@@ -78,7 +78,7 @@ public class TChapterServiceImpl implements TChapterService {
         if (chapter.getVideo() != null){
             fileService.associateDelete(chapter.getVideo());
         }
-        if (chapter.getTest() != null){
+        if (chapter.getChapterExam() != null){
             log.info("习题级联删除未完成");
             //TODO 删除章节习题
         }
@@ -98,7 +98,7 @@ public class TChapterServiceImpl implements TChapterService {
             if (chapter.getVideo() != null) {
                 fileService.associateDelete(chapter.getVideo());
             }
-            if (chapter.getTest() != null) {
+            if (chapter.getChapterExam() != null) {
                 log.info("习题级联删除未完成");
                 //TODO 删除章节习题
             }

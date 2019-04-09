@@ -45,4 +45,6 @@ public interface ChapterMapper {
      * 李九龙
      */
     List<Chapter> CourseChapterList(@Param("course") String course);
+
+    int updateChapterExamAfterUpload(@Param("id") String id,@Param("chapterExam") String chapterExam);
 }

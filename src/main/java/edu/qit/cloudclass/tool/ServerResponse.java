@@ -1,6 +1,7 @@
 package edu.qit.cloudclass.tool;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
@@ -11,9 +12,6 @@ import java.io.Serializable;
  * @version 1.0
  */
 
-//TODO 日期格式化
-//TODO null没有正常忽略
-@JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 public class ServerResponse<T> implements Serializable {
     private int status;

@@ -18,4 +18,7 @@ public class Course {
 
     @JsonIgnore
     private Date createTime;
+
+    @JsonIgnore
+    private String finalExam;
 }

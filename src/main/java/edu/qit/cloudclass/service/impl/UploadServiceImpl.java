@@ -19,8 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
+
 import static edu.qit.cloudclass.service.impl.FileServiceImpl.FILE_BASE_PATH;
 
 /**
@@ -188,7 +187,7 @@ public class UploadServiceImpl implements UploadService {
                     multipartFile.transferTo(file);
                     //更新数据库
                     fileMapper.insert(fileInfo);
-                    courseMapper.updateImageIdAfterUpdate(target, fileInfo.getId());
+                    courseMapper.updateImageIdAfterUpload(target, fileInfo.getId());
                     break;
                 }
                 case FileInfo.VIDEO_FILE_TYPE: {

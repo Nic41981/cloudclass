@@ -5,7 +5,7 @@
 <mapper namespace="edu.qit.cloudclass.dao.CourseMapper">
 
     <sql id="base_column_list">
-        id,name,image,createTime,teacher,tag
+        id,name,image,createTime,teacher,tag,finalExam
     </sql>
 
     <select id="findTeacherIdByPrimaryKey" resultType="java.lang.String">
@@ -43,8 +43,11 @@
         where id = #{course.id}
     </update>
 
-    <update id="updateImageIdAfterUpdate">
+    <update id="updateImageIdAfterUpload">
         update course set image = #{image} where id = #{id};
+    </update>
+    <update id="updateFinalExamAfterUpload">
+        update course set finalExam = #{finalExam} where id = #{id};
     </update>
 
     <!-- 根据id删除课程信息 -->
@@ -64,6 +67,9 @@
     </select>
     <select id="checkCourseExist" resultType="java.lang.Integer">
         select count(1) from course where id = #{id};
+    </select>
+    <select id="findFinalExamByPrimaryKey" resultType="java.lang.String">
+        select finalExam from course where id = #{id};
     </select>
 
     <!--查询学生已选课程列表-->

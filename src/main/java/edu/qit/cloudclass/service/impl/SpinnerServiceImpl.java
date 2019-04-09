@@ -51,6 +51,13 @@ public class SpinnerServiceImpl implements SpinnerService {
             return existResult;
         }
         List<ExamSpinner> examinationList = chapterExamMapper.getExamSpinnerList(courseId);
+        String finalExamId = courseMapper.findFinalExamByPrimaryKey(courseId);
+        if (finalExamId != null) {
+            ExamSpinner finalExam = new ExamSpinner();
+            finalExam.setId(finalExamId);
+            finalExam.setName("期末考试");
+            examinationList.add(finalExam);
+        }
         return ServerResponse.createBySuccess("查询成功",examinationList);
     }
 

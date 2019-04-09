@@ -20,7 +20,7 @@ public class Chapter {
 
     private String video;
 
-    private String test;
+    private String chapterExam;
 
     @JsonIgnore
     private Date createTime;

@@ -6,7 +6,7 @@
 
     <select id="getExamSpinnerList" resultType="edu.qit.cloudclass.domain.spinner.ExamSpinner">
         select exam.id,exam.name from chapter,exam
-        where chapter.test = exam.id and chapter.course = #{course}
+        where chapter.chapterExam = exam.id and chapter.course = #{course}
         order by if(isnull(chapter.num),1,0),num;
     </select>
 </mapper>

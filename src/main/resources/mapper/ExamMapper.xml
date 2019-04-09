@@ -4,7 +4,18 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.qit.cloudclass.dao.ExamMapper">
     <sql id="base_column_list">
-        id,course,name,createTime,startTime,stopTime,timeLength
+        id,course,name,createTime,startTime,stopTime,duration
     </sql>
+    <insert id="insert" parameterType="edu.qit.cloudclass.domain.Exam">
+        insert into exam(id,course, name, createTime, startTime, stopTime, duration)
+        values (#{exam.id},#{exam.course},#{exam.name},now(),#{exam.startTime},#{exam.stopTime},#{exam.duration});
+    </insert>
+    <delete id="delete">
+        delete from exam where id = #{id};
+    </delete>
+    <select id="findExamByPrimaryKey" resultType="edu.qit.cloudclass.domain.Exam">
+        select <include refid="base_column_list"/>
+        from exam where id = #{id};
+    </select>
 
 </mapper>

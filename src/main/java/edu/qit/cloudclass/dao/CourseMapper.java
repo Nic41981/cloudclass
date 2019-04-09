@@ -43,7 +43,17 @@ public interface CourseMapper {
     /**
      * 董悦
      */
-    int updateImageIdAfterUpdate(@Param("id") String id,@Param("image") String image);
+    int updateImageIdAfterUpload(@Param("id") String id, @Param("image") String image);
+
+    /**
+     * 董悦
+     */
+    String findFinalExamByPrimaryKey(@Param("id")String id);
+
+    /**
+     * 董悦
+     */
+    int updateFinalExamAfterUpload(@Param("id")String id,@Param("finalExam")String finalExam);
 
     /**
      *李广源
