@@ -24,6 +24,7 @@ public interface CourseMapper {
 
     Course findCourseByPrimaryKey(@Param("id") String id);
 
+    List<Course> TagList(@Param("tag") String tag);
     /**
      * 王恺
      */
@@ -63,4 +64,5 @@ public interface CourseMapper {
      *李广源
      */
     int deletScourseByCourseIdAndStudentId(Study study);
+
 }

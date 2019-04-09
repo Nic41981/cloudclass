@@ -11,7 +11,7 @@
     <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="base_column_list">
-    id,course,num,name,video,info,test,createTime
+    id,course,num,name,video,info,chapterExam,createTime
   </sql>
 
   <insert id="insert" parameterType="edu.qit.cloudclass.domain.Chapter">
@@ -68,4 +68,10 @@
     select id,num,name from chapter where course = #{course} and num is not null order by num asc ;
   </select>
 
+<!-- 查询课程章节列表（播放页列表数据） 李九龙-->
+  <select id="CourseChapterList" resultType="edu.qit.cloudclass.domain.Chapter">
+    select <include refid="base_column_list"/>
+    from cloudclass.chapter where course = #{course}
+    order by createTime desc;
+  </select>
 </mapper>

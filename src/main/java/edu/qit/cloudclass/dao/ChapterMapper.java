@@ -40,4 +40,9 @@ public interface ChapterMapper {
      * 王恺
      */
     List<ChapterSpinner> getChapterSpinnerList(@Param("course") String course);
+
+    /**
+     * 李九龙
+     */
+    List<Chapter> CourseChapterList(@Param("course") String course);
 }

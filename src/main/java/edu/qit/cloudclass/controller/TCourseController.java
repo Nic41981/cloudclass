@@ -1,6 +1,5 @@
 package edu.qit.cloudclass.controller;
 
-import edu.qit.cloudclass.dao.CourseMapper;
 import edu.qit.cloudclass.domain.Course;
 
 import edu.qit.cloudclass.domain.User;
