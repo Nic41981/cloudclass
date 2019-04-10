@@ -8,7 +8,6 @@ import java.util.Date;
 public class Exam {
     @JsonIgnore
     protected String id;
-    @JsonIgnore
     protected String course;
     protected String name;
     @JsonIgnore
@@ -16,4 +15,9 @@ public class Exam {
     protected Date startTime;
     protected Date stopTime;
     protected int duration;
+
+    public boolean isSubmittable(){
+        Date now = new Date();
+        return now.after(this.startTime) && now.before(this.stopTime);
+    }
 }

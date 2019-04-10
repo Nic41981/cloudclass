@@ -1,5 +1,6 @@
 package edu.qit.cloudclass.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.util.Date;
@@ -10,9 +11,16 @@ import java.util.Date;
  */
 @Data
 public class Score {
+    @JsonIgnore
     private int id;
-    private String study;
+
+    @JsonIgnore
+    private int study;
+
     private String exam;
+
+    @JsonIgnore
     private Date createTime;
+
     private int score;
 }

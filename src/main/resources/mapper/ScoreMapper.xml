@@ -6,4 +6,19 @@
     <sql id="base_column_list">
         id,study,exam,createTime,score
     </sql>
+    <insert id="insert">
+        insert into score(study, exam, createTime, score)
+        values(#{score.study},#{score.exam},now(),#{score.score})
+    </insert>
+    <delete id="delete">
+        delete from score where id = #{id};
+    </delete>
+    <select id="findScoreByPrimaryKey" resultType="edu.qit.cloudclass.domain.Score">
+        select <include refid="base_column_list"/>
+        from score where id = #{id};
+    </select>
+    <select id="findScoreByStudyAndExam" resultType="edu.qit.cloudclass.domain.Score">
+        select <include refid="base_column_list"/>
+        from score where study = #{study} and exam = #{exam};
+    </select>
 </mapper>

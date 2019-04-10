@@ -1,6 +1,7 @@
 package edu.qit.cloudclass.service.impl;
 
 import edu.qit.cloudclass.dao.QuestionMapper;
+import edu.qit.cloudclass.domain.Answer;
 import edu.qit.cloudclass.domain.Question;
 import edu.qit.cloudclass.service.QuestionService;
 import edu.qit.cloudclass.tool.ServerResponse;
@@ -43,6 +44,12 @@ public class QuestionServiceImpl implements QuestionService {
             question.decodeOption();
         }
         return questionList;
+    }
+
+    @Override
+    public List<Answer> getAnswerListByType(String examId, String type) {
+        List<Answer> answerList = questionMapper.selectAnswerListByExamAndType(examId,type);
+        return answerList;
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.*;
  */
 @Slf4j
 @Data
-public class Question {
+public class Question implements Comparable<Question> {
     public static final String CHOICE_QUESTION = "choice";
     public static final String JUDGEMENT_QUESTION = "judgement";
 
@@ -70,4 +70,10 @@ public class Question {
             Collections.shuffle(optionList);
         }
     }
+
+    @Override
+    public int compareTo(Question o) {
+        return this.id > o.id ? 1 : -1;
+    }
+
 }

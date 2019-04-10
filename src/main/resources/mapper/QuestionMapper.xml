@@ -32,4 +32,8 @@
         select <include refid="base_column_list"/>
         from question where exam = #{exam} and type = #{type};
     </select>
+    <select id="selectAnswerListByExamAndType" resultType="edu.qit.cloudclass.domain.Answer">
+        select id,answer from question
+        where exam = #{exam} and type = #{type};
+    </select>
 </mapper>

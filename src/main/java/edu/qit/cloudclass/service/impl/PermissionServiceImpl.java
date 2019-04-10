@@ -4,7 +4,6 @@ import edu.qit.cloudclass.dao.ChapterMapper;
 import edu.qit.cloudclass.dao.CourseMapper;
 import edu.qit.cloudclass.dao.ExamMapper;
 import edu.qit.cloudclass.dao.StudyMapper;
-import edu.qit.cloudclass.domain.Course;
 import edu.qit.cloudclass.domain.Exam;
 import edu.qit.cloudclass.domain.Study;
 import edu.qit.cloudclass.service.PermissionService;
@@ -13,6 +12,8 @@ import edu.qit.cloudclass.tool.ServerResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 /**
  * @author nic
@@ -48,27 +49,4 @@ public class PermissionServiceImpl implements PermissionService {
         }
         return checkCourseOwnerPermission(userId,targetCourse);
     }
-
-    @Override
-    public ServerResponse checkExamReadPermission(String userId, String examId) {
-        Exam exam = examMapper.findExamByPrimaryKey(examId);
-        if (exam == null){
-            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"考试不存在");
-        }
-        //判断是否是学生
-        Study study = studyMapper.findStudyByCourseAndStudent(exam.getCourse(),userId);
-        if (study == null){
-            //判断是否是教师
-            Course course = courseMapper.findCourseByPrimaryKey(exam.getCourse());
-            if (course == null){
-                return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"课程不存在");
-            }
-            if (userId.equals(course.getTeacher())) {
-                return ServerResponse.createBySuccess();
-            }
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "权限不足");
-        }
-        return ServerResponse.createBySuccess();
-    }
-
 }
