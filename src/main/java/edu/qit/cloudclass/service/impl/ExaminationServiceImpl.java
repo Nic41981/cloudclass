@@ -136,11 +136,11 @@ public class ExaminationServiceImpl implements ExaminationService {
         List<Answer> tChoiceList = questionService.getAnswerListByType(answer.getExam(),Question.CHOICE_QUESTION);
         List<Answer> sChoiceList = answer.getChoiceList();
         int choiceScore = countScore(tChoiceList,sChoiceList);
-        log.info("选择题:" + choiceScore);
+        log.info("选择题总得分:" + choiceScore);
         List<Answer> tJudgementList = questionService.getAnswerListByType(answer.getExam(),Question.JUDGEMENT_QUESTION);
         List<Answer> sJudgementList = answer.getJudgementList();
         int judgementScore = countScore(tJudgementList,sJudgementList);
-        log.info("判断题:" + judgementScore);
+        log.info("判断题总得分:" + judgementScore);
         log.info("==========结算结束==========");
         //级联删除记录
         Score oldScore = scoreMapper.findScoreByStudyAndExam(study.getId(),exam.getId());
@@ -152,6 +152,7 @@ public class ExaminationServiceImpl implements ExaminationService {
         score.setStudy(study.getId());
         score.setExam(answer.getExam());
         score.setScore(choiceScore + judgementScore);
+        log.info("插入成绩:" + score);
         if (scoreMapper.insert(score) == 0){
             return ServerResponse.createByError("提交失败");
         }
@@ -191,7 +192,7 @@ public class ExaminationServiceImpl implements ExaminationService {
         if (study == null){
             return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"未参加学习");
         }
-        Score score = scoreMapper.findScoreByStudyAndExam(study.getId(),chapter.getCourse());
+        Score score = scoreMapper.findScoreByStudyAndExam(study.getId(),chapter.getChapterExam());
         if (score == null){
             return ServerResponse.createByError("暂无成绩");
         }
@@ -222,6 +223,7 @@ public class ExaminationServiceImpl implements ExaminationService {
             if (tAnswerList.contains(sAnswer)){
                 int index = tAnswerList.indexOf(sAnswer);
                 Answer tAnswer = tAnswerList.get(index);
+                log.info("题目ID:" + sAnswer.getId() + ",总分:" + tAnswer.getScore() + ",标准答案:" + tAnswer.getAnswer() + ",学生答案:" + sAnswer.getAnswer());
                 if (tAnswer.getAnswer().equals(sAnswer.getAnswer())){
                     score += tAnswer.getScore();
                 }

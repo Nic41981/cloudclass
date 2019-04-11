@@ -25,8 +25,6 @@ public class PermissionServiceImpl implements PermissionService {
 
     private final CourseMapper courseMapper;
     private final ChapterMapper chapterMapper;
-    private final ExamMapper examMapper;
-    private final StudyMapper studyMapper;
 
     @Override
     public ServerResponse checkCourseOwnerPermission(String userId, String courseId) {

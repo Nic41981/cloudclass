@@ -7,7 +7,7 @@
     <result column="num" jdbcType="INTEGER" property="num" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="video" jdbcType="VARCHAR" property="video" />
-    <result column="test" jdbcType="VARCHAR" property="chapterExam" />
+    <result column="chapterExam" jdbcType="VARCHAR" property="chapterExam" />
     <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="base_column_list">

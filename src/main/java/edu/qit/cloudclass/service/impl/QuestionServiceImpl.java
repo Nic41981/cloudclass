@@ -48,8 +48,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<Answer> getAnswerListByType(String examId, String type) {
-        List<Answer> answerList = questionMapper.selectAnswerListByExamAndType(examId,type);
-        return answerList;
+        return questionMapper.selectAnswerListByExamAndType(examId,type);
     }
 
     @Override

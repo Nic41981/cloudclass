@@ -33,7 +33,7 @@ public class ExamComplex extends Exam {
     }
 
     public boolean isCompleteExamination(){
-        if (Tool.checkParamsNotNull(this.name,this.course)){
+        if (!Tool.checkParamsNotNull(this.name,this.course)){
             return false;
         }
         if (this.startTime == null || this.stopTime == null || this.duration == 0){
