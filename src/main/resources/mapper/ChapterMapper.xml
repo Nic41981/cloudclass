@@ -71,9 +71,9 @@
   </select>
 
 <!-- 查询课程章节列表（播放页列表数据） 李九龙-->
-  <select id="CourseChapterList" resultType="edu.qit.cloudclass.domain.Chapter">
+  <select id="courseChapterList" resultType="edu.qit.cloudclass.domain.Chapter">
     select <include refid="base_column_list"/>
-    from cloudclass.chapter where course = #{course}
-    order by createTime desc;
+    from chapter where course = #{course}
+    order by num;
   </select>
 </mapper>

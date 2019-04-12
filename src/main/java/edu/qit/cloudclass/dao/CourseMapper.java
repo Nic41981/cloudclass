@@ -24,7 +24,7 @@ public interface CourseMapper {
 
     Course findCourseByPrimaryKey(@Param("id") String id);
 
-    List<Course> TagList(@Param("tag") String tag);
+    List<Course> tagList(@Param("tag") String tag);
     /**
      * 王恺
      */

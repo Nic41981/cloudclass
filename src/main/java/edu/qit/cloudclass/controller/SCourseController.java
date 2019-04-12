@@ -16,8 +16,7 @@ import javax.servlet.http.HttpSession;
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SCourseController {
-    @Autowired
-    private SCourseService sCourseService;
+    private final SCourseService sCourseService;
 
     @RequestMapping(value = "/course/list", method = RequestMethod.GET)
     public ServerResponse scourseList(HttpSession session) {

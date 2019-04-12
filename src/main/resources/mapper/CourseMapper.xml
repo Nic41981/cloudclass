@@ -24,10 +24,9 @@
     </select>
 
     <!-- 第二阶段 -->
-    <select id="TagList" resultType="edu.qit.cloudclass.domain.Course">
+    <select id="tagList" resultType="edu.qit.cloudclass.domain.Course">
         select <include refid="base_column_list"/>
-        from cloudclass.course where tag = #{tag}
-        order by createTime desc;
+        from cloudclass.course where tag like '%${tag}%';
     </select>
 
 

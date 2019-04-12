@@ -109,10 +109,4 @@ public class TChapterServiceImpl implements TChapterService {
         }
         return ServerResponse.createBySuccess();
     }
-
-    @Override
-    public ServerResponse<List<Chapter>> CourseChapterList(String course) {
-        List<Chapter> list =  chapterMapper.CourseChapterList(course);
-        return ServerResponse.createBySuccess("查询成功",list);
-    }
 }

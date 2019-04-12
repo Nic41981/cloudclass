@@ -11,8 +11,4 @@ public interface TChapterService {
     ServerResponse chapterModify(Chapter chapter);
     ServerResponse chapterDelete(String courseId,String chapterId);
     ServerResponse associateDelete(String courseId);
-    /**
-     * 李九龙
-     */
-    ServerResponse<List<Chapter>> CourseChapterList(String course);
 }

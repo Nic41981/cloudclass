@@ -106,10 +106,4 @@ public class TChapterController {
         //删除章节
         return TChapterService.chapterDelete(courseId,chapterId);
     }
-
-    @RequestMapping(value = "course/chapter/list/{course}",method = RequestMethod.GET)
-    public ServerResponse getChaperList(@PathVariable("course") String course,@RequestBody(required = false) Chapter chapter){
-        //查询课程
-        return TChapterService.CourseChapterList(course);
-    }
 }

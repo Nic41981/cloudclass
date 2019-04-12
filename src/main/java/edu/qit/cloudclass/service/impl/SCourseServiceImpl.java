@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-@Slf4j
 public class SCourseServiceImpl implements SCourseService {
     private final CourseMapper courseMapper;
     @Override

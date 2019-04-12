@@ -2,10 +2,6 @@ package edu.qit.cloudclass.service.impl;
 
 import edu.qit.cloudclass.dao.ChapterMapper;
 import edu.qit.cloudclass.dao.CourseMapper;
-import edu.qit.cloudclass.dao.ExamMapper;
-import edu.qit.cloudclass.dao.StudyMapper;
-import edu.qit.cloudclass.domain.Exam;
-import edu.qit.cloudclass.domain.Study;
 import edu.qit.cloudclass.service.PermissionService;
 import edu.qit.cloudclass.tool.ResponseCode;
 import edu.qit.cloudclass.tool.ServerResponse;
