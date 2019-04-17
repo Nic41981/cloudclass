@@ -3,9 +3,12 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.qit.cloudclass.dao.ScoreMapper">
+
     <sql id="base_column_list">
         id,study,exam,createTime,score
     </sql>
+
+
     <insert id="insert">
         insert into score(study, exam, createTime, score)
         values(#{score.study},#{score.exam},now(),#{score.score})
@@ -21,4 +24,10 @@
         select <include refid="base_column_list"/>
         from score where study = #{study} and exam = #{exam};
     </select>
+
+    <select id="getScoreList" resultType="edu.qit.cloudclass.domain.ScoreItem">
+        select user.name,score.score from user,score,study where user.id = study.student and study.id = score.study and score.exam = #{exam};
+    </select>
+
+
 </mapper>

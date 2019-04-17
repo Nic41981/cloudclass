@@ -10,6 +10,7 @@
     <result column="chapterExam" jdbcType="VARCHAR" property="chapterExam" />
     <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
+
   <sql id="base_column_list">
     id,course,num,name,video,info,chapterExam,createTime
   </sql>
@@ -52,15 +53,19 @@
     </trim>
     where id = #{chapter.id};
   </update>
+
     <update id="updateNumAfterDelete">
         update chapter set num = num - 1 where course = #{course} and num > #{num};
     </update>
+
   <update id="updateNumBeforeInsert">
     update chapter set num = num + 1 where course = #{course} and num >= #{num}
   </update>
+
   <update id="updateVideoIdAfterUpload">
     update chapter set video = #{video} where id = #{id};
   </update>
+
   <update id="updateChapterExamAfterUpload">
     update chapter set chapterExam = #{chapterExam} where id = #{id};
   </update>
@@ -76,4 +81,5 @@
     from chapter where course = #{course}
     order by num;
   </select>
+
 </mapper>
