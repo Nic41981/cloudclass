@@ -25,22 +25,22 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     public ServerResponse checkCourseOwnerPermission(String userId, String courseId) {
         String teacher = courseMapper.findTeacherIdByPrimaryKey(courseId);
-        if (teacher == null){
-            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"课程不存在");
+        if (teacher == null) {
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "课程不存在");
         }
 
-        if (teacher.equals(userId)){
+        if (teacher.equals(userId)) {
             return ServerResponse.createBySuccess();
         }
-        return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"权限不足");
+        return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "权限不足");
     }
 
     @Override
-    public ServerResponse checkChapterOwnerPermission(String userId,String courseId, String chapterId) {
+    public ServerResponse checkChapterOwnerPermission(String userId, String courseId, String chapterId) {
         String targetCourse = chapterMapper.findCourseIdByPrimaryKey(chapterId);
-        if (targetCourse == null || !targetCourse.equals(courseId)){
-            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"章节不存在");
+        if (targetCourse == null || !targetCourse.equals(courseId)) {
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "章节不存在");
         }
-        return checkCourseOwnerPermission(userId,targetCourse);
+        return checkCourseOwnerPermission(userId, targetCourse);
     }
 }

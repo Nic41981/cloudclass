@@ -26,48 +26,48 @@ public class UploadController {
     private final UploadService uploadService;
     private final PermissionService permissionService;
 
-    @RequestMapping(value = "/course/image",method = RequestMethod.POST)
+    @RequestMapping(value = "/course/image", method = RequestMethod.POST)
     public ServerResponse imageUpload(
-            @RequestParam(value = "course",required = false)String courseId,
-            @RequestParam(value = "image",required = false)MultipartFile image,
-            HttpSession session){
+            @RequestParam(value = "course", required = false) String courseId,
+            @RequestParam(value = "image", required = false) MultipartFile image,
+            HttpSession session) {
         //参数检查
-        if (!Tool.checkParamsNotNull(courseId) || image == null || image.isEmpty()){
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+        if (!Tool.checkParamsNotNull(courseId) || image == null || image.isEmpty()) {
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
         }
         //登录判断
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null){
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"权限不足");
+        if (user == null) {
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "权限不足");
         }
         //用户权限判断
-        ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(),courseId);
-        if (!permissionResult.isSuccess()){
+        ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(), courseId);
+        if (!permissionResult.isSuccess()) {
             return permissionResult;
         }
-        return uploadService.uploadImage(image,courseId);
+        return uploadService.uploadImage(image, courseId);
     }
 
     @RequestMapping(value = "/course/video")
     public ServerResponse videoUpload(
-            @RequestParam(value = "course",required = false)String courseId,
-            @RequestParam(value = "chapter",required = false)String chapterId,
-            @RequestParam(value = "video",required = false)MultipartFile video,
-            HttpSession session){
+            @RequestParam(value = "course", required = false) String courseId,
+            @RequestParam(value = "chapter", required = false) String chapterId,
+            @RequestParam(value = "video", required = false) MultipartFile video,
+            HttpSession session) {
         //参数检查
-        if(!Tool.checkParamsNotNull(chapterId,chapterId) || video == null || video.isEmpty()){
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+        if (!Tool.checkParamsNotNull(chapterId, chapterId) || video == null || video.isEmpty()) {
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
         }
         //登录判断
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null){
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"用户未登录");
+        if (user == null) {
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "用户未登录");
         }
         //用户权限判断
-        ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(),courseId);
-        if (!permissionResult.isSuccess()){
+        ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(), courseId);
+        if (!permissionResult.isSuccess()) {
             return permissionResult;
         }
-        return uploadService.uploadVideo(video,courseId,chapterId);
+        return uploadService.uploadVideo(video, courseId, chapterId);
     }
 }

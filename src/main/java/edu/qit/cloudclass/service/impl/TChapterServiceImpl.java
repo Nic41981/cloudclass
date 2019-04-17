@@ -21,13 +21,6 @@ public class TChapterServiceImpl implements TChapterService {
     private final ChapterMapper chapterMapper;
     private final FileService fileService;
 
-
-    @Override
-    public ServerResponse<List<Chapter>> chapterList(String courseId) {
-        List<Chapter> chapterList = chapterMapper.chapterList(courseId);
-        return ServerResponse.createBySuccess("查询成功",chapterList);
-    }
-
     @Override
     public ServerResponse chapter(Chapter chapter) {
         chapter.setId(Tool.uuid());
@@ -35,13 +28,12 @@ public class TChapterServiceImpl implements TChapterService {
         if (chapter.getNum() == 0 || chapter.getNum() > maxNum) {
             //追加章节-章节序号递增
             chapter.setNum(maxNum + 1);
-        }
-        else {
+        } else {
             //指定章节-后面的章节序号递增
-            chapterMapper.updateNumBeforeInsert(chapter.getNum(),chapter.getCourse());
+            chapterMapper.updateNumBeforeInsert(chapter.getNum(), chapter.getCourse());
         }
         log.info("创建章节:" + chapter.toString());
-        if (chapterMapper.insert(chapter) == 0){
+        if (chapterMapper.insert(chapter) == 0) {
             log.error("创建失败");
             ServerResponse.createByError("创建失败");
         }
@@ -51,7 +43,7 @@ public class TChapterServiceImpl implements TChapterService {
     @Override
     public ServerResponse chapterModify(Chapter chapter) {
         log.info("修改章节:" + chapter.toString());
-        if (chapterMapper.modify(chapter) == 0){
+        if (chapterMapper.modify(chapter) == 0) {
             log.error("修改失败");
             return ServerResponse.createByError("修改异常");
         }
@@ -59,26 +51,26 @@ public class TChapterServiceImpl implements TChapterService {
     }
 
     @Override
-    public ServerResponse chapterDelete(String courseId,String chapterId) {
+    public ServerResponse chapterDelete(String courseId, String chapterId) {
         log.info("==========删除章节开始==========");
         //查找记录
         Chapter chapter = chapterMapper.findChapterByPrimaryKey(chapterId);
-        if (chapter == null){
+        if (chapter == null) {
             log.error("==========获取章节记录失败==========");
             return ServerResponse.createByError("删除失败");
         }
         //删除记录
         log.info("删除章节:" + chapter.toString());
-        if (chapterMapper.delete(chapterId) == 0){
+        if (chapterMapper.delete(chapterId) == 0) {
             log.error("==========删除章节记录失败==========");
             return ServerResponse.createByError("删除失败");
         }
-        chapterMapper.updateNumAfterDelete(chapter.getNum(),courseId);
+        chapterMapper.updateNumAfterDelete(chapter.getNum(), courseId);
         //级联删除
-        if (chapter.getVideo() != null){
+        if (chapter.getVideo() != null) {
             fileService.associateDelete(chapter.getVideo());
         }
-        if (chapter.getChapterExam() != null){
+        if (chapter.getChapterExam() != null) {
             log.info("习题级联删除未完成");
             //TODO 删除章节习题
         }
@@ -88,13 +80,12 @@ public class TChapterServiceImpl implements TChapterService {
 
     @Override
     public ServerResponse associateDelete(String courseId) {
-        ServerResponse<List<Chapter>> listResult = chapterList(courseId);
-        if (!listResult.isSuccess()){
-            log.warn("章节列表获取失败");
+        List<Chapter> list = chapterMapper.courseChapterList(courseId);
+        if (list == null) {
+            log.error("章节列表查询失败");
             return ServerResponse.createBySuccess();
         }
-        List<Chapter> list = listResult.getData();
-        for (Chapter chapter : list){
+        for (Chapter chapter : list) {
             if (chapter.getVideo() != null) {
                 fileService.associateDelete(chapter.getVideo());
             }
@@ -103,7 +94,7 @@ public class TChapterServiceImpl implements TChapterService {
                 //TODO 删除章节习题
             }
             log.info("删除章节:" + chapter.toString());
-            if (chapterMapper.delete(chapter.getId()) == 0){
+            if (chapterMapper.delete(chapter.getId()) == 0) {
                 log.warn("章节记录删除失败");
             }
         }

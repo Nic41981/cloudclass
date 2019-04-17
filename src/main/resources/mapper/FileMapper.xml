@@ -14,7 +14,8 @@
         delete from file where id = #{id};
     </delete>
     <select id="findFileByPrimaryKey" resultType="edu.qit.cloudclass.domain.FileInfo">
-        select <include refid="base_column_list"/>
+        select
+        <include refid="base_column_list"/>
         from file where id = #{id};
     </select>
 

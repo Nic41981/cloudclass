@@ -5,8 +5,8 @@
 <mapper namespace="edu.qit.cloudclass.dao.ChapterExamMapper">
 
     <select id="getExamSpinnerList" resultType="edu.qit.cloudclass.domain.spinner.ExamSpinner">
-        select exam.id,exam.name from chapter,exam
-        where chapter.chapterExam = exam.id and chapter.course = #{course}
+        select final_exam.id,final_exam.name from chapter,final_exam
+        where chapter.chapterExam = final_exam.id and chapter.course = #{course}
         order by if(isnull(chapter.num),1,0),num;
     </select>
 

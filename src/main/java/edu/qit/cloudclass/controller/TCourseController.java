@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpSession;
 
 @Slf4j
@@ -24,47 +25,47 @@ public class TCourseController {
     private final PermissionService permissionService;
 
 
-    @RequestMapping(value = "/course/list",method = RequestMethod.GET)
-    public ServerResponse getCourses(HttpSession session){
+    @RequestMapping(value = "/course/list", method = RequestMethod.GET)
+    public ServerResponse getCourses(HttpSession session) {
         //权限判断
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null || user.getIdentity() != User.TEACHER_IDENTITY){
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"权限不足");
+        if (user == null || user.getIdentity() != User.TEACHER_IDENTITY) {
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "权限不足");
         }
         //查找列表
         return tCourseService.getCourses(user.getId());
     }
 
 
-    @RequestMapping(value = "/course",method = RequestMethod.POST)
-    public ServerResponse add(@RequestBody(required = false) Course course,HttpSession session){
+    @RequestMapping(value = "/course", method = RequestMethod.POST)
+    public ServerResponse add(@RequestBody(required = false) Course course, HttpSession session) {
         //参数检查
-        if (course == null || !Tool.checkParamsNotNull(course.getName())){
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+        if (course == null || !Tool.checkParamsNotNull(course.getName())) {
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
         }
         //权限判断
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null || user.getIdentity() != User.TEACHER_IDENTITY){
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"权限不足");
+        if (user == null || user.getIdentity() != User.TEACHER_IDENTITY) {
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "权限不足");
         }
         course.setTeacher(user.getId());
         //创建课程
         return tCourseService.add(course);
     }
 
-    @RequestMapping(value = "/course/{courseId}",method = RequestMethod.PUT)
+    @RequestMapping(value = "/course/{courseId}", method = RequestMethod.PUT)
     public ServerResponse modify(@PathVariable("courseId") String courseId, @RequestBody(required = false) Course course, HttpSession session) {
         //参数检查
-        if (course == null){
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+        if (course == null) {
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
         }
         //权限检查
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null){
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"权限不足");
+        if (user == null) {
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "权限不足");
         }
-        ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(),courseId);
-        if (!permissionResult.isSuccess()){
+        ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(), courseId);
+        if (!permissionResult.isSuccess()) {
             return permissionResult;
         }
         course.setId(courseId);
@@ -73,15 +74,15 @@ public class TCourseController {
 
     }
 
-    @RequestMapping(value = "/course/{courseId}",method = RequestMethod.DELETE)
-    public ServerResponse deleteCourseById(@PathVariable("courseId") String courseId, HttpSession session){
+    @RequestMapping(value = "/course/{courseId}", method = RequestMethod.DELETE)
+    public ServerResponse deleteCourseById(@PathVariable("courseId") String courseId, HttpSession session) {
         //权限检查
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null){
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"权限不足");
+        if (user == null) {
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "权限不足");
         }
-        ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(),courseId);
-        if (!permissionResult.isSuccess()){
+        ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(), courseId);
+        if (!permissionResult.isSuccess()) {
             return permissionResult;
         }
         //删除课程

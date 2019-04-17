@@ -11,8 +11,11 @@ import java.util.List;
  * @version 1.0
  */
 public interface QuestionService {
-    void insertList(List<Question> questions,String examId,String type);
-    List<Question> getQuestionListByType(String examId,String type);
+    void insertList(List<Question> questions);
+
+    List<Question> getQuestionListByType(String examId, String type);
+
     List<Answer> getAnswerListByType(String examId, String type);
+
     void associateDelete(String examId);
 }

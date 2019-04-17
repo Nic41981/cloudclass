@@ -16,15 +16,13 @@ public interface ChapterMapper {
 
     int modify(@Param("chapter") Chapter chapter);
 
-    List<Chapter> chapterList(@Param("course") String course);
-
     Chapter findChapterByPrimaryKey(@Param("id") String id);
 
     int findMaxNum(@Param("course") String course);
 
-    int updateNumAfterDelete(@Param("num") int num,@Param("course")String course);
+    int updateNumAfterDelete(@Param("num") int num, @Param("course") String course);
 
-    int updateNumBeforeInsert(@Param("num") int num, @Param("course")String course);
+    int updateNumBeforeInsert(@Param("num") int num, @Param("course") String course);
 
     /**
      * 董悦
@@ -34,7 +32,7 @@ public interface ChapterMapper {
     /**
      * 董悦
      */
-    int updateVideoIdAfterUpload(@Param("id") String id,@Param("video") String video);
+    int updateVideoIdAfterUpload(@Param("id") String id, @Param("video") String video);
 
     /**
      * 王恺
@@ -46,5 +44,5 @@ public interface ChapterMapper {
      */
     List<Chapter> courseChapterList(@Param("course") String course);
 
-    int updateChapterExamAfterUpload(@Param("id") String id,@Param("chapterExam") String chapterExam);
+    int updateChapterExamAfterUpload(@Param("id") String id, @Param("chapterExam") String chapterExam);
 }

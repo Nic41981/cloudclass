@@ -11,17 +11,17 @@ import edu.qit.cloudclass.tool.ServerResponse;
  * @version 1.0
  */
 public interface ExaminationService {
-    ServerResponse createFinalExam(ExamComplex exam,String userId);
+    ServerResponse createFinalExam(ExamComplex exam, String userId);
 
-    ServerResponse createChapterExam(ExamComplex exam,String chapterId,String userId);
+    ServerResponse createChapterExam(ExamComplex exam, String chapterId, String userId);
 
-    ServerResponse getExamPage(String examId);
+    ServerResponse getExamPage(String examId, String user);
 
     ServerResponse submitExam(AnswerComplex answer);
 
-    ServerResponse finalExamScore(String userId,String courseId);
+    ServerResponse finalExamScore(String userId, String courseId);
 
-    ServerResponse chapterExamScore(String userId,String chapterId);
+    ServerResponse chapterExamScore(String userId, String chapterId);
 
     ServerResponse associateDelete(String examId);
 }

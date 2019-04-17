@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -37,31 +38,31 @@ public class UploadServiceImpl implements UploadService {
     private final FileService fileService;
 
     @Override
-    public ServerResponse uploadImage(MultipartFile multipartFile,String courseId) {
+    public ServerResponse uploadImage(MultipartFile multipartFile, String courseId) {
         log.info("==========上传图片开始==========");
         //解析文件名信息
-        ServerResponse<FileInfo> fileInfoResult = parserFileInfo(multipartFile,FileInfo.IMAGE_FILE_TYPE);
-        if (!fileInfoResult.isSuccess()){
+        ServerResponse<FileInfo> fileInfoResult = parserFileInfo(multipartFile, FileInfo.IMAGE_FILE_TYPE);
+        if (!fileInfoResult.isSuccess()) {
             log.error("==========文件名解析失败==========");
             return fileInfoResult;
         }
         FileInfo fileInfo = fileInfoResult.getData();
         //安全检查
-        ServerResponse securityCheckResult = securityCheck(multipartFile,fileInfo);
-        if (!securityCheckResult.isSuccess()){
+        ServerResponse securityCheckResult = securityCheck(multipartFile, fileInfo);
+        if (!securityCheckResult.isSuccess()) {
             log.error("==========安全检查失败==========");
             return securityCheckResult;
         }
         log.info("安全检查:PASS");
         //读取图片信息
         ServerResponse imageInfoResult = parserImageInfo(multipartFile);
-        if (!imageInfoResult.isSuccess()){
+        if (!imageInfoResult.isSuccess()) {
             log.error("==========图片信息读取失败==========");
             return imageInfoResult;
         }
         //文件存储
-        ServerResponse storageResult = storageFile(multipartFile,fileInfo,courseId);
-        if (!storageResult.isSuccess()){
+        ServerResponse storageResult = storageFile(multipartFile, fileInfo, courseId);
+        if (!storageResult.isSuccess()) {
             log.error("==========图片存储出错==========");
             return storageResult;
         }
@@ -73,28 +74,28 @@ public class UploadServiceImpl implements UploadService {
     public ServerResponse uploadVideo(MultipartFile multipartFile, String courseId, String chapterId) {
         log.info("==========上传视频开始==========");
         //解析文件名信息
-        ServerResponse<FileInfo> fileInfoResult = parserFileInfo(multipartFile,FileInfo.VIDEO_FILE_TYPE);
-        if (!fileInfoResult.isSuccess()){
+        ServerResponse<FileInfo> fileInfoResult = parserFileInfo(multipartFile, FileInfo.VIDEO_FILE_TYPE);
+        if (!fileInfoResult.isSuccess()) {
             log.error("==========文件名解析失败==========");
             return fileInfoResult;
         }
         FileInfo fileInfo = fileInfoResult.getData();
         //安全检查
-        ServerResponse securityCheckResult = securityCheck(multipartFile,fileInfo);
-        if (!securityCheckResult.isSuccess()){
+        ServerResponse securityCheckResult = securityCheck(multipartFile, fileInfo);
+        if (!securityCheckResult.isSuccess()) {
             log.error("==========安全检查失败==========");
             return securityCheckResult;
         }
         log.info("安全检查:PASS");
         //读取视频信息
         ServerResponse videoInfoResult = parserVideoInfo(multipartFile);
-        if (!videoInfoResult.isSuccess()){
+        if (!videoInfoResult.isSuccess()) {
             log.error("==========图片信息读取失败==========");
             return videoInfoResult;
         }
         //文件存储
-        ServerResponse storageResult = storageFile(multipartFile,fileInfo,chapterId);
-        if (!storageResult.isSuccess()){
+        ServerResponse storageResult = storageFile(multipartFile, fileInfo, chapterId);
+        if (!storageResult.isSuccess()) {
             log.error("==========视频转存失败==========");
             return storageResult;
         }
@@ -103,17 +104,17 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public ServerResponse<FileInfo> parserFileInfo(MultipartFile multipartFile,String fileType) {
+    public ServerResponse<FileInfo> parserFileInfo(MultipartFile multipartFile, String fileType) {
         String filename = multipartFile.getOriginalFilename();
-        if (filename == null){
-            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"不支持的文件类型");
+        if (filename == null) {
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "不支持的文件类型");
         }
         log.info("文件名:" + filename);
         int suffixIndex = filename.lastIndexOf('.');
-        if (suffixIndex <= 0){
-            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"不支持的文件类型");
+        if (suffixIndex <= 0) {
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "不支持的文件类型");
         }
-        String realName = filename.substring(0,suffixIndex);
+        String realName = filename.substring(0, suffixIndex);
         String suffix = filename.substring(suffixIndex + 1);
         log.info("文件类型:" + suffix.toUpperCase() + "文件");
         FileInfo fileInfo = new FileInfo();
@@ -152,8 +153,8 @@ public class UploadServiceImpl implements UploadService {
                 return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "不支持的文件类型");
             }
             log.info("图片尺寸:" + image.getWidth(null) + "x" + image.getHeight(null));
-        } catch (Exception e){
-            log.error(e.getMessage(),e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
             return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "不支持的文件类型");
         }
         return ServerResponse.createBySuccess();
@@ -165,22 +166,22 @@ public class UploadServiceImpl implements UploadService {
         return ServerResponse.createBySuccess();
     }
 
-    public ServerResponse storageFile(MultipartFile multipartFile,FileInfo fileInfo,String target){
+    public ServerResponse storageFile(MultipartFile multipartFile, FileInfo fileInfo, String target) {
         String path = FILE_BASE_PATH + File.separator
                 + fileInfo.getType() + File.separator
                 + fileInfo.getId() + "." + fileInfo.getSuffix();
         File file = new File(path);
         File dir = file.getParentFile();
-        try{
+        try {
             //检查父文件夹
             if (!dir.exists() && !dir.mkdirs()) {
                 return ServerResponse.createByError("上传失败");
             }
-            switch (fileInfo.getType()){
+            switch (fileInfo.getType()) {
                 case FileInfo.IMAGE_FILE_TYPE: {
                     //冲突处理
                     Course course = courseMapper.findCourseByPrimaryKey(target);
-                    if (course.getImage() != null){
+                    if (course.getImage() != null) {
                         fileService.associateDelete(course.getImage());
                     }
                     //存储文件
@@ -193,7 +194,7 @@ public class UploadServiceImpl implements UploadService {
                 case FileInfo.VIDEO_FILE_TYPE: {
                     //冲突处理
                     Chapter chapter = chapterMapper.findChapterByPrimaryKey(target);
-                    if (chapter.getVideo() != null){
+                    if (chapter.getVideo() != null) {
                         fileService.associateDelete(chapter.getVideo());
                     }
                     //存储文件
@@ -208,8 +209,8 @@ public class UploadServiceImpl implements UploadService {
                 }
             }
             return ServerResponse.createBySuccessMsg("上传成功");
-        }catch (Exception e){
-            log.error(e.getMessage(),e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return ServerResponse.createByError("上传失败");
     }

@@ -12,7 +12,10 @@ import java.util.List;
 public interface SpinnerService {
 
     ServerResponse<List<CourseSpinner>> getCourseList();
+
     ServerResponse getChapterList(String courseId);
+
     ServerResponse getExaminationList(String courseId);
+
     ServerResponse checkCourseExist(String courseId);
 }

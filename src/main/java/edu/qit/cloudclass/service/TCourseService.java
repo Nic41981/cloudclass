@@ -7,7 +7,10 @@ import java.util.List;
 
 public interface TCourseService {
     ServerResponse add(Course course);
+
     ServerResponse modify(Course course);
+
     ServerResponse deleteCourseById(String id);
+
     ServerResponse<List<Course>> getCourses(String teacher);
 }

@@ -15,4 +15,5 @@ import java.util.List;
 public interface StudyMapper {
     Study findStudyByCourseAndStudent(@Param("course")String course,@Param("student")String student);
     List<StudyItem> findStudyByCourseId(@Param("course")String course);
+    Study findStudyByCourseAndStudent(@Param("course") String course, @Param("student") String student);
 }

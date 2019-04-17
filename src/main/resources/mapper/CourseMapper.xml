@@ -13,19 +13,22 @@
     </select>
 
     <select id="findCourseByPrimaryKey" resultType="edu.qit.cloudclass.domain.Course">
-        select <include refid="base_column_list"/>
+        select
+        <include refid="base_column_list"/>
         from course where id = #{id};
     </select>
 
     <select id="coursesList" resultType="edu.qit.cloudclass.domain.Course">
-        select <include refid="base_column_list"/>
+        select
+        <include refid="base_column_list"/>
         from cloudclass.course where teacher = #{teacher}
         order by createTime desc;
     </select>
 
     <!-- 第二阶段 -->
     <select id="tagList" resultType="edu.qit.cloudclass.domain.Course">
-        select <include refid="base_column_list"/>
+        select
+        <include refid="base_column_list"/>
         from cloudclass.course where tag like '%${tag}%';
     </select>
 
@@ -36,8 +39,8 @@
         update course
         <trim prefix="set" suffixOverrides=",">
             <if test="course.id != null">id = #{course.id},</if>
-            <if test= "course.name != null"> name = #{course.name},</if>
-            <if test= "course.tag != null"> tag = #{course.tag},</if>
+            <if test="course.name != null">name = #{course.name},</if>
+            <if test="course.tag != null">tag = #{course.tag},</if>
         </trim>
         where id = #{course.id}
     </update>
@@ -73,15 +76,16 @@
 
     <!--查询学生已选课程列表-->
     <select id="getSCourseList" resultType="edu.qit.cloudclass.domain.spinner.SCourseSpinner" parameterType="String">
-        select course.id,course.name,course.image,score.score from study,course,score where study.course=course.id and score.study=study.id and  study.student=#{studentId};
+        select course.id,course.name,course.image,score.score from study,course,score where study.course=course.id and
+        score.study=study.id and study.student=#{studentId};
     </select>
 
     <!--学生选课-->
-    <insert id="insertScourseByCourseIdAndStudentId" parameterType="edu.qit.cloudclass.domain.Study" >
+    <insert id="insertScourseByCourseIdAndStudentId" parameterType="edu.qit.cloudclass.domain.Study">
         insert into study(student,course,createTime) values(#{student},#{course},now());
     </insert>
     <!--检查该学生选课状态-->
-    <select id="checkStudyByCourseIdAndStudentId"  resultType="int" parameterType="edu.qit.cloudclass.domain.Study">
+    <select id="checkStudyByCourseIdAndStudentId" resultType="int" parameterType="edu.qit.cloudclass.domain.Study">
         select count(*) from study where course=#{course} and student=#{student};
     </select>
 

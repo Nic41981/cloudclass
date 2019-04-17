@@ -22,7 +22,7 @@ public class ScoreServiceImpl implements ScoreService {
     public void associateDelete(int scoreId) {
         Score score = scoreMapper.findScoreByPrimaryKey(scoreId);
         log.info("删除成绩:" + score.toString());
-        if (scoreMapper.delete(scoreId) == 0){
+        if (scoreMapper.delete(scoreId) == 0) {
             log.warn("成绩记录删除失败");
         }
     }

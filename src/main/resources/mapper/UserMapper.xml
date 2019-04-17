@@ -20,12 +20,14 @@
     </update>
 
     <select id="login" resultType="edu.qit.cloudclass.domain.User">
-        select <include refid="base_column_list"/>
+        select
+        <include refid="base_column_list"/>
         from user where name = #{name};
     </select>
 
     <select id="autoLogin" resultType="edu.qit.cloudclass.domain.User">
-        select <include refid="base_column_list"/>
+        select
+        <include refid="base_column_list"/>
         from user where taken = #{taken}
     </select>
 

@@ -10,6 +10,7 @@ import edu.qit.cloudclass.tool.ServerResponse;
 public interface UserService {
     /**
      * 用户注册
+     *
      * @author 董悦
      * 2019-03-19
      */
@@ -17,13 +18,15 @@ public interface UserService {
 
     /**
      * 用户登录
+     *
      * @author 董悦
      * 2019-03-19
      */
-    ServerResponse<User> login(String name, String password,boolean autoLogin);
+    ServerResponse<User> login(String name, String password, boolean autoLogin);
 
     /**
      * 用户自动登录
+     *
      * @author 董悦
      * 2019-03-19
      */
@@ -31,6 +34,7 @@ public interface UserService {
 
     /**
      * 产生并记录用户自动登录凭证
+     *
      * @author 董悦
      * 2019-03-19
      */
@@ -38,8 +42,9 @@ public interface UserService {
 
     /**
      * 检查用户名或电子邮件的唯一性
+     *
      * @author 董悦
      * 2019-03-23
      */
-    ServerResponse checkValid(String str,String type);
+    ServerResponse checkValid(String str, String type);
 }

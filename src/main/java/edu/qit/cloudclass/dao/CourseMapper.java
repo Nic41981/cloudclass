@@ -25,6 +25,7 @@ public interface CourseMapper {
     Course findCourseByPrimaryKey(@Param("id") String id);
 
     List<Course> tagList(@Param("tag") String tag);
+
     /**
      * 王恺
      */
@@ -38,7 +39,7 @@ public interface CourseMapper {
     /**
      * 董悦
      */
-    String findTeacherIdByPrimaryKey(@Param("id")String id);
+    String findTeacherIdByPrimaryKey(@Param("id") String id);
 
     /**
      * 董悦
@@ -48,30 +49,30 @@ public interface CourseMapper {
     /**
      * 董悦
      */
-    String findFinalExamByPrimaryKey(@Param("id")String id);
+    String findFinalExamByPrimaryKey(@Param("id") String id);
 
     /**
      * 董悦
      */
-    int updateFinalExamAfterUpload(@Param("id")String id,@Param("finalExam")String finalExam);
+    int updateFinalExamAfterUpload(@Param("id") String id, @Param("finalExam") String finalExam);
 
     /**
-     *李广源
+     * 李广源
      */
     List<SCourseSpinner> getSCourseList(@Param("studentId") String studentId);
 
     /**
-     *李广源
+     * 李广源
      */
     int insertScourseByCourseIdAndStudentId(Study study);
 
     /**
-     *李广源
+     * 李广源
      */
     int checkStudyByCourseIdAndStudentId(Study study);
 
     /**
-     *李广源
+     * 李广源
      */
     int deletScourseByCourseIdAndStudentId(Study study);
 

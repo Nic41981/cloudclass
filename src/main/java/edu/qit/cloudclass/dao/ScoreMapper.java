@@ -18,4 +18,10 @@ public interface ScoreMapper {
     Score findScoreByPrimaryKey(@Param("id")int id);
     Score findScoreByStudyAndExam(@Param("study")int study,@Param("exam")String exam);
     List<ScoreItem> getScoreList(@Param("exam")String exam);
+
+    int delete(@Param("id") int id);
+
+    Score findScoreByPrimaryKey(@Param("id") int id);
+
+    Score findScoreByStudyAndExam(@Param("study") int study, @Param("exam") String exam);
 }

@@ -5,18 +5,19 @@
 <mapper namespace="edu.qit.cloudclass.dao.ExamMapper">
 
     <sql id="base_column_list">
-        id,course,name,createTime,startTime,stopTime,duration
+        id,course,name,startTime,stopTime,duration,resubmit,createTime
     </sql>
     <insert id="insert" parameterType="edu.qit.cloudclass.domain.Exam">
-        insert into exam(id,course, name, createTime, startTime, stopTime, duration)
-        values (#{exam.id},#{exam.course},#{exam.name},now(),#{exam.startTime},#{exam.stopTime},#{exam.duration});
+        insert into final_exam(id,course, name, startTime, stopTime, duration, resubmit, createTime)
+        values (#{exam.id},#{exam.course},#{exam.name},#{exam.startTime},#{exam.stopTime},#{exam.duration},#{exam.resubmit},now());
     </insert>
     <delete id="delete">
-        delete from exam where id = #{id};
+        delete from final_exam where id = #{id};
     </delete>
     <select id="findExamByPrimaryKey" resultType="edu.qit.cloudclass.domain.Exam">
-        select <include refid="base_column_list"/>
-        from exam where id = #{id};
+        select
+        <include refid="base_column_list"/>
+        from final_exam where id = #{id};
     </select>
 
 </mapper>

@@ -12,5 +12,5 @@ import java.util.List;
  */
 @Mapper
 public interface ChapterExamMapper {
-    List<ExamSpinner> getExamSpinnerList(@Param("course")String course);
+    List<ExamSpinner> getExamSpinnerList(@Param("course") String course);
 }

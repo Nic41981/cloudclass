@@ -10,14 +10,14 @@
     <insert id="insertList">
         insert into question(exam, type, question, score, options, answer)
         values
-        <foreach collection="questions" item="question" index= "index" separator =",">
+        <foreach collection="questions" item="question" index="index" separator=",">
             (
-                #{question.exam},
-                #{question.type},
-                #{question.question},
-                #{question.score},
-                #{question.options},
-                #{question.answer}
+            #{question.exam},
+            #{question.type},
+            #{question.question},
+            #{question.score},
+            #{question.options},
+            #{question.answer}
             )
         </foreach>
     </insert>
@@ -25,11 +25,13 @@
         delete from question where id = #{id};
     </delete>
     <select id="questionList" resultType="edu.qit.cloudclass.domain.Question">
-        select <include refid="base_column_list"/>
+        select
+        <include refid="base_column_list"/>
         from question where exam = #{exam};
     </select>
     <select id="selectQuestionListByExamAndType" resultType="edu.qit.cloudclass.domain.Question">
-        select <include refid="base_column_list"/>
+        select
+        <include refid="base_column_list"/>
         from question where exam = #{exam} and type = #{type};
     </select>
     <select id="selectAnswerListByExamAndType" resultType="edu.qit.cloudclass.domain.Answer">

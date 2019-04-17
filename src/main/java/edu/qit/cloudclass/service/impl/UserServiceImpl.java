@@ -26,17 +26,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public ServerResponse register(User user) {
         //唯一性检查
-        ServerResponse response = checkValid(user.getName(),User.NAME);
-        if (!response.isSuccess()){
+        ServerResponse response = checkValid(user.getName(), User.NAME);
+        if (!response.isSuccess()) {
             return response;
         }
-        response = checkValid(user.getEmail(),User.EMAIL);
-        if (!response.isSuccess()){
+        response = checkValid(user.getEmail(), User.EMAIL);
+        if (!response.isSuccess()) {
             return response;
         }
         //创建用户对象
         user.setId(Tool.uuid());
-        user.setPassword(BCrypt.hashpw(user.getPassword(),BCrypt.gensalt()));
+        user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
         user.setIdentity(User.STUDENT_IDENTITY);
         //写入数据库
         userMapper.register(user);
@@ -45,29 +45,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ServerResponse<User> login(String name, String password,boolean autoLogin) {
+    public ServerResponse<User> login(String name, String password, boolean autoLogin) {
         //查询数据库并判断登录
         User user = userMapper.login(name);
-        if (user != null && BCrypt.checkpw(password,user.getPassword())){
+        if (user != null && BCrypt.checkpw(password, user.getPassword())) {
             log.info("用户" + user.getId() + "登录成功!");
-            if (autoLogin){
+            if (autoLogin) {
                 //将自动登录凭证写入数据库和用户信息
                 user.setTaken(registerAutoLogin(user).getData());
             }
-            return ServerResponse.createBySuccess("登录成功",user);
+            return ServerResponse.createBySuccess("登录成功", user);
         }
-        return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"用户名或密码错误");
+        return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "用户名或密码错误");
     }
 
     @Override
     public ServerResponse<User> autoLogin(String taken) {
         //查询数据库并判断登录
         User user = userMapper.autoLogin(taken);
-        if (user != null){
+        if (user != null) {
             log.info("用户" + user.getId() + "自动登录成功!");
             return ServerResponse.createBySuccess(user);
         }
-        return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"登录失败");
+        return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "登录失败");
     }
 
     @Override
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
         //构建凭证元数据
         String source = user.getId() + user.hashCode() + System.currentTimeMillis();
         //编译自动登录凭证
-        String taken = BCrypt.hashpw(source,BCrypt.gensalt());
+        String taken = BCrypt.hashpw(source, BCrypt.gensalt());
         //将自动登录凭证写入数据库
         userMapper.registerAutoLogin(user.getId(), taken);
         return ServerResponse.createBySuccess(taken);

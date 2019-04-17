@@ -23,26 +23,26 @@ public class SpinnerController {
     private final SpinnerService spinnerService;
 
     //查询课程列表
-    @RequestMapping(value = "/course",method = RequestMethod.GET)
+    @RequestMapping(value = "/course", method = RequestMethod.GET)
     @ResponseBody
     public ServerResponse getCourseList() {
-      return spinnerService.getCourseList();
+        return spinnerService.getCourseList();
     }
 
     //查询章节列表
-    @RequestMapping(value = "/chapter",method = RequestMethod.GET)
-    public ServerResponse getChapterList(@RequestParam(value = "course",required = false) String courseId) {
-        if (!Tool.checkParamsNotNull(courseId)){
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+    @RequestMapping(value = "/chapter", method = RequestMethod.GET)
+    public ServerResponse getChapterList(@RequestParam(value = "course", required = false) String courseId) {
+        if (!Tool.checkParamsNotNull(courseId)) {
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
         }
         return spinnerService.getChapterList(courseId);
     }
 
     //查询考试名称列表
-    @RequestMapping(value = "/examination",method = RequestMethod.GET)
-    public ServerResponse getExaminationList(@RequestParam(value = "course",required = false) String courseId) {
-        if (!Tool.checkParamsNotNull(courseId)){
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+    @RequestMapping(value = "/examination", method = RequestMethod.GET)
+    public ServerResponse getExaminationList(@RequestParam(value = "course", required = false) String courseId) {
+        if (!Tool.checkParamsNotNull(courseId)) {
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
         }
         return spinnerService.getExaminationList(courseId);
     }

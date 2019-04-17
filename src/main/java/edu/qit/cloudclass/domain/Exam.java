@@ -15,8 +15,11 @@ public class Exam {
     protected Date startTime;
     protected Date stopTime;
     protected int duration;
+    @JsonIgnore
+    protected boolean resubmit;
 
-    public boolean isSubmittable(){
+    @JsonIgnore
+    public boolean isSubmittable() {
         Date now = new Date();
         return now.after(this.startTime) && now.before(this.stopTime);
     }

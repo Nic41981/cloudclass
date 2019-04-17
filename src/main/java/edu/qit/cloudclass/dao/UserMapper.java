@@ -23,7 +23,7 @@ public interface UserMapper {
     /**
      * 董悦
      */
-    void registerAutoLogin(@Param("id") String id,@Param("taken") String taken);
+    void registerAutoLogin(@Param("id") String id, @Param("taken") String taken);
 
     /**
      * 董悦

@@ -25,15 +25,15 @@ public class TCourseServiceImpl implements TCourseService {
 
     @Override
     public ServerResponse<List<Course>> getCourses(String teacher) {
-        List<Course> list =  tCourseMapper.coursesList(teacher);
-        return ServerResponse.createBySuccess("查询成功",list);
+        List<Course> list = tCourseMapper.coursesList(teacher);
+        return ServerResponse.createBySuccess("查询成功", list);
     }
 
     @Override
     public ServerResponse add(Course course) {
         course.setId(Tool.uuid());
         log.info("创建课程:" + course.toString());
-        if (tCourseMapper.insert(course) == 0){
+        if (tCourseMapper.insert(course) == 0) {
             log.error("创建失败");
             return ServerResponse.createByError("创建失败");
         }
@@ -43,7 +43,7 @@ public class TCourseServiceImpl implements TCourseService {
     @Override
     public ServerResponse modify(Course course) {
         log.info("修改课程:" + course.toString());
-        if (tCourseMapper.modify(course) == 0){
+        if (tCourseMapper.modify(course) == 0) {
             log.error("修改失败");
             return ServerResponse.createByError("修改失败");
         }
@@ -56,24 +56,24 @@ public class TCourseServiceImpl implements TCourseService {
         log.info("==========删除课程开始==========");
         //查找记录
         Course course = tCourseMapper.findCourseByPrimaryKey(courseId);
-        if (course == null){
+        if (course == null) {
             log.error("==========获取课程记录失败==========");
             return ServerResponse.createByError("删除失败");
         }
         //删除记录
         log.info("删除课程:" + course.toString());
-        if (tCourseMapper.delete(courseId) == 0){
+        if (tCourseMapper.delete(courseId) == 0) {
             log.error("==========课程记录删除失败==========");
             return ServerResponse.createByError("删除失败");
         }
         //级联删除
-        if (course.getImage() != null){
+        if (course.getImage() != null) {
             fileService.associateDelete(course.getImage());
         }
         tChapterService.associateDelete(course.getId());
         //TODO 删除相关学习
         log.info("==========删除课程结束==========");
-        return  ServerResponse.createBySuccessMsg("删除成功");
+        return ServerResponse.createBySuccessMsg("删除成功");
     }
 
 }

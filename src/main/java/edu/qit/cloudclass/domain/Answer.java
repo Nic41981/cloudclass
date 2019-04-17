@@ -1,14 +1,14 @@
 package edu.qit.cloudclass.domain;
 
-import lombok.Data;
-
-import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author nic
  * @version 1.0
  */
-@Data
+@Getter
+@Setter
 public class Answer implements Comparable<Answer> {
     private int id;
     private int score;
@@ -21,8 +21,12 @@ public class Answer implements Comparable<Answer> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Answer answer = (Answer) o;
         return id == answer.id;
     }

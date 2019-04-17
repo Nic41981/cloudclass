@@ -29,8 +29,8 @@ public class FileServiceImpl implements FileService {
     @Override
     public ServerResponse<FileInfo> getFileInfo(String fileId) {
         FileInfo fileInfo = fileMapper.findFileByPrimaryKey(fileId);
-        if (fileInfo == null){
-            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"文件不存在");
+        if (fileInfo == null) {
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "文件不存在");
         }
         return ServerResponse.createBySuccess(fileInfo);
     }
@@ -38,23 +38,23 @@ public class FileServiceImpl implements FileService {
     @Override
     public ServerResponse getFileNames(String fileId) {
         ServerResponse<FileInfo> fileInfoResult = getFileInfo(fileId);
-        if (!fileInfoResult.isSuccess()){
+        if (!fileInfoResult.isSuccess()) {
             return fileInfoResult;
         }
         FileInfo fileInfo = fileInfoResult.getData();
         String realName = fileInfo.getRealName() + "." + fileInfo.getSuffix();
         String resourceName = fileInfo.getId() + "." + fileInfo.getSuffix();
-        Map<String,String> result = new HashMap<>(2);
-        result.put("realName",realName);
-        result.put("resourceName",resourceName);
-        return ServerResponse.createBySuccess("查询成功",result);
+        Map<String, String> result = new HashMap<>(2);
+        result.put("realName", realName);
+        result.put("resourceName", resourceName);
+        return ServerResponse.createBySuccess("查询成功", result);
     }
 
     @Override
     public ServerResponse associateDelete(String fileId) {
         //查找文件记录
         ServerResponse<FileInfo> fileInfoResult = getFileInfo(fileId);
-        if (!fileInfoResult.isSuccess()){
+        if (!fileInfoResult.isSuccess()) {
             log.warn("文件记录不存在");
             return ServerResponse.createBySuccess();
         }
@@ -65,15 +65,14 @@ public class FileServiceImpl implements FileService {
                 + fileInfo.getId() + "." + fileInfo.getSuffix();
         log.info("删除文件:" + path);
         File file = new File(path);
-        if (!file.exists()){
+        if (!file.exists()) {
             log.warn("文件不存在");
-        }
-        else if (!file.delete()){
+        } else if (!file.delete()) {
             log.warn("文件无法删除");
         }
         //删除文件记录
         log.info("删除文件记录:" + fileInfo.toString());
-        if (fileMapper.delete(fileId) == 0){
+        if (fileMapper.delete(fileId) == 0) {
             log.warn("文件记录删除失败");
         }
         return ServerResponse.createBySuccess();

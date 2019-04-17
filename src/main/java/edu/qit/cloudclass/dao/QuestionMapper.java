@@ -14,11 +14,11 @@ import java.util.List;
 @Mapper
 public interface QuestionMapper {
 
-    List<Question> selectQuestionListByExamAndType(@Param("exam")String exam,@Param("type")String type);
+    List<Question> selectQuestionListByExamAndType(@Param("exam") String exam, @Param("type") String type);
 
-    List<Answer> selectAnswerListByExamAndType(@Param("exam")String exam,@Param("type")String type);
+    List<Answer> selectAnswerListByExamAndType(@Param("exam") String exam, @Param("type") String type);
 
-    int insertList(@Param("questions")List<Question> questions);
+    int insertList(@Param("questions") List<Question> questions);
 
     int delete(@Param("id") int id);
 

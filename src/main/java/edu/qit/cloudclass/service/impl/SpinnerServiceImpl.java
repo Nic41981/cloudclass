@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 /**
@@ -30,24 +31,24 @@ public class SpinnerServiceImpl implements SpinnerService {
 
     @Override
     public ServerResponse<List<CourseSpinner>> getCourseList() {
-       List<CourseSpinner> courseList = courseMapper.getCourseSpinnerList();
-       return ServerResponse.createBySuccess("查询成功",courseList);
+        List<CourseSpinner> courseList = courseMapper.getCourseSpinnerList();
+        return ServerResponse.createBySuccess("查询成功", courseList);
     }
 
     @Override
     public ServerResponse getChapterList(String courseId) {
         ServerResponse existResult = checkCourseExist(courseId);
-        if (!existResult.isSuccess()){
+        if (!existResult.isSuccess()) {
             return existResult;
         }
         List<ChapterSpinner> courseList = chapterMapper.getChapterSpinnerList(courseId);
-        return ServerResponse.createBySuccess("查询成功",courseList);
+        return ServerResponse.createBySuccess("查询成功", courseList);
     }
 
     @Override
     public ServerResponse getExaminationList(String courseId) {
         ServerResponse existResult = checkCourseExist(courseId);
-        if (!existResult.isSuccess()){
+        if (!existResult.isSuccess()) {
             return existResult;
         }
         List<ExamSpinner> examinationList = chapterExamMapper.getExamSpinnerList(courseId);
@@ -58,14 +59,14 @@ public class SpinnerServiceImpl implements SpinnerService {
             finalExam.setName("期末考试");
             examinationList.add(finalExam);
         }
-        return ServerResponse.createBySuccess("查询成功",examinationList);
+        return ServerResponse.createBySuccess("查询成功", examinationList);
     }
 
     @Override
     public ServerResponse checkCourseExist(String courseId) {
         int flag = courseMapper.checkCourseExist(courseId);
-        if (flag == 0){
-            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"课程不存在");
+        if (flag == 0) {
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "课程不存在");
         }
         return ServerResponse.createBySuccess();
     }

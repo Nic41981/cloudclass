@@ -18,28 +18,29 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SCourseServiceImpl implements SCourseService {
     private final CourseMapper courseMapper;
+
     @Override
     public ServerResponse scourseList(String studentId) {
 
         log.info(studentId);
 
         List<SCourseSpinner> listResult = courseMapper.getSCourseList(studentId);
-        return ServerResponse.createBySuccess("查询成功",listResult);
+        return ServerResponse.createBySuccess("查询成功", listResult);
     }
 
     @Override
-    public ServerResponse insertScourse(String courseId,String studentId) {
+    public ServerResponse insertScourse(String courseId, String studentId) {
         Study study = new Study();
 
         study.setCourse(courseId);
         study.setStudent(studentId);
 
-        if (courseMapper.checkStudyByCourseIdAndStudentId(study)==1){
-            ServerResponse.createByError(ResponseCode.ERROR.getStatus(),"已经选择该课程");
+        if (courseMapper.checkStudyByCourseIdAndStudentId(study) == 1) {
+            ServerResponse.createByError(ResponseCode.ERROR.getStatus(), "已经选择该课程");
         }
 
-        if (courseMapper.insertScourseByCourseIdAndStudentId(study)==0){
-            ServerResponse.createByError(ResponseCode.ERROR.getStatus(),"选课异常");
+        if (courseMapper.insertScourseByCourseIdAndStudentId(study) == 0) {
+            ServerResponse.createByError(ResponseCode.ERROR.getStatus(), "选课异常");
         }
 
         return ServerResponse.createBySuccess("选课成功");
@@ -52,12 +53,12 @@ public class SCourseServiceImpl implements SCourseService {
         study.setCourse(courseId);
         study.setStudent(studentId);
 
-        if (courseMapper.checkStudyByCourseIdAndStudentId(study)==0){
-            ServerResponse.createByError(ResponseCode.ERROR.getStatus(),"未选修该课程");
+        if (courseMapper.checkStudyByCourseIdAndStudentId(study) == 0) {
+            ServerResponse.createByError(ResponseCode.ERROR.getStatus(), "未选修该课程");
         }
 
-        if (courseMapper.deletScourseByCourseIdAndStudentId(study)==0){
-            ServerResponse.createByError(ResponseCode.ERROR.getStatus(),"退课异常");
+        if (courseMapper.deletScourseByCourseIdAndStudentId(study) == 0) {
+            ServerResponse.createByError(ResponseCode.ERROR.getStatus(), "退课异常");
         }
 
         return ServerResponse.createBySuccess("退课成功");

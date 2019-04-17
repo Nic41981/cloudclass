@@ -22,31 +22,30 @@ public class SCourseController {
     public ServerResponse scourseList(HttpSession session) {
         //权限判断
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null){
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"账户未登录");
+        if (user == null) {
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "账户未登录");
         }
         return sCourseService.scourseList(user.getId());
     }
 
     @RequestMapping(value = "/course/{courseId}", method = RequestMethod.POST)
-    public ServerResponse insertSCourse(@PathVariable("courseId") String courseId,HttpSession session) {
+    public ServerResponse insertSCourse(@PathVariable("courseId") String courseId, HttpSession session) {
         //权限判断
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null){
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"账户未登录");
+        if (user == null) {
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "账户未登录");
         }
-        return sCourseService.insertScourse(courseId,user.getId());
+        return sCourseService.insertScourse(courseId, user.getId());
     }
 
     @RequestMapping(value = "/course/{courseId}", method = RequestMethod.DELETE)
-    public ServerResponse deleteSCourse(@PathVariable("courseId") String courseId,HttpSession session) {
+    public ServerResponse deleteSCourse(@PathVariable("courseId") String courseId, HttpSession session) {
         //权限判断
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
 
-        if (user == null){
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"账户未登录");
+        if (user == null) {
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "账户未登录");
         }
-
-        return sCourseService.deleteScourse(courseId,user.getId());
+        return sCourseService.deleteScourse(courseId, user.getId());
     }
 }
