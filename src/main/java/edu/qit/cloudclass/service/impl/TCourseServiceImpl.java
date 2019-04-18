@@ -3,6 +3,7 @@ package edu.qit.cloudclass.service.impl;
 import edu.qit.cloudclass.dao.CourseMapper;
 import edu.qit.cloudclass.domain.Course;
 import edu.qit.cloudclass.service.FileService;
+import edu.qit.cloudclass.service.FinalExamService;
 import edu.qit.cloudclass.service.TChapterService;
 import edu.qit.cloudclass.service.TCourseService;
 import edu.qit.cloudclass.tool.ServerResponse;
@@ -22,6 +23,8 @@ public class TCourseServiceImpl implements TCourseService {
     private final CourseMapper tCourseMapper;
     private final FileService fileService;
     private final TChapterService tChapterService;
+    private final StudyService studyService;
+    private final FinalExamService finalExamService;
 
     @Override
     public ServerResponse<List<Course>> getCourses(String teacher) {
@@ -42,12 +45,12 @@ public class TCourseServiceImpl implements TCourseService {
 
     @Override
     public ServerResponse modify(Course course) {
-        log.info("修改课程:" + course.toString());
+        log.info("更新课程:" + course.toString());
         if (tCourseMapper.modify(course) == 0) {
-            log.error("修改失败");
-            return ServerResponse.createByError("修改失败");
+            log.error("更新失败");
+            return ServerResponse.createByError("更新失败");
         }
-        return ServerResponse.createBySuccess("更新成功");
+        return ServerResponse.createBySuccessMsg("更新成功");
 
     }
 
@@ -70,8 +73,11 @@ public class TCourseServiceImpl implements TCourseService {
         if (course.getImage() != null) {
             fileService.associateDelete(course.getImage());
         }
+        if (course.getFinalExam() != null){
+            finalExamService.associateDelete(course.getFinalExam());
+        }
         tChapterService.associateDelete(course.getId());
-        //TODO 删除相关学习
+        studyService.associateDelete(course.getId());
         log.info("==========删除课程结束==========");
         return ServerResponse.createBySuccessMsg("删除成功");
     }

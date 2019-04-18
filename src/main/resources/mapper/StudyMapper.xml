@@ -7,6 +7,9 @@
     <sql id="base_column_list">
         id,student,course,createTime
     </sql>
+    <delete id="delete">
+        delete from study where id = #{id};
+    </delete>
 
     <select id="findStudyByCourseAndStudent" resultType="edu.qit.cloudclass.domain.Study">
         select
@@ -14,10 +17,14 @@
         from study where course = #{course} and student = #{student};
     </select>
 
-    <select id="findStudyByCourseId" resultType="edu.qit.cloudclass.domain.StudyItem">
+    <select id="findStudyItemByCourseId" resultType="edu.qit.cloudclass.domain.StudyItem">
         select study.student,user.name
         from study,user
         where study.student = user.id and  study.course = #{course} ;
+    </select>
+    <select id="findStudyListByCourse" resultType="edu.qit.cloudclass.domain.Study">
+        select <include refid="base_column_list"/>
+        from study where course = #{course};
     </select>
 
 </mapper>

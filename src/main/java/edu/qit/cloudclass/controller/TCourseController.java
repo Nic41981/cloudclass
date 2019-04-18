@@ -29,7 +29,10 @@ public class TCourseController {
     public ServerResponse getCourses(HttpSession session) {
         //权限判断
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null || user.getIdentity() != User.TEACHER_IDENTITY) {
+        if (user == null){
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "用户未登录");
+        }
+        if (user.getIdentity() != User.TEACHER_IDENTITY) {
             return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "权限不足");
         }
         //查找列表
@@ -45,7 +48,10 @@ public class TCourseController {
         }
         //权限判断
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null || user.getIdentity() != User.TEACHER_IDENTITY) {
+        if (user == null){
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "用户未登陆");
+        }
+        if (user.getIdentity() != User.TEACHER_IDENTITY) {
             return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "权限不足");
         }
         course.setTeacher(user.getId());
@@ -62,7 +68,7 @@ public class TCourseController {
         //权限检查
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
         if (user == null) {
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "权限不足");
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "用户未登录");
         }
         ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(), courseId);
         if (!permissionResult.isSuccess()) {
@@ -79,7 +85,7 @@ public class TCourseController {
         //权限检查
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
         if (user == null) {
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "权限不足");
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "用户未登录");
         }
         ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(), courseId);
         if (!permissionResult.isSuccess()) {

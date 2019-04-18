@@ -69,7 +69,7 @@
     </select>
 
     <!-- 查询课程章节列表（播放页列表数据） 李九龙-->
-    <select id="courseChapterList" resultType="edu.qit.cloudclass.domain.Chapter">
+    <select id="chapterList" resultType="edu.qit.cloudclass.domain.Chapter">
         select
         <include refid="base_column_list"/>
         from chapter where course = #{course}

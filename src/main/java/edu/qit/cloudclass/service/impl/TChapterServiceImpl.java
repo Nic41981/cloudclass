@@ -2,6 +2,7 @@ package edu.qit.cloudclass.service.impl;
 
 import edu.qit.cloudclass.dao.ChapterMapper;
 import edu.qit.cloudclass.domain.Chapter;
+import edu.qit.cloudclass.service.ChapterExamService;
 import edu.qit.cloudclass.service.FileService;
 import edu.qit.cloudclass.service.TChapterService;
 import edu.qit.cloudclass.tool.ServerResponse;
@@ -10,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Slf4j
@@ -20,6 +20,7 @@ public class TChapterServiceImpl implements TChapterService {
 
     private final ChapterMapper chapterMapper;
     private final FileService fileService;
+    private final ChapterExamService chapterExamService;
 
     @Override
     public ServerResponse chapter(Chapter chapter) {
@@ -79,25 +80,23 @@ public class TChapterServiceImpl implements TChapterService {
     }
 
     @Override
-    public ServerResponse associateDelete(String courseId) {
-        List<Chapter> list = chapterMapper.courseChapterList(courseId);
+    public void associateDelete(String courseId) {
+        List<Chapter> list = chapterMapper.chapterList(courseId);
         if (list == null) {
-            log.error("章节列表查询失败");
-            return ServerResponse.createBySuccess();
+            log.warn("章节列表查询失败");
+            return;
         }
         for (Chapter chapter : list) {
             if (chapter.getVideo() != null) {
                 fileService.associateDelete(chapter.getVideo());
             }
             if (chapter.getChapterExam() != null) {
-                log.info("习题级联删除未完成");
-                //TODO 删除章节习题
+                chapterExamService.associateDelete(chapter.getChapterExam());
             }
             log.info("删除章节:" + chapter.toString());
             if (chapterMapper.delete(chapter.getId()) == 0) {
                 log.warn("章节记录删除失败");
             }
         }
-        return ServerResponse.createBySuccess();
     }
 }

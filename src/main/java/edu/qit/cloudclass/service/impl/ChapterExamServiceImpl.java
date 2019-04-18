@@ -113,27 +113,23 @@ public class ChapterExamServiceImpl implements ChapterExamService {
             return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "未参加学习");
         }
         //计算得分
-        Score newScore = new Score();
-        newScore.setStudy(study.getId());
-        newScore.setExam(answer.getExam());
-        newScore.setScore(examService.countScore(answer));
-        Score oldScore = scoreMapper.findScoreByStudyAndExam(study.getId(), exam.getId());
-        if (oldScore != null) {
-            if (oldScore.getScore() > newScore.getScore()) {
-                //低于最高分不更新记录
-                return ServerResponse.createBySuccess("提交成功", newScore);
-            }
-            else {
-                //级联删除记录
-                scoreService.associateDelete(oldScore.getId());
-            }
+        Score score = scoreMapper.findScoreByStudyAndExam(study.getId(), exam.getId());
+        int newScore = examService.countScore(answer);
+        if (score == null){
+            //第一次提交创建记录
+            score = new Score();
+            score.setStudy(study.getId());
+            score.setExam(exam.getId());
+            score.setScore(newScore);
+            return scoreService.insert(score);
         }
-        //更新记录
-        log.info("更新成绩:" + newScore);
-        if (scoreMapper.insert(newScore) == 0) {
-            return ServerResponse.createByError("提交失败");
+        if (score.getScore() > newScore) {
+            //低于最高分不更新记录
+            return ServerResponse.createBySuccess("提交成功", newScore);
         }
-        return ServerResponse.createBySuccess("提交成功", newScore);
+        //高于最高分更新记录
+        score.setScore(newScore);
+        return scoreService.update(score);
     }
 
     @Override

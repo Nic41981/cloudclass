@@ -6,10 +6,7 @@ import edu.qit.cloudclass.dao.ScoreMapper;
 import edu.qit.cloudclass.dao.StudyMapper;
 import edu.qit.cloudclass.domain.*;
 import edu.qit.cloudclass.domain.complex.AnswerComplex;
-import edu.qit.cloudclass.service.ExamService;
-import edu.qit.cloudclass.service.FinalExamService;
-import edu.qit.cloudclass.service.PermissionService;
-import edu.qit.cloudclass.service.QuestionService;
+import edu.qit.cloudclass.service.*;
 import edu.qit.cloudclass.tool.ResponseCode;
 import edu.qit.cloudclass.tool.ServerResponse;
 import edu.qit.cloudclass.tool.Tool;
@@ -30,11 +27,11 @@ import java.util.List;
 public class FinalExamServiceImpl implements FinalExamService {
     private final CourseMapper courseMapper;
     private final StudyMapper studyMapper;
-    private final ScoreMapper scoreMapper;
     private final FinalExamMapper finalExamMapper;
     private final PermissionService permissionService;
     private final QuestionService questionService;
     private final ExamService examService;
+    private final ScoreService scoreService;
 
 
     @Override
@@ -112,20 +109,16 @@ public class FinalExamServiceImpl implements FinalExamService {
         if (study == null) {
             return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "未参加学习");
         }
-        Score oldScore = scoreMapper.findScoreByStudyAndExam(study.getId(), exam.getId());
-        if (oldScore != null){
+        Score score = scoreService.findScoreByStudyAndExam(study.getId(),exam.getId());
+        if (score != null){
             return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"不可重复提交");
         }
-        //更新记录
-        Score score = new Score();
+        //创建记录
+        score = new Score();
         score.setStudy(study.getId());
         score.setExam(answer.getExam());
         score.setScore(examService.countScore(answer));
-        log.info("更新成绩:" + score);
-        if (scoreMapper.insert(score) == 0) {
-            return ServerResponse.createByError("提交失败");
-        }
-        return ServerResponse.createBySuccess("提交成功", score);
+        return scoreService.insert(score);
     }
 
     @Override
@@ -141,7 +134,7 @@ public class FinalExamServiceImpl implements FinalExamService {
         if (study == null) {
             return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "未参加学习");
         }
-        Score score = scoreMapper.findScoreByStudyAndExam(study.getId(), course.getFinalExam());
+        Score score = scoreService.findScoreByStudyAndExam(study.getId(), course.getFinalExam());
         if (score == null) {
             return ServerResponse.createByError("暂无成绩");
         }

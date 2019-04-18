@@ -45,7 +45,7 @@ public class CourseServiceImpl implements CourseService {
                 return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "未参加学习");
             }
         }
-        List<Chapter> list = chapterMapper.courseChapterList(course.getId());
+        List<Chapter> list = chapterMapper.chapterList(course.getId());
         String finalExam = courseMapper.findFinalExamByPrimaryKey(course.getId());
         Map<String, Object> resultMap = new LinkedHashMap<>();
         resultMap.put("chapterList", list);

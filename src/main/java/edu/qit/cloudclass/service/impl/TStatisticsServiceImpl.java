@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.rmi.runtime.Log;
 
 import java.util.List;
 
@@ -54,7 +53,7 @@ public class TStatisticsServiceImpl implements TStatisticsService {
 
     @Override
     public ServerResponse getStudyList(String courseId) {
-        List<StudyItem> studyItems = studyMapper.findStudyByCourseId(courseId);
+        List<StudyItem> studyItems = studyMapper.findStudyItemByCourseId(courseId);
         return ServerResponse.createBySuccess("查询成功", studyItems);
     }
 

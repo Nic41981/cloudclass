@@ -13,6 +13,14 @@
         insert into score(study, exam, createTime, score)
         values(#{score.study},#{score.exam},now(),#{score.score})
     </insert>
+    <update id="update">
+        update score
+        <trim prefix="set" suffixOverrides=",">
+            <if test="score.id != null">id = #{score.id},</if>
+            <if test="score.score != null">score = #{score.score},</if>
+        </trim>
+        where id = #{score.id};
+    </update>
     <delete id="delete">
         delete from score where id = #{id};
     </delete>
@@ -29,6 +37,10 @@
 
     <select id="getScoreList" resultType="edu.qit.cloudclass.domain.ScoreItem">
         select user.name,score.score from user,score,study where user.id = study.student and study.id = score.study and score.exam = #{exam};
+    </select>
+    <select id="selectScoreListByStudy" resultType="edu.qit.cloudclass.domain.Score">
+        select <include refid="base_column_list"/>
+        from score where study = #{study};
     </select>
 
 
