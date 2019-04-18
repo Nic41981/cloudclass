@@ -3,6 +3,7 @@ package edu.qit.cloudclass.service.impl;
 import edu.qit.cloudclass.dao.StudyMapper;
 import edu.qit.cloudclass.domain.Study;
 import edu.qit.cloudclass.service.ScoreService;
+import edu.qit.cloudclass.service.StudyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

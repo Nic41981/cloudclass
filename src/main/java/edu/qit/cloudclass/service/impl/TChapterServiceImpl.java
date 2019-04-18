@@ -26,7 +26,7 @@ public class TChapterServiceImpl implements TChapterService {
     public ServerResponse chapter(Chapter chapter) {
         chapter.setId(Tool.uuid());
         int maxNum = chapterMapper.findMaxNum(chapter.getCourse());
-        if (chapter.getNum() == 0 || chapter.getNum() > maxNum) {
+        if (chapter.getNum() <= 0 || chapter.getNum() > maxNum) {
             //追加章节-章节序号递增
             chapter.setNum(maxNum + 1);
         } else {
@@ -43,16 +43,16 @@ public class TChapterServiceImpl implements TChapterService {
 
     @Override
     public ServerResponse chapterModify(Chapter chapter) {
-        log.info("修改章节:" + chapter.toString());
+        log.info("更新章节:" + chapter.toString());
         if (chapterMapper.modify(chapter) == 0) {
-            log.error("修改失败");
-            return ServerResponse.createByError("修改异常");
+            log.error("更新失败");
+            return ServerResponse.createByError("更新失败");
         }
-        return ServerResponse.createBySuccessMsg("修改成功");
+        return ServerResponse.createBySuccessMsg("更新成功");
     }
 
     @Override
-    public ServerResponse chapterDelete(String courseId, String chapterId) {
+    public ServerResponse chapterDelete(String chapterId) {
         log.info("==========删除章节开始==========");
         //查找记录
         Chapter chapter = chapterMapper.findChapterByPrimaryKey(chapterId);
@@ -66,14 +66,13 @@ public class TChapterServiceImpl implements TChapterService {
             log.error("==========删除章节记录失败==========");
             return ServerResponse.createByError("删除失败");
         }
-        chapterMapper.updateNumAfterDelete(chapter.getNum(), courseId);
+        chapterMapper.updateNumAfterDelete(chapter.getNum(), chapter.getCourse());
         //级联删除
         if (chapter.getVideo() != null) {
             fileService.associateDelete(chapter.getVideo());
         }
         if (chapter.getChapterExam() != null) {
-            log.info("习题级联删除未完成");
-            //TODO 删除章节习题
+            chapterExamService.associateDelete(chapter.getChapterExam());
         }
         log.info("==========删除章节结束==========");
         return ServerResponse.createBySuccessMsg("删除成功");

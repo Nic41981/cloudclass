@@ -11,7 +11,7 @@ public interface TChapterService {
 
     ServerResponse chapterModify(Chapter chapter);
 
-    ServerResponse chapterDelete(String courseId, String chapterId);
+    ServerResponse chapterDelete(String chapterId);
 
     void associateDelete(String courseId);
 }

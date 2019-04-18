@@ -2,10 +2,7 @@ package edu.qit.cloudclass.service.impl;
 
 import edu.qit.cloudclass.dao.CourseMapper;
 import edu.qit.cloudclass.domain.Course;
-import edu.qit.cloudclass.service.FileService;
-import edu.qit.cloudclass.service.FinalExamService;
-import edu.qit.cloudclass.service.TChapterService;
-import edu.qit.cloudclass.service.TCourseService;
+import edu.qit.cloudclass.service.*;
 import edu.qit.cloudclass.tool.ServerResponse;
 import edu.qit.cloudclass.tool.Tool;
 import lombok.RequiredArgsConstructor;

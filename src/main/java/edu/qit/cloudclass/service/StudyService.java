@@ -1,4 +1,4 @@
-package edu.qit.cloudclass.service.impl;
+package edu.qit.cloudclass.service;
 
 /**
  * @author nic

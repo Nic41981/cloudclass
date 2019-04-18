@@ -11,9 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpSession;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/teacher")
@@ -28,13 +26,12 @@ public class TChapterController {
     public ServerResponse chapter(@RequestBody(required = false) Chapter chapter, HttpSession session) {
         //参数检查
         if (chapter == null || !Tool.checkParamsNotNull(chapter.getName(), chapter.getInfo(), chapter.getCourse())) {
-            log.warn(chapter.toString());
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
         }
         //权限判断
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
         if (user == null) {
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "权限不足");
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "用户未登陆");
         }
         ServerResponse resultResponse = permissionService.checkCourseOwnerPermission(user.getId(), chapter.getCourse());
         if (!resultResponse.isSuccess()) {
@@ -47,15 +44,15 @@ public class TChapterController {
     @RequestMapping(value = "/chapter/{chapterId}", method = RequestMethod.PUT)
     public ServerResponse chapterModify(@PathVariable("chapterId") String chapterId, @RequestBody(required = false) Chapter chapter, HttpSession session) {
         //参数检查
-        if (chapter == null || !Tool.checkParamsNotNull(chapterId, chapter.getCourse())) {
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
+        if (chapter == null){
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
         }
         //权限判断
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
         if (user == null) {
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "权限不足");
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "用户未登陆");
         }
-        ServerResponse resultResponse = permissionService.checkChapterOwnerPermission(user.getId(), chapter.getCourse(), chapterId);
+        ServerResponse resultResponse = permissionService.checkChapterOwnerPermission(user.getId(),chapterId);
         if (!resultResponse.isSuccess()) {
             return resultResponse;
         }
@@ -66,25 +63,17 @@ public class TChapterController {
 
 
     @RequestMapping(value = "/chapter/{chapterId}", method = RequestMethod.DELETE)
-    public ServerResponse chapterDelete(@PathVariable("chapterId") String chapterId, @RequestBody(required = false) Map<String, String> params, HttpSession session) {
-        //参数检查
-        if (params == null) {
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
-        }
-        String courseId = params.get("course");
-        if (!Tool.checkParamsNotNull(chapterId)) {
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
-        }
+    public ServerResponse chapterDelete(@PathVariable("chapterId") String chapterId, HttpSession session) {
         //权限判断
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
         if (user == null) {
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "权限不足");
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "用户未登录");
         }
-        ServerResponse resultResponse = permissionService.checkChapterOwnerPermission(user.getId(), courseId, chapterId);
+        ServerResponse resultResponse = permissionService.checkChapterOwnerPermission(user.getId(),chapterId);
         if (!resultResponse.isSuccess()) {
             return resultResponse;
         }
         //删除章节
-        return TChapterService.chapterDelete(courseId, chapterId);
+        return TChapterService.chapterDelete(chapterId);
     }
 }

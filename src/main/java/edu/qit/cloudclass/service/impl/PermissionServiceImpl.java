@@ -3,6 +3,7 @@ package edu.qit.cloudclass.service.impl;
 import edu.qit.cloudclass.dao.ChapterMapper;
 import edu.qit.cloudclass.dao.CourseMapper;
 import edu.qit.cloudclass.dao.StudyMapper;
+import edu.qit.cloudclass.domain.Chapter;
 import edu.qit.cloudclass.domain.Course;
 import edu.qit.cloudclass.domain.Study;
 import edu.qit.cloudclass.service.PermissionService;
@@ -40,12 +41,12 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public ServerResponse checkChapterOwnerPermission(String userId, String courseId, String chapterId) {
-        String targetCourse = chapterMapper.findCourseIdByPrimaryKey(chapterId);
-        if (targetCourse == null || !targetCourse.equals(courseId)) {
-            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "章节不存在");
+    public ServerResponse checkChapterOwnerPermission(String userId, String chapterId) {
+        Chapter chapter = chapterMapper.findChapterByPrimaryKey(chapterId);
+        if (chapter == null){
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"章节不存在");
         }
-        return checkCourseOwnerPermission(userId, targetCourse);
+        return checkCourseOwnerPermission(userId, chapter.getCourse());
     }
 
     @Override
