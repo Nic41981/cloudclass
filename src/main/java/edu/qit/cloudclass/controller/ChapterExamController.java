@@ -42,7 +42,7 @@ public class ChapterExamController {
         return chapterExamService.create(exam, user.getId());
     }
 
-    @RequestMapping(value = "/final/{examId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/chapter/{examId}", method = RequestMethod.GET)
     public ServerResponse getExamPage(@PathVariable("examId") String examId, HttpSession session) {
         //获取用户信息
         User user = (User) session.getAttribute(UserController.SESSION_KEY);

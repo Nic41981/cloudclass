@@ -2,6 +2,7 @@ package edu.qit.cloudclass.dao;
 
 import edu.qit.cloudclass.domain.FinalExam;
 import edu.qit.cloudclass.domain.spinner.ExamSpinner;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
  * @version 1.0
  * @date 19-4-17
  */
+@Mapper
 public interface FinalExamMapper {
     int insert(@Param("exam") FinalExam exam);
 
