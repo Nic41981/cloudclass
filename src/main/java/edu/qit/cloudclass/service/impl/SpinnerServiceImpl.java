@@ -1,8 +1,6 @@
 package edu.qit.cloudclass.service.impl;
 
-import edu.qit.cloudclass.dao.ChapterExamMapper;
-import edu.qit.cloudclass.dao.ChapterMapper;
-import edu.qit.cloudclass.dao.CourseMapper;
+import edu.qit.cloudclass.dao.*;
 import edu.qit.cloudclass.domain.spinner.ChapterSpinner;
 import edu.qit.cloudclass.domain.spinner.CourseSpinner;
 import edu.qit.cloudclass.domain.spinner.ExamSpinner;
@@ -13,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 /**
@@ -28,6 +25,7 @@ public class SpinnerServiceImpl implements SpinnerService {
     private final CourseMapper courseMapper;
     private final ChapterMapper chapterMapper;
     private final ChapterExamMapper chapterExamMapper;
+    private final FinalExamMapper finalExamMapper;
 
     @Override
     public ServerResponse<List<CourseSpinner>> getCourseList() {
@@ -52,11 +50,8 @@ public class SpinnerServiceImpl implements SpinnerService {
             return existResult;
         }
         List<ExamSpinner> examinationList = chapterExamMapper.getExamSpinnerList(courseId);
-        String finalExamId = courseMapper.findFinalExamByPrimaryKey(courseId);
-        if (finalExamId != null) {
-            ExamSpinner finalExam = new ExamSpinner();
-            finalExam.setId(finalExamId);
-            finalExam.setName("期末考试");
+        ExamSpinner finalExam = finalExamMapper.fingExamSpinnerByCourse(courseId);
+        if (finalExam != null){
             examinationList.add(finalExam);
         }
         return ServerResponse.createBySuccess("查询成功", examinationList);

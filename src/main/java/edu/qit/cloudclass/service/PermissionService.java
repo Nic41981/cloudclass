@@ -10,4 +10,6 @@ public interface PermissionService {
     ServerResponse checkCourseOwnerPermission(String userId, String courseId);
 
     ServerResponse checkChapterOwnerPermission(String userId, String courseId, String chapterId);
+
+    ServerResponse checkCourseMemberPermission(String userId,String courseId);
 }

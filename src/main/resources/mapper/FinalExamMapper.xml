@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.qit.cloudclass.dao.FinalExamMapper">
+    <sql id="base_column_list">
+        id,name,startTime,stopTime,createTime
+    </sql>
+    <insert id="insert">
+        insert into final_exam(<include refid="base_column_list"/>)
+        value (#{exam.id},#{exam.name},#{exam.startTime},#{exam.stopTime},now());
+    </insert>
+    <delete id="delete">
+        delete from final_exam where id = #{id};
+    </delete>
+    <select id="findExamByPrimaryKey" resultType="edu.qit.cloudclass.domain.FinalExam">
+        select <include refid="base_column_list"/>
+        from final_exam where id = #{id};
+    </select>
+    <select id="fingExamSpinnerByCourse" resultType="edu.qit.cloudclass.domain.spinner.ExamSpinner">
+        select final_exam.id,final_exam.name from final_exam,course
+        where course.finalExam = final_exam.id and course.id = #{course};
+    </select>
+</mapper>

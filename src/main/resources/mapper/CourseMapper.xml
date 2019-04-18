@@ -8,10 +8,6 @@
         id,name,image,createTime,teacher,tag,finalExam
     </sql>
 
-    <select id="findTeacherIdByPrimaryKey" resultType="java.lang.String">
-        select teacher from cloudclass.course where id = #{id};
-    </select>
-
     <select id="findCourseByPrimaryKey" resultType="edu.qit.cloudclass.domain.Course">
         select
         <include refid="base_column_list"/>

@@ -3,13 +3,23 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.qit.cloudclass.dao.ChapterExamMapper">
-
+    <sql id="base_column_list">
+        id,name,createTime
+    </sql>
+    <insert id="insert">
+        insert into chapter_exam(<include refid="base_column_list"/>)
+        value (#{exam.id},#{exam.name},now());
+    </insert>
+    <delete id="delete">
+        delete from chapter_exam where id = #{id};
+    </delete>
+    <select id="findExamByPrimaryKey" resultType="edu.qit.cloudclass.domain.ChapterExam">
+        select <include refid="base_column_list"/>
+        from chapter_exam where id = #{id};
+    </select>
     <select id="getExamSpinnerList" resultType="edu.qit.cloudclass.domain.spinner.ExamSpinner">
         select final_exam.id,final_exam.name from chapter,final_exam
         where chapter.chapterExam = final_exam.id and chapter.course = #{course}
-        order by if(isnull(chapter.num),1,0),num;
+        order by num;
     </select>
-
-
-
 </mapper>

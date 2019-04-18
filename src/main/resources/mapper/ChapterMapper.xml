@@ -1,28 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.qit.cloudclass.dao.ChapterMapper">
-  <resultMap id="base_result_map" type="edu.qit.cloudclass.domain.Chapter">
-    <result column="id" jdbcType="VARCHAR" property="id" />
-    <result column="course" jdbcType="VARCHAR" property="course" />
-    <result column="num" jdbcType="INTEGER" property="num" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="video" jdbcType="VARCHAR" property="video" />
-    <result column="chapterExam" jdbcType="VARCHAR" property="chapterExam" />
-    <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
-  </resultMap>
-
-  <sql id="base_column_list">
-    id,course,num,name,video,info,chapterExam,createTime
-  </sql>
     <resultMap id="base_result_map" type="edu.qit.cloudclass.domain.Chapter">
-        <result column="id" jdbcType="VARCHAR" property="id"/>
-        <result column="course" jdbcType="VARCHAR" property="course"/>
-        <result column="num" jdbcType="INTEGER" property="num"/>
-        <result column="name" jdbcType="VARCHAR" property="name"/>
-        <result column="video" jdbcType="VARCHAR" property="video"/>
-        <result column="chapterExam" jdbcType="VARCHAR" property="chapterExam"/>
-        <result column="createTime" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="id" jdbcType="VARCHAR" property="id" />
+        <result column="course" jdbcType="VARCHAR" property="course" />
+        <result column="num" jdbcType="INTEGER" property="num" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="video" jdbcType="VARCHAR" property="video" />
+        <result column="chapterExam" jdbcType="VARCHAR" property="chapterExam" />
+        <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
     </resultMap>
+
     <sql id="base_column_list">
         id,course,num,name,video,info,chapterExam,createTime
     </sql>
@@ -60,31 +48,11 @@
         </trim>
         where id = #{chapter.id};
     </update>
-  <update id="modify" parameterType="edu.qit.cloudclass.domain.Chapter">
-    update chapter
-    <trim prefix="set" suffixOverrides=",">
-      <if test="chapter.id != null">id = #{chapter.id},</if>
-      <if test="chapter.name != null">name = #{chapter.name},</if>
-      <if test="chapter.info != null">info = #{chapter.info},</if>
-    </trim>
-    where id = #{chapter.id};
-  </update>
 
     <update id="updateNumAfterDelete">
         update chapter set num = num - 1 where course = #{course} and num > #{num};
     </update>
 
-  <update id="updateNumBeforeInsert">
-    update chapter set num = num + 1 where course = #{course} and num >= #{num}
-  </update>
-
-  <update id="updateVideoIdAfterUpload">
-    update chapter set video = #{video} where id = #{id};
-  </update>
-
-  <update id="updateChapterExamAfterUpload">
-    update chapter set chapterExam = #{chapterExam} where id = #{id};
-  </update>
     <update id="updateNumBeforeInsert">
         update chapter set num = num + 1 where course = #{course} and num >= #{num}
     </update>
@@ -99,13 +67,6 @@
     <select id="getChapterSpinnerList" resultType="edu.qit.cloudclass.domain.spinner.ChapterSpinner">
         select id,num,name from chapter where course = #{course} order by num asc ;
     </select>
-
-<!-- 查询课程章节列表（播放页列表数据） 李九龙-->
-  <select id="courseChapterList" resultType="edu.qit.cloudclass.domain.Chapter">
-    select <include refid="base_column_list"/>
-    from chapter where course = #{course}
-    order by num;
-  </select>
 
     <!-- 查询课程章节列表（播放页列表数据） 李九龙-->
     <select id="courseChapterList" resultType="edu.qit.cloudclass.domain.Chapter">

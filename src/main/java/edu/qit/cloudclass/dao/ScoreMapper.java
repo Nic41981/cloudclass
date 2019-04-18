@@ -14,14 +14,12 @@ import java.util.List;
 @Mapper
 public interface ScoreMapper {
     int insert(@Param("score") Score score);
+
     int delete(@Param("id")int id);
+
     Score findScoreByPrimaryKey(@Param("id")int id);
+
     Score findScoreByStudyAndExam(@Param("study")int study,@Param("exam")String exam);
+
     List<ScoreItem> getScoreList(@Param("exam")String exam);
-
-    int delete(@Param("id") int id);
-
-    Score findScoreByPrimaryKey(@Param("id") int id);
-
-    Score findScoreByStudyAndExam(@Param("study") int study, @Param("exam") String exam);
 }

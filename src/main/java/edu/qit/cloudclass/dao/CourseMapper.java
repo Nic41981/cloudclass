@@ -39,11 +39,6 @@ public interface CourseMapper {
     /**
      * 董悦
      */
-    String findTeacherIdByPrimaryKey(@Param("id") String id);
-
-    /**
-     * 董悦
-     */
     int updateImageIdAfterUpload(@Param("id") String id, @Param("image") String image);
 
     /**
