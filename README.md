@@ -199,7 +199,7 @@ URL:_http://39.107.102.246/teacher/course/{课程ID}_
 |-4|课程不存在|
 ## 教师个人中心-章节部分
 ### 1.教师章节列表
-URL:_http://39.107.102.246/teacher/chapter/list
+URL:_http://39.107.102.246/teacher/chapter/list_
 
 请求方法:_GET_
 
@@ -219,7 +219,7 @@ URL:_http://39.107.102.246/teacher/chapter/list
 |-3|缺少参数|
 |-4|课程不存在|
 ### 2.创建章节
-URL:_http://39.107.102.246/teacher/chapter
+URL:_http://39.107.102.246/teacher/chapter_
 
 请求方法:_POST_
 
@@ -251,7 +251,7 @@ URL:_http://39.107.102.246/teacher/chapter
 |-3|缺少参数|
 |-4|课程不存在|
 ### 3.修改章节
-URL:_http://39.107.102.246/teacher/chapter/{章节ID}
+URL:_http://39.107.102.246/teacher/chapter/{章节ID}_
 
 请求方法:_PUT_
 
@@ -283,7 +283,7 @@ URL:_http://39.107.102.246/teacher/chapter/{章节ID}
 |-4|章节不存在|
 |-4|课程不存在|
 ### 4.删除章节
-URL:_http://39.107.102.246/teacher/chapter/{章节ID}
+URL:_http://39.107.102.246/teacher/chapter/{章节ID}_
 
 请求方法:_DELETE_
 
