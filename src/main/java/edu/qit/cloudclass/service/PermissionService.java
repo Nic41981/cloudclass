@@ -9,10 +9,6 @@ import edu.qit.cloudclass.tool.ServerResponse;
 public interface PermissionService {
     ServerResponse checkCourseOwnerPermission(String userId, String courseId);
 
-    ServerResponse checkChapterOwnerPermission(String userId, String chapterId);
-
-    ServerResponse checkCourseMemberPermission(String userId,String courseId);
-
     boolean isCourseExist(String courseId);
 
     boolean isTeacherOfCourse(String userId,String courseId);
