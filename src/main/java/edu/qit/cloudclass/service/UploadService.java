@@ -10,14 +10,18 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface UploadService {
 
-    ServerResponse uploadImage(MultipartFile multipartFile,String courseId);
+    ServerResponse uploadImage(MultipartFile multipartFile, String courseId);
 
-    ServerResponse uploadVideo(MultipartFile multipartFile,String courseId,String chapterId);
+    ServerResponse uploadVideo(MultipartFile multipartFile, String courseId, String chapterId);
 
-    ServerResponse<FileInfo> parserFileInfo(MultipartFile multipartFile,String fileType);
+    ServerResponse<FileInfo> parserFileInfo(MultipartFile multipartFile, String fileType);
 
     ServerResponse securityCheck(MultipartFile multipartFile, FileInfo fileInfo);
 
-    ServerResponse storageFile(MultipartFile multipartFile,FileInfo fileInfo,String targetId);
+    ServerResponse parserImageInfo(MultipartFile multipartFile);
+
+    ServerResponse parserVideoInfo(MultipartFile multipartFile);
+
+    ServerResponse storageFile(MultipartFile multipartFile, FileInfo fileInfo, String targetId);
 
 }

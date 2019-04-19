@@ -1,10 +1,11 @@
 package edu.qit.cloudclass.dao;
 
 import edu.qit.cloudclass.domain.Course;
-import edu.qit.cloudclass.domain.CourseSpinner;
+import edu.qit.cloudclass.domain.Study;
+import edu.qit.cloudclass.domain.spinner.CourseSpinner;
+import edu.qit.cloudclass.domain.spinner.SCourseSpinner;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -23,6 +24,8 @@ public interface CourseMapper {
 
     Course findCourseByPrimaryKey(@Param("id") String id);
 
+    List<Course> tagList(@Param("tag") String tag);
+
     /**
      * 王恺
      */
@@ -36,10 +39,40 @@ public interface CourseMapper {
     /**
      * 董悦
      */
-    String findTeacherIdByPrimaryKey(@Param("id")String id);
+    int updateImageIdAfterUpload(@Param("id") String id, @Param("image") String image);
 
     /**
      * 董悦
      */
-    int updateImageIdAfterUpdate(@Param("id") String id,@Param("image") String image);
+    String findFinalExamByPrimaryKey(@Param("id") String id);
+
+    /**
+     * 董悦
+     */
+    int updateFinalExamAfterUpload(@Param("id") String id, @Param("finalExam") String finalExam);
+
+    /**
+     * 李广源
+     */
+    List<SCourseSpinner> getSCourseList(@Param("studentId") String studentId);
+
+    /**
+     * 李广源
+     */
+    int insertScourseByCourseIdAndStudentId(Study study);
+
+    /**
+     * 李广源
+     */
+    int checkStudyByCourseIdAndStudentId(Study study);
+
+    /**
+     * 李广源
+     */
+    int deletScourseByCourseIdAndStudentId(Study study);
+
+    String fingCourseIdByFinalExam(@Param("finalExam")String finalExam);
+
+    String findTeacherIdByPrimaryKey(@Param("id")String id);
+
 }

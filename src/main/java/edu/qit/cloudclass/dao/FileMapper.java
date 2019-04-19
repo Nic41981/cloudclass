@@ -15,7 +15,7 @@ public interface FileMapper {
      */
     void insert(@Param("file") FileInfo fileInfo);
 
-    int delete(@Param("id")String id);
+    int delete(@Param("id") String id);
 
     FileInfo findFileByPrimaryKey(@Param("id") String id);
 

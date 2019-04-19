@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,38 +31,35 @@ public class UserController {
 
     private final UserService userServer;
 
-    @RequestMapping(value = "/register",method = RequestMethod.POST)
-    public ServerResponse register(@RequestBody(required = false) User user){
-        //接收并检查参数
-        if (user == null){
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
-        }
-        if (!Tool.checkParamsNotNull(user.getName(),user.getPassword(),user.getEmail())) {
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public ServerResponse register(@RequestBody(required = false) User user) {
+        //参数检查
+        if (user == null || !Tool.checkParamsNotNull(user.getName(), user.getPassword(), user.getEmail())) {
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
         }
         //调用service方法注册信息
         return userServer.register(user);
     }
 
-    @RequestMapping(value = "/login",method = RequestMethod.POST)
-    public ServerResponse login(@RequestBody(required = false) Map<String,String> params, HttpServletResponse response, HttpSession session){
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ServerResponse login(@RequestBody(required = false) Map<String, String> params, HttpServletResponse response, HttpSession session) {
         //接收并检查参数
-        if (params == null){
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+        if (params == null) {
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
         }
         String name = params.get("name");
         String password = params.get("password");
         boolean autoLogin = Boolean.parseBoolean(params.get("autoLogin"));
-        if (!Tool.checkParamsNotNull(name,password)) {
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+        if (!Tool.checkParamsNotNull(name, password)) {
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
         }
         //调用Service方法验证登录
-        ServerResponse<User> result = userServer.login(name,password,autoLogin);
+        ServerResponse<User> result = userServer.login(name, password, autoLogin);
         if (!result.isSuccess()) {
             return result;
         }
         //记录会话信息
-        session.setAttribute(SESSION_KEY,result.getData());
+        session.setAttribute(SESSION_KEY, result.getData());
         if (autoLogin) {
             //Cookie中写入自动登录凭证
             String taken = result.getData().getTaken();
@@ -72,25 +70,25 @@ public class UserController {
         return result;
     }
 
-    @RequestMapping(value = "/login/auto",method = RequestMethod.POST)
-    public ServerResponse autoLogin(HttpServletRequest request,HttpSession session){
+    @RequestMapping(value = "/login/auto", method = RequestMethod.POST)
+    public ServerResponse autoLogin(HttpServletRequest request, HttpSession session) {
         //获取Cookie
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"未获取Cookie");
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "未获取Cookie");
         }
         //遍历查找凭证
         for (Cookie cookie : cookies) {
             if (cookie.getName().equals(AUTO_LOGIN_KEY)) {
                 //调用Service方法自动登录
                 ServerResponse<User> autoLoginResult = userServer.autoLogin(cookie.getValue());
-                if (autoLoginResult.isSuccess()){
-                    session.setAttribute(SESSION_KEY,autoLoginResult.getData());
-                    return ServerResponse.createBySuccess("登陆成功",autoLoginResult.getData());
+                if (autoLoginResult.isSuccess()) {
+                    session.setAttribute(SESSION_KEY, autoLoginResult.getData());
+                    return ServerResponse.createBySuccess("登陆成功", autoLoginResult.getData());
                 }
             }
         }
-        return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"未找到凭证");
+        return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "未找到凭证");
     }
 
 }

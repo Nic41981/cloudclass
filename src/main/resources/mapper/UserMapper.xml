@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.qit.cloudclass.dao.UserMapper">
+
     <sql id="base_column_list">
         id,name,password,createTime,identity,email,taken
     </sql>
@@ -11,22 +12,29 @@
         insert into user(<include refid="base_column_list"/>)
         values (#{user.id},#{user.name},#{user.password},now(),#{user.identity},#{user.email},#{user.taken});
     </insert>
+
     <update id="registerAutoLogin">
         update user
         set taken = #{taken}
         where id = #{id};
     </update>
+
     <select id="login" resultType="edu.qit.cloudclass.domain.User">
-        select <include refid="base_column_list"/>
+        select
+        <include refid="base_column_list"/>
         from user where name = #{name};
     </select>
+
     <select id="autoLogin" resultType="edu.qit.cloudclass.domain.User">
-        select <include refid="base_column_list"/>
+        select
+        <include refid="base_column_list"/>
         from user where taken = #{taken}
     </select>
+
     <select id="checkName" resultType="java.lang.Integer">
         select count(1) from user where name = #{name};
     </select>
+
     <select id="checkEmail" resultType="java.lang.Integer">
         select count(1) from user where email = #{email};
     </select>

@@ -1,7 +1,7 @@
 package edu.qit.cloudclass.dao;
 
 import edu.qit.cloudclass.domain.Chapter;
-import edu.qit.cloudclass.domain.ChapterSpinner;
+import edu.qit.cloudclass.domain.spinner.ChapterSpinner;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,15 +16,13 @@ public interface ChapterMapper {
 
     int modify(@Param("chapter") Chapter chapter);
 
-    List<Chapter> chapterList(@Param("course") String course);
-
     Chapter findChapterByPrimaryKey(@Param("id") String id);
 
     int findMaxNum(@Param("course") String course);
 
-    int updateNumAfterDelete(@Param("num") int num,@Param("course")String course);
+    int updateNumAfterDelete(@Param("num") int num, @Param("course") String course);
 
-    int updateNumBeforeInsert(@Param("num") int num, @Param("course")String course);
+    int updateNumBeforeInsert(@Param("num") int num, @Param("course") String course);
 
     /**
      * 董悦
@@ -34,10 +32,19 @@ public interface ChapterMapper {
     /**
      * 董悦
      */
-    int updateVideoIdAfterUpload(@Param("id") String id,@Param("video") String video);
+    int updateVideoIdAfterUpload(@Param("id") String id, @Param("video") String video);
 
     /**
      * 王恺
      */
     List<ChapterSpinner> getChapterSpinnerList(@Param("course") String course);
+
+    /**
+     * 李九龙
+     */
+    List<Chapter> chapterList(@Param("course") String course);
+
+    int updateChapterExamAfterUpload(@Param("id") String id, @Param("chapterExam") String chapterExam);
+
+    String findCourseIdByChapterExam(@Param("chapterExam") String chapterExam);
 }

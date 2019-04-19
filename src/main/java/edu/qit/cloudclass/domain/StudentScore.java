@@ -4,10 +4,10 @@ import lombok.Data;
 
 /**
  * Created by Root
- * on 2019/3/30 23:13
  */
 @Data
-public class ExamSpinner {
-    private String id;
+public class StudentScore {
     private String name;
+    private int score;
+
 }

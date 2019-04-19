@@ -5,36 +5,47 @@
 <mapper namespace="edu.qit.cloudclass.dao.CourseMapper">
 
     <sql id="base_column_list">
-        id,name,image,createTime,teacher,tag
+        id,name,image,createTime,teacher,tag,finalExam
     </sql>
 
-    <select id="findTeacherIdByPrimaryKey" resultType="java.lang.String">
-        select teacher from cloudclass.course where id = #{id};
-    </select>
-
     <select id="findCourseByPrimaryKey" resultType="edu.qit.cloudclass.domain.Course">
-        select <include refid="base_column_list"/>
+        select
+        <include refid="base_column_list"/>
         from course where id = #{id};
     </select>
 
     <select id="coursesList" resultType="edu.qit.cloudclass.domain.Course">
-        select <include refid="base_column_list"/>
+        select
+        <include refid="base_column_list"/>
         from cloudclass.course where teacher = #{teacher}
         order by createTime desc;
     </select>
+
+    <!-- 第二阶段 -->
+    <select id="tagList" resultType="edu.qit.cloudclass.domain.Course">
+        select
+        <include refid="base_column_list"/>
+        from cloudclass.course where tag like '%${tag}%';
+    </select>
+
+
+    <!-- end -->
 
     <update id="modify" parameterType="edu.qit.cloudclass.domain.Course">
         update course
         <trim prefix="set" suffixOverrides=",">
             <if test="course.id != null">id = #{course.id},</if>
-            <if test= "course.name != null"> name = #{course.name},</if>
-            <if test= "course.tag != null"> tag = #{course.tag},</if>
+            <if test="course.name != null">name = #{course.name},</if>
+            <if test="course.tag != null">tag = #{course.tag},</if>
         </trim>
         where id = #{course.id}
     </update>
 
-    <update id="updateImageIdAfterUpdate">
+    <update id="updateImageIdAfterUpload">
         update course set image = #{image} where id = #{id};
+    </update>
+    <update id="updateFinalExamAfterUpload">
+        update course set finalExam = #{finalExam} where id = #{id};
     </update>
 
     <!-- 根据id删除课程信息 -->
@@ -49,11 +60,39 @@
     </insert>
 
     <!--查询课程列表-->
-    <select id="getCourseSpinnerList" resultType="edu.qit.cloudclass.domain.CourseSpinner">
+    <select id="getCourseSpinnerList" resultType="edu.qit.cloudclass.domain.spinner.CourseSpinner">
         select id,name from course;
     </select>
     <select id="checkCourseExist" resultType="java.lang.Integer">
         select count(1) from course where id = #{id};
     </select>
+    <select id="findFinalExamByPrimaryKey" resultType="java.lang.String">
+        select finalExam from course where id = #{id};
+    </select>
 
+    <!--查询学生已选课程列表-->
+    <select id="getSCourseList" resultType="edu.qit.cloudclass.domain.spinner.SCourseSpinner" parameterType="String">
+        select course.id,course.name,course.image,score.score from study,course,score where study.course=course.id and
+        score.study=study.id and study.student=#{studentId};
+    </select>
+
+    <!--学生选课-->
+    <insert id="insertScourseByCourseIdAndStudentId" parameterType="edu.qit.cloudclass.domain.Study">
+        insert into study(student,course,createTime) values(#{student},#{course},now());
+    </insert>
+    <!--检查该学生选课状态-->
+    <select id="checkStudyByCourseIdAndStudentId" resultType="int" parameterType="edu.qit.cloudclass.domain.Study">
+        select count(*) from study where course=#{course} and student=#{student};
+    </select>
+    <select id="fingCourseIdByFinalExam" resultType="java.lang.String">
+        select id from course where finalExam = #{finalExam};
+    </select>
+    <select id="findTeacherIdByPrimaryKey" resultType="java.lang.String">
+        select teacher from course where id = #{id};
+    </select>
+
+    <!--学生退课-->
+    <delete id="deletScourseByCourseIdAndStudentId" parameterType="edu.qit.cloudclass.domain.Study">
+        delete from study where course=#{course} and student=#{student};
+    </delete>
 </mapper>

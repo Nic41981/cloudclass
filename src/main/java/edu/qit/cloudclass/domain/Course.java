@@ -2,6 +2,7 @@ package edu.qit.cloudclass.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+
 import java.util.Date;
 
 @Data
@@ -18,4 +19,6 @@ public class Course {
 
     @JsonIgnore
     private Date createTime;
+
+    private String finalExam;
 }

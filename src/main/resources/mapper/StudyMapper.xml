@@ -3,7 +3,28 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.qit.cloudclass.dao.StudyMapper">
+
     <sql id="base_column_list">
-        id,student,num,course,createTime
+        id,student,course,createTime
     </sql>
+    <delete id="delete">
+        delete from study where id = #{id};
+    </delete>
+
+    <select id="findStudyByCourseAndStudent" resultType="edu.qit.cloudclass.domain.Study">
+        select
+        <include refid="base_column_list"/>
+        from study where course = #{course} and student = #{student};
+    </select>
+
+    <select id="selectUserNameListByCourse" resultType="string">
+        select user.name
+        from study,user
+        where study.student = user.id and study.course = #{course} ;
+    </select>
+    <select id="findStudyListByCourse" resultType="edu.qit.cloudclass.domain.Study">
+        select <include refid="base_column_list"/>
+        from study where course = #{course};
+    </select>
+
 </mapper>

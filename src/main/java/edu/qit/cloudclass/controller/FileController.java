@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class FileController {
     private final FileService fileService;
 
-    @RequestMapping(value = "/names",method = RequestMethod.GET)
-    public ServerResponse fileNames(@RequestParam(value = "file",required = false)String fileId){
-        if (!Tool.checkParamsNotNull(fileId)){
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+    @RequestMapping(value = "/names", method = RequestMethod.GET)
+    public ServerResponse fileNames(@RequestParam(value = "file", required = false) String fileId) {
+        if (!Tool.checkParamsNotNull(fileId)) {
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
         }
         return fileService.getFileNames(fileId);
     }

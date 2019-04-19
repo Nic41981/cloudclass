@@ -1,10 +1,8 @@
 package edu.qit.cloudclass.controller;
 
-import edu.qit.cloudclass.dao.CourseMapper;
 import edu.qit.cloudclass.domain.Course;
-
 import edu.qit.cloudclass.domain.User;
-import edu.qit.cloudclass.service.PermissionService;
+import edu.qit.cloudclass.service.SCourseService;
 import edu.qit.cloudclass.service.TCourseService;
 import edu.qit.cloudclass.tool.ResponseCode;
 import edu.qit.cloudclass.tool.ServerResponse;
@@ -22,47 +20,30 @@ import javax.servlet.http.HttpSession;
 public class TCourseController {
 
     private final TCourseService tCourseService;
-    private final PermissionService permissionService;
 
-
-    @RequestMapping(value = "/course/list",method = RequestMethod.GET)
-    public ServerResponse getCourses(HttpSession session){
-        //权限判断
+    @RequestMapping(value = "/course/list", method = RequestMethod.GET)
+    public ServerResponse getCourses(HttpSession session) {
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null || user.getIdentity() != User.TEACHER_IDENTITY){
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"权限不足");
-        }
-        //查找列表
         return tCourseService.getCourses(user.getId());
     }
 
-
-    @RequestMapping(value = "/course",method = RequestMethod.POST)
-    public ServerResponse add(@RequestBody(required = false) Course course,HttpSession session){
+    @RequestMapping(value = "/course", method = RequestMethod.POST)
+    public ServerResponse add(@RequestBody(required = false) Course course, HttpSession session) {
         //参数检查
-        if (!Tool.checkParamsNotNull(course.getName())){
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+        if (course == null || !Tool.checkParamsNotNull(course.getName())) {
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
         }
-        //权限判断
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null || user.getIdentity() != User.TEACHER_IDENTITY){
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"权限不足");
-        }
         course.setTeacher(user.getId());
         //创建课程
         return tCourseService.add(course);
     }
 
-    @RequestMapping(value = "/course/{courseId}",method = RequestMethod.PUT)
-    public ServerResponse modify(@PathVariable("courseId") String courseId, @RequestBody(required = false) Course course, HttpSession session) {
-        //权限检查
-        User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null){
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"权限不足");
-        }
-        ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(),courseId);
-        if (!permissionResult.isSuccess()){
-            return permissionResult;
+    @RequestMapping(value = "/course/{courseId}", method = RequestMethod.PUT)
+    public ServerResponse modify(@PathVariable("courseId") String courseId, @RequestBody(required = false) Course course) {
+        //参数检查
+        if (course == null) {
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
         }
         course.setId(courseId);
         //修改课程
@@ -70,19 +51,9 @@ public class TCourseController {
 
     }
 
-    @RequestMapping(value = "/course/{courseId}",method = RequestMethod.DELETE)
-    public ServerResponse deleteCourseById(@PathVariable("courseId") String courseId, HttpSession session){
-        //权限检查
-        User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null){
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"权限不足");
-        }
-        ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(),courseId);
-        if (!permissionResult.isSuccess()){
-            return permissionResult;
-        }
+    @RequestMapping(value = "/course/{courseId}", method = RequestMethod.DELETE)
+    public ServerResponse deleteCourseById(@PathVariable("courseId") String courseId) {
         //删除课程
         return tCourseService.deleteCourseById(courseId);
     }
-
 }
