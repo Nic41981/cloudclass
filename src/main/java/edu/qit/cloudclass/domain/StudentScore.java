@@ -6,8 +6,8 @@ import lombok.Data;
  * Created by Root
  */
 @Data
-public class StudyItem {
-    private String student;
+public class StudentScore {
     private String name;
-    private String course;
+    private int score;
+
 }

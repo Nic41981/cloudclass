@@ -56,10 +56,6 @@ public class TCourseServiceImpl implements TCourseService {
         log.info("==========删除课程开始==========");
         //查找记录
         Course course = tCourseMapper.findCourseByPrimaryKey(courseId);
-        if (course == null) {
-            log.error("==========获取课程记录失败==========");
-            return ServerResponse.createByError("删除失败");
-        }
         //删除记录
         log.info("删除课程:" + course.toString());
         if (tCourseMapper.delete(courseId) == 0) {

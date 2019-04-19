@@ -84,6 +84,12 @@
     <select id="checkStudyByCourseIdAndStudentId" resultType="int" parameterType="edu.qit.cloudclass.domain.Study">
         select count(*) from study where course=#{course} and student=#{student};
     </select>
+    <select id="fingCourseIdByFinalExam" resultType="java.lang.String">
+        select id from course where finalExam = #{finalExam};
+    </select>
+    <select id="findTeacherIdByPrimaryKey" resultType="java.lang.String">
+        select teacher from course where id = #{id};
+    </select>
 
     <!--学生退课-->
     <delete id="deletScourseByCourseIdAndStudentId" parameterType="edu.qit.cloudclass.domain.Study">

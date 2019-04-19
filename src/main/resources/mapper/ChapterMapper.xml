@@ -75,4 +75,7 @@
         from chapter where course = #{course}
         order by num;
     </select>
+    <select id="findCourseIdByChapterExam" resultType="java.lang.String">
+        select course from chapter where chapterExam = #{chapterExam};
+    </select>
 </mapper>

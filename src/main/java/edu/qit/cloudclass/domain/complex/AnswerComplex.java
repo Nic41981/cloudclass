@@ -11,8 +11,6 @@ import java.util.List;
  */
 @Data
 public class AnswerComplex {
-    private String user;
-    private String exam;
     List<Answer> choiceList;
     List<Answer> judgementList;
 }

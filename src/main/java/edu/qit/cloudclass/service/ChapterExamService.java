@@ -11,9 +11,9 @@ import edu.qit.cloudclass.tool.ServerResponse;
  */
 public interface ChapterExamService {
     ServerResponse create(ChapterExam exam, String userId);
-    ServerResponse page(String examId, String userId);
-    ServerResponse submit(AnswerComplex answer);
-    ServerResponse score(String userId, String chapterId);
+    ServerResponse page(String examId);
+    ServerResponse submit(String userId,String examId,AnswerComplex answer);
+    ServerResponse score(String userId, String examId);
     void associateDelete(String examId);
 
 }

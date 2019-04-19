@@ -3,12 +3,11 @@ package edu.qit.cloudclass.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.qit.cloudclass.tool.Tool;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author nic
@@ -17,6 +16,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@ToString
 public class FinalExam extends AbstractExam{
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String course;
@@ -34,7 +34,9 @@ public class FinalExam extends AbstractExam{
     @Override
     @JsonIgnore
     public boolean isCompleteExamination(){
-        return Tool.checkParamsNotNull(name,course) && startTime != null && stopTime != null;
+        return Tool.checkParamsNotNull(name,course)
+                && startTime != null && stopTime != null
+                && choiceList != null && judgementList != null;
     }
 
     @JsonIgnore

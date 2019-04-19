@@ -3,14 +3,15 @@ package edu.qit.cloudclass.controller;
 import edu.qit.cloudclass.domain.FinalExam;
 import edu.qit.cloudclass.domain.User;
 import edu.qit.cloudclass.domain.complex.AnswerComplex;
+import edu.qit.cloudclass.service.ExamService;
 import edu.qit.cloudclass.service.FinalExamService;
+import edu.qit.cloudclass.service.PermissionService;
 import edu.qit.cloudclass.tool.ResponseCode;
 import edu.qit.cloudclass.tool.ServerResponse;
 import edu.qit.cloudclass.tool.Tool;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpSession;
 
 /**
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpSession;
 public class FinalExamController {
 
     private final FinalExamService finalExamService;
+    private final PermissionService permissionService;
 
     @RequestMapping(value = "/final", method = RequestMethod.POST)
     public ServerResponse createFinalExam(
@@ -38,47 +40,38 @@ public class FinalExamController {
         }
         //获取用户信息
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null) {
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "用户未登录");
+        if (!permissionService.isCourseExist(exam.getCourse())){
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"课程不存在");
+        }
+        if (!permissionService.isTeacherOfCourse(user.getId(),exam.getCourse())){
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"权限不足");
         }
         //创建期末考试
-        return finalExamService.create(exam, user.getId());
+        return finalExamService.create(exam);
     }
 
     @RequestMapping(value = "/final/{examId}", method = RequestMethod.GET)
-    public ServerResponse getExamPage(@PathVariable("examId") String examId, HttpSession session) {
-        //获取用户信息
-        User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null) {
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "用户未登录");
-        }
+    public ServerResponse getExamPage(@PathVariable("examId") String examId) {
         //查询试卷
-        return finalExamService.page(examId, user.getId());
+        return finalExamService.page(examId);
     }
 
-    @RequestMapping(value = "/final/submit", method = RequestMethod.POST)
-    public ServerResponse submitExam(@RequestBody(required = false) AnswerComplex answer, HttpSession session) {
+    @RequestMapping(value = "/final/{examId}", method = RequestMethod.POST)
+    public ServerResponse submitExam(@PathVariable("examId")String examId,@RequestBody(required = false) AnswerComplex answer, HttpSession session) {
         //参数检查
-        if (answer == null || !Tool.checkParamsNotNull(answer.getExam())) {
+        if (answer == null || answer.getChoiceList() == null || answer.getJudgementList() == null) {
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
         }
         //获取用户信息
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null) {
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "用户未登录");
-        }
         //提交答案
-        answer.setUser(user.getId());
-        return finalExamService.submit(answer);
+        return finalExamService.submit(user.getId(),examId,answer);
     }
 
-    @RequestMapping(value = "/final/score/{courseId}", method = RequestMethod.GET)
-    public ServerResponse finalExamScore(@PathVariable("courseId") String courseId, HttpSession session) {
+    @RequestMapping(value = "/final/score/{examId}", method = RequestMethod.GET)
+    public ServerResponse finalExamScore(@PathVariable("examId") String examId, HttpSession session) {
         //获取用户信息
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null) {
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "权限不足");
-        }
-        return finalExamService.score(user.getId(), courseId);
+        return finalExamService.score(user.getId(), examId);
     }
 }

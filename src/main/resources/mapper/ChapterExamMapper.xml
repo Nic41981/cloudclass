@@ -22,4 +22,7 @@
         where chapter.chapterExam = final_exam.id and chapter.course = #{course}
         order by num;
     </select>
+    <select id="checkExamExist" resultType="java.lang.Integer">
+        select count(1) from chapter_exam where id = #{id};
+    </select>
 </mapper>

@@ -2,7 +2,6 @@ package edu.qit.cloudclass.service.impl;
 
 import edu.qit.cloudclass.dao.CourseMapper;
 import edu.qit.cloudclass.dao.FinalExamMapper;
-import edu.qit.cloudclass.dao.ScoreMapper;
 import edu.qit.cloudclass.dao.StudyMapper;
 import edu.qit.cloudclass.domain.*;
 import edu.qit.cloudclass.domain.complex.AnswerComplex;
@@ -14,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 /**
  * @author nic
@@ -28,34 +26,19 @@ public class FinalExamServiceImpl implements FinalExamService {
     private final CourseMapper courseMapper;
     private final StudyMapper studyMapper;
     private final FinalExamMapper finalExamMapper;
-    private final PermissionService permissionService;
     private final QuestionService questionService;
     private final ExamService examService;
     private final ScoreService scoreService;
 
-
     @Override
-    public ServerResponse create(FinalExam exam, String userId) {
-
+    public ServerResponse create(FinalExam exam) {
         exam.setId(Tool.uuid());
-        //查询课程信息
-        Course course = courseMapper.findCourseByPrimaryKey(exam.getCourse());
-        if (course == null) {
-            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "课程不存在");
-        }
-        if (!course.getTeacher().equals(userId)) {
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "权限不足");
-        }
-        //题目信息处理
-        List<Question> choiceList = examService.parserQuestion(exam.getChoiceList(), exam.getId(), Question.CHOICE_QUESTION);
-        if (choiceList == null || choiceList.size() < 1) {
-            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "有效问题不足");
-        }
-        List<Question> judgementList = examService.parserQuestion(exam.getJudgementList(), exam.getId(), Question.JUDGEMENT_QUESTION);
-        if (judgementList == null || judgementList.size() < 1) {
-            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "有效问题不足");
+        exam = (FinalExam) examService.parserQuestion(exam);
+        if (exam.getChoiceList().isEmpty() || exam.getJudgementList().isEmpty()){
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"有效题目不足");
         }
         //级联删除
+        Course course = courseMapper.findCourseByPrimaryKey(exam.getCourse());
         if (course.getFinalExam() != null) {
             associateDelete(course.getFinalExam());
         }
@@ -70,44 +53,34 @@ public class FinalExamServiceImpl implements FinalExamService {
             log.error("==========试卷信息创建失败==========");
             return ServerResponse.createByError("创建失败");
         }
-        log.info("有效选择题数目:" + choiceList.size());
-        questionService.insertList(choiceList);
-        log.info("有效判断题数目:" + choiceList.size());
-        questionService.insertList(judgementList);
+        log.info("有效选择题数目:" + exam.getChoiceList().size());
+        questionService.insertList(exam.getChoiceList());
+        log.info("有效判断题数目:" + exam.getJudgementList().size());
+        questionService.insertList(exam.getJudgementList());
         log.info("==========创建期末考试结束==========");
         return ServerResponse.createBySuccessMsg("创建成功");
     }
 
     @Override
-    public ServerResponse page(String examId, String userId) {
+    public ServerResponse page(String examId) {
         FinalExam exam = finalExamMapper.findExamByPrimaryKey(examId);
-        if (exam == null) {
-            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "考试不存在");
-        }
-        if (exam.isSubmittable()){
+        if (!exam.isSubmittable()){
             return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"不在考试时间");
-        }
-        ServerResponse permissionResult = permissionService.checkCourseMemberPermission(userId,exam.getCourse());
-        if (!permissionResult.isSuccess()){
-            return permissionResult;
         }
         exam = (FinalExam) examService.shuffleQuestionList(exam);
         return ServerResponse.createBySuccess("查询成功", exam);
     }
 
     @Override
-    public ServerResponse submit(AnswerComplex answer) {
-
-        FinalExam exam = finalExamMapper.findExamByPrimaryKey(answer.getExam());
-        if (exam == null) {
-            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "考试不存在");
-        }
+    public ServerResponse submit(String userId,String examId,AnswerComplex answer) {
+        FinalExam exam = finalExamMapper.findExamByPrimaryKey(examId);
         if (!exam.isSubmittable()) {
             return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "不在考试时间");
         }
-        Study study = studyMapper.findStudyByCourseAndStudent(exam.getCourse(), answer.getUser());
-        if (study == null) {
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "未参加学习");
+        String courseId = courseMapper.fingCourseIdByFinalExam(examId);
+        Study study = studyMapper.findStudyByCourseAndStudent(courseId, userId);
+        if (study == null){
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"未参加学习");
         }
         Score score = scoreService.findScoreByStudyAndExam(study.getId(),exam.getId());
         if (score != null){
@@ -116,27 +89,18 @@ public class FinalExamServiceImpl implements FinalExamService {
         //创建记录
         score = new Score();
         score.setStudy(study.getId());
-        score.setExam(answer.getExam());
-        score.setScore(examService.countScore(answer));
+        score.setExam(examId);
+        score.setScore(examService.countScore(answer,examId));
         return scoreService.insert(score);
     }
 
     @Override
-    public ServerResponse score(String userId, String courseId) {
-        Course course = courseMapper.findCourseByPrimaryKey(courseId);
-        if (course == null) {
-            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "课程不存在");
-        }
-        if (course.getFinalExam() == null) {
-            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "考试不存在");
-        }
+    public ServerResponse score(String userId, String examId) {
+        String courseId = courseMapper.fingCourseIdByFinalExam(examId);
         Study study = studyMapper.findStudyByCourseAndStudent(courseId, userId);
-        if (study == null) {
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "未参加学习");
-        }
-        Score score = scoreService.findScoreByStudyAndExam(study.getId(), course.getFinalExam());
+        Score score = scoreService.findScoreByStudyAndExam(study.getId(),examId);
         if (score == null) {
-            return ServerResponse.createByError("暂无成绩");
+            return ServerResponse.createBySuccessMsg("暂无成绩");
         }
         return ServerResponse.createBySuccess("查询成功", score);
     }

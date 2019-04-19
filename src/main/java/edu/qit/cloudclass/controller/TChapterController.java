@@ -30,31 +30,21 @@ public class TChapterController {
         }
         //权限判断
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null) {
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "用户未登陆");
+        if (!permissionService.isCourseExist(chapter.getCourse())){
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"课程不存在");
         }
-        ServerResponse resultResponse = permissionService.checkCourseOwnerPermission(user.getId(), chapter.getCourse());
-        if (!resultResponse.isSuccess()) {
-            return resultResponse;
+        if (!permissionService.isTeacherOfCourse(user.getId(),chapter.getCourse())){
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"权限不足");
         }
         //创建章节
         return TChapterService.chapter(chapter);
     }
 
     @RequestMapping(value = "/chapter/{chapterId}", method = RequestMethod.PUT)
-    public ServerResponse chapterModify(@PathVariable("chapterId") String chapterId, @RequestBody(required = false) Chapter chapter, HttpSession session) {
+    public ServerResponse chapterModify(@PathVariable("chapterId") String chapterId, @RequestBody(required = false) Chapter chapter) {
         //参数检查
         if (chapter == null){
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
-        }
-        //权限判断
-        User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null) {
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "用户未登陆");
-        }
-        ServerResponse resultResponse = permissionService.checkChapterOwnerPermission(user.getId(),chapterId);
-        if (!resultResponse.isSuccess()) {
-            return resultResponse;
         }
         chapter.setId(chapterId);
         //修改章节
@@ -63,16 +53,7 @@ public class TChapterController {
 
 
     @RequestMapping(value = "/chapter/{chapterId}", method = RequestMethod.DELETE)
-    public ServerResponse chapterDelete(@PathVariable("chapterId") String chapterId, HttpSession session) {
-        //权限判断
-        User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null) {
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "用户未登录");
-        }
-        ServerResponse resultResponse = permissionService.checkChapterOwnerPermission(user.getId(),chapterId);
-        if (!resultResponse.isSuccess()) {
-            return resultResponse;
-        }
+    public ServerResponse chapterDelete(@PathVariable("chapterId") String chapterId) {
         //删除章节
         return TChapterService.chapterDelete(chapterId);
     }

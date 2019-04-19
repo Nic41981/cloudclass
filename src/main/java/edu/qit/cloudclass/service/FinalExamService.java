@@ -10,9 +10,9 @@ import edu.qit.cloudclass.tool.ServerResponse;
  * @date 19-4-17
  */
 public interface FinalExamService {
-    ServerResponse create(FinalExam exam, String userId);
-    ServerResponse page(String examId, String userId);
-    ServerResponse submit(AnswerComplex answer);
-    ServerResponse score(String userId, String courseId);
+    ServerResponse create(FinalExam exam);
+    ServerResponse page(String examId);
+    ServerResponse submit(String userId,String examId,AnswerComplex answer);
+    ServerResponse score(String userId, String examId);
     void associateDelete(String examId);
 }

@@ -12,4 +12,20 @@ public interface PermissionService {
     ServerResponse checkChapterOwnerPermission(String userId, String chapterId);
 
     ServerResponse checkCourseMemberPermission(String userId,String courseId);
+
+    boolean isCourseExist(String courseId);
+
+    boolean isTeacherOfCourse(String userId,String courseId);
+
+    String getCourseIdByChapterId(String chapterId);
+
+    boolean isFinalExamExist(String examId);
+
+    String getCourseIdByFinalExam(String examId);
+
+    boolean isMemberOfCourse(String userId,String courseId);
+
+    boolean isChapterExamExist(String examId);
+
+    String getCourseIdByChapterExam(String examId);
 }

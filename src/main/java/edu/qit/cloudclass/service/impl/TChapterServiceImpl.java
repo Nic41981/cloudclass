@@ -56,10 +56,6 @@ public class TChapterServiceImpl implements TChapterService {
         log.info("==========删除章节开始==========");
         //查找记录
         Chapter chapter = chapterMapper.findChapterByPrimaryKey(chapterId);
-        if (chapter == null) {
-            log.error("==========获取章节记录失败==========");
-            return ServerResponse.createByError("删除失败");
-        }
         //删除记录
         log.info("删除章节:" + chapter.toString());
         if (chapterMapper.delete(chapterId) == 0) {

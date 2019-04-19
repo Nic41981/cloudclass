@@ -17,10 +17,10 @@
         from study where course = #{course} and student = #{student};
     </select>
 
-    <select id="findStudyItemByCourseId" resultType="edu.qit.cloudclass.domain.StudyItem">
-        select study.student,user.name
+    <select id="selectUserNameListByCourse" resultType="string">
+        select user.name
         from study,user
-        where study.student = user.id and  study.course = #{course} ;
+        where study.student = user.id and study.course = #{course} ;
     </select>
     <select id="findStudyListByCourse" resultType="edu.qit.cloudclass.domain.Study">
         select <include refid="base_column_list"/>

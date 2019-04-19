@@ -23,11 +23,11 @@ public class ExamServiceImpl implements ExamService {
     private final QuestionService questionService;
 
     @Override
-    public int countScore(AnswerComplex answer) {
+    public int countScore(AnswerComplex answer,String examId) {
         int total = 0;
         log.info("==========选择结算开始==========");
         int score = 0;
-        List<Answer> tAnswerList = questionService.getAnswerListByType(answer.getExam(), Question.CHOICE_QUESTION);
+        List<Answer> tAnswerList = questionService.getAnswerListByType(examId, Question.CHOICE_QUESTION);
         List<Answer> sAnswerList = answer.getChoiceList();
         for (Answer sAnswer : sAnswerList) {
             if (tAnswerList.contains(sAnswer)) {
@@ -44,7 +44,7 @@ public class ExamServiceImpl implements ExamService {
         log.info("==========选择结算结束==========");
         log.info("==========判断结算开始==========");
         score = 0;
-        tAnswerList = questionService.getAnswerListByType(answer.getExam(), Question.JUDGEMENT_QUESTION);
+        tAnswerList = questionService.getAnswerListByType(examId, Question.JUDGEMENT_QUESTION);
         sAnswerList = answer.getJudgementList();
         for (Answer sAnswer : sAnswerList) {
             if (tAnswerList.contains(sAnswer)) {
@@ -106,6 +106,37 @@ public class ExamServiceImpl implements ExamService {
         judgementList = new ArrayList<>(judgementList);
         Collections.shuffle(judgementList);
         exam.setJudgementList(judgementList);
+        return exam;
+    }
+
+    @Override
+    public AbstractExam parserQuestion(AbstractExam exam) {
+        List<Question> questionList = exam.getChoiceList();
+        if (questionList != null) {
+            for (Question question : questionList) {
+                question.setExam(exam.getId());
+                question.setType(Question.CHOICE_QUESTION);
+                if (!question.isChoiceQuestion()) {
+                    log.warn("选择题解析错误:" + question);
+                    questionList.remove(question);
+                } else {
+                    question.encodeOption();
+                }
+            }
+        }
+        exam.setChoiceList(questionList);
+        questionList = exam.getJudgementList();
+        if (questionList != null) {
+            for (Question question : questionList) {
+                question.setExam(exam.getId());
+                question.setType(Question.JUDGEMENT_QUESTION);
+                if (!question.isJudgementQuestion()) {
+                    log.warn("判断题解析错误:" + question);
+                    questionList.remove(question);
+                }
+            }
+        }
+        exam.setJudgementList(questionList);
         return exam;
     }
 

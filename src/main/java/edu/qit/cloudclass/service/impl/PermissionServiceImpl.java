@@ -1,8 +1,6 @@
 package edu.qit.cloudclass.service.impl;
 
-import edu.qit.cloudclass.dao.ChapterMapper;
-import edu.qit.cloudclass.dao.CourseMapper;
-import edu.qit.cloudclass.dao.StudyMapper;
+import edu.qit.cloudclass.dao.*;
 import edu.qit.cloudclass.domain.Chapter;
 import edu.qit.cloudclass.domain.Course;
 import edu.qit.cloudclass.domain.Study;
@@ -26,6 +24,8 @@ public class PermissionServiceImpl implements PermissionService {
     private final CourseMapper courseMapper;
     private final ChapterMapper chapterMapper;
     private final StudyMapper studyMapper;
+    private final FinalExamMapper finalExamMapper;
+    private final ChapterExamMapper chapterExamMapper;
 
     @Override
     public ServerResponse checkCourseOwnerPermission(String userId, String courseId) {
@@ -62,5 +62,48 @@ public class PermissionServiceImpl implements PermissionService {
             }
         }
         return ServerResponse.createBySuccess();
+    }
+
+    @Override
+    public boolean isCourseExist(String courseId) {
+        return courseMapper.checkCourseExist(courseId) == 1;
+    }
+
+    @Override
+    public boolean isTeacherOfCourse(String userId, String courseId) {
+        return courseMapper.findCourseByPrimaryKey(courseId).getTeacher().equals(userId);
+    }
+
+    @Override
+    public String getCourseIdByChapterId(String chapterId) {
+        return chapterMapper.findCourseIdByPrimaryKey(chapterId);
+    }
+
+    @Override
+    public boolean isFinalExamExist(String examId) {
+        return finalExamMapper.checkExamExist(examId) == 1;
+    }
+
+    @Override
+    public String getCourseIdByFinalExam(String examId) {
+        return courseMapper.fingCourseIdByFinalExam(examId);
+    }
+
+    @Override
+    public boolean isMemberOfCourse(String userId, String courseId) {
+        if (courseMapper.findTeacherIdByPrimaryKey(courseId).equals(userId)){
+            return true;
+        }
+        return studyMapper.findStudyByCourseAndStudent(courseId, userId) != null;
+    }
+
+    @Override
+    public boolean isChapterExamExist(String examId) {
+        return chapterExamMapper.checkExamExist(examId) == 1;
+    }
+
+    @Override
+    public String getCourseIdByChapterExam(String examId) {
+        return chapterMapper.findCourseIdByChapterExam(examId);
     }
 }

@@ -21,4 +21,7 @@
         select final_exam.id,final_exam.name from final_exam,course
         where course.finalExam = final_exam.id and course.id = #{course};
     </select>
+    <select id="checkExamExist" resultType="java.lang.Integer">
+        select count(1) from final_exam where id = #{id};
+    </select>
 </mapper>

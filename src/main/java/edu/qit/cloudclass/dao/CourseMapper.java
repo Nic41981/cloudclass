@@ -71,4 +71,8 @@ public interface CourseMapper {
      */
     int deletScourseByCourseIdAndStudentId(Study study);
 
+    String fingCourseIdByFinalExam(@Param("finalExam")String finalExam);
+
+    String findTeacherIdByPrimaryKey(@Param("id")String id);
+
 }
