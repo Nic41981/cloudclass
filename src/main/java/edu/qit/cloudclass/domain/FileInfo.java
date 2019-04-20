@@ -19,12 +19,16 @@ public class FileInfo {
     private String id;
 
     @JsonIgnore
-    private String realName;
+    private String filePath;
 
-    @JsonIgnore
-    private String type;
+    private String mappingPath;
+
+    private String realName;
 
     private String suffix;
 
+    @JsonIgnore
     private Date uploadTime;
+
+
 }

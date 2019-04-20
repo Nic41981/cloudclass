@@ -30,7 +30,7 @@ public class WebConfigure implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor).addPathPatterns("/teacher/**","/exam/**");
+        registry.addInterceptor(loginInterceptor).addPathPatterns("/teacher/**","/exam/**","/upload/**");
         registry.addInterceptor(teacherIdentifyInterceptor).addPathPatterns("/teacher/**");
         registry.addInterceptor(teacherCourseInterceptor).addPathPatterns("/teacher/course/**").excludePathPatterns("/teacher/course/list","/teacher/course");
         registry.addInterceptor(teacherChapterInterceptor).addPathPatterns("/teacher/chapter/**").excludePathPatterns("/teacher/chapter/list","/teacher/chapter");

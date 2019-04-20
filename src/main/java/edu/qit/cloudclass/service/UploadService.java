@@ -1,6 +1,5 @@
 package edu.qit.cloudclass.service;
 
-import edu.qit.cloudclass.domain.FileInfo;
 import edu.qit.cloudclass.tool.ServerResponse;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,18 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface UploadService {
 
-    ServerResponse uploadImage(MultipartFile multipartFile, String courseId);
+    ServerResponse uploadCourseImage(MultipartFile multipartFile, String courseId);
 
-    ServerResponse uploadVideo(MultipartFile multipartFile, String courseId, String chapterId);
-
-    ServerResponse<FileInfo> parserFileInfo(MultipartFile multipartFile, String fileType);
-
-    ServerResponse securityCheck(MultipartFile multipartFile, FileInfo fileInfo);
-
-    ServerResponse parserImageInfo(MultipartFile multipartFile);
-
-    ServerResponse parserVideoInfo(MultipartFile multipartFile);
-
-    ServerResponse storageFile(MultipartFile multipartFile, FileInfo fileInfo, String targetId);
+    ServerResponse uploadChapterVideo(MultipartFile multipartFile, String chapterId);
 
 }

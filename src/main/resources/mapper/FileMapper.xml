@@ -4,11 +4,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="edu.qit.cloudclass.dao.FileMapper">
     <sql id="base_column_list">
-        id,realName,suffix,type,uploadTime
+        id,filePath,mappingPath,realName,suffix,uploadTime
     </sql>
     <insert id="insert">
         insert into file (<include refid="base_column_list"/>)
-        values (#{file.id},#{file.realName},#{file.suffix},#{file.type},now());
+        values (#{file.id},#{file.filePath},#{file.mappingPath},#{file.realName},#{file.suffix},now());
     </insert>
     <delete id="delete">
         delete from file where id = #{id};
