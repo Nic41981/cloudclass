@@ -16,6 +16,4 @@ public interface SpinnerService {
     ServerResponse getChapterList(String courseId);
 
     ServerResponse getExaminationList(String courseId);
-
-    ServerResponse checkCourseExist(String courseId);
 }

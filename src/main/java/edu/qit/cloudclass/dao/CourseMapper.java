@@ -4,6 +4,7 @@ import edu.qit.cloudclass.domain.Course;
 import edu.qit.cloudclass.domain.Study;
 import edu.qit.cloudclass.domain.spinner.CourseSpinner;
 import edu.qit.cloudclass.domain.spinner.SCourseSpinner;
+import javafx.scene.control.Spinner;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -54,12 +55,7 @@ public interface CourseMapper {
     /**
      * 李广源
      */
-    List<SCourseSpinner> getSCourseList(@Param("studentId") String studentId);
-
-    /**
-     * 李广源
-     */
-    int insertScourseByCourseIdAndStudentId(Study study);
+    List<Course> getSCourseList(@Param("student") String student);
 
     /**
      * 李广源
@@ -75,4 +71,7 @@ public interface CourseMapper {
 
     String findTeacherIdByPrimaryKey(@Param("id")String id);
 
+    List<CourseSpinner> selectCourseSpinnerListByTeacher(@Param("teacher")String teacher);
+
+    List<CourseSpinner> selectCourseSpinnerListByStudent(@Param("student") String student);
 }

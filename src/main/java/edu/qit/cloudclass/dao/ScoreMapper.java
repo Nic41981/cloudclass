@@ -2,6 +2,7 @@ package edu.qit.cloudclass.dao;
 
 import edu.qit.cloudclass.domain.Score;
 import edu.qit.cloudclass.domain.StudentScore;
+import edu.qit.cloudclass.domain.complex.ScoreWithName;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -27,5 +28,7 @@ public interface ScoreMapper {
 
     List<StudentScore> getScoreList(@Param("exam")String exam);
 
-    int update(Score score);
+    int update(@Param("score") Score score);
+
+    List<ScoreWithName> selectScoreWithNameListByExam(@Param("exam")String exam);
 }

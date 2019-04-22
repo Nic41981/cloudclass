@@ -9,6 +9,6 @@ public interface CourseService {
 
     ServerResponse<List<Course>> tagList(String tag);
 
-    ServerResponse courseChapterList(String courseId, String userId);
+    ServerResponse courseChapterList(String courseId);
 
 }

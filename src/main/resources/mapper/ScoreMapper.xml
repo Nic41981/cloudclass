@@ -45,7 +45,11 @@
     </select>
     <select id="selectScoreListByExam" resultType="edu.qit.cloudclass.domain.Score">
         select <include refid="base_column_list"/>
-        from score where exam = #{exam};
+        from score where exam = #{exam} order by score desc;
+    </select>
+    <select id="selectScoreWithNameListByExam" resultType="edu.qit.cloudclass.domain.complex.ScoreWithName">
+        select user.name,score.score from user,study,score
+        where user.id = study.student and study.id = score.study and score.exam = #{exam};
     </select>
 
 

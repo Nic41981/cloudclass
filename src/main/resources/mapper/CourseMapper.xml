@@ -25,7 +25,7 @@
     <select id="tagList" resultType="edu.qit.cloudclass.domain.Course">
         select
         <include refid="base_column_list"/>
-        from cloudclass.course where tag like '%${tag}%';
+        from cloudclass.course where tag like "%"#{tag}"%";
     </select>
 
 
@@ -71,15 +71,10 @@
     </select>
 
     <!--查询学生已选课程列表-->
-    <select id="getSCourseList" resultType="edu.qit.cloudclass.domain.spinner.SCourseSpinner" parameterType="String">
-        select course.id,course.name,course.image,score.score from study,course,score where study.course=course.id and
-        score.study=study.id and study.student=#{studentId};
+    <select id="getSCourseList" resultType="edu.qit.cloudclass.domain.Course" parameterType="String">
+        select course.id, name, image, course.createTime, teacher, tag, finalExam
+        from study,course where study.course = course.id and study.student = #{student};
     </select>
-
-    <!--学生选课-->
-    <insert id="insertScourseByCourseIdAndStudentId" parameterType="edu.qit.cloudclass.domain.Study">
-        insert into study(student,course,createTime) values(#{student},#{course},now());
-    </insert>
     <!--检查该学生选课状态-->
     <select id="checkStudyByCourseIdAndStudentId" resultType="int" parameterType="edu.qit.cloudclass.domain.Study">
         select count(*) from study where course=#{course} and student=#{student};
@@ -89,6 +84,13 @@
     </select>
     <select id="findTeacherIdByPrimaryKey" resultType="java.lang.String">
         select teacher from course where id = #{id};
+    </select>
+    <select id="selectCourseSpinnerListByTeacher" resultType="edu.qit.cloudclass.domain.spinner.CourseSpinner">
+        select id,name from course where teacher = #{teacher};
+    </select>
+    <select id="selectCourseSpinnerListByStudent" resultType="edu.qit.cloudclass.domain.spinner.CourseSpinner">
+        select course.id,course.name from course,study
+        where course.id = study.course and study.student = #{student};
     </select>
 
     <!--学生退课-->

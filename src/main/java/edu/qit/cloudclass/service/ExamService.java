@@ -12,9 +12,9 @@ import java.util.List;
 public interface ExamService {
     int countScore(AnswerComplex answer,String examId);
 
-    List<Question> parserQuestion(List<Question> questionList, String examId, String type);
-
     AbstractExam shuffleQuestionList(AbstractExam exam);
 
     AbstractExam parserQuestion(AbstractExam exam);
+
+    AbstractExam parserQuestionScore(AbstractExam exam);
 }

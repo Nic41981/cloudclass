@@ -37,6 +37,7 @@ public class FinalExamServiceImpl implements FinalExamService {
         if (exam.getChoiceList().isEmpty() || exam.getJudgementList().isEmpty()){
             return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"有效题目不足");
         }
+        exam = (FinalExam) examService.parserQuestionScore(exam);
         //级联删除
         Course course = courseMapper.findCourseByPrimaryKey(exam.getCourse());
         if (course.getFinalExam() != null) {

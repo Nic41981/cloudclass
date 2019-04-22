@@ -27,6 +27,12 @@ public class TCourseController {
         return tCourseService.getCourses(user.getId());
     }
 
+    @RequestMapping(value = "/course/spinner",method = RequestMethod.GET)
+    public ServerResponse courseSpinnerList(HttpSession session){
+        User user = (User) session.getAttribute(UserController.SESSION_KEY);
+        return tCourseService.courseSpinner(user.getId());
+    }
+
     @RequestMapping(value = "/course", method = RequestMethod.POST)
     public ServerResponse add(@RequestBody(required = false) Course course, HttpSession session) {
         //参数检查

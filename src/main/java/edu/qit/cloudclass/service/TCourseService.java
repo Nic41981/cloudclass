@@ -12,5 +12,7 @@ public interface TCourseService {
 
     ServerResponse deleteCourseById(String id);
 
-    ServerResponse<List<Course>> getCourses(String teacher);
+    ServerResponse<List<Course>> getCourses(String teacherId);
+
+    ServerResponse courseSpinner(String teacherId);
 }

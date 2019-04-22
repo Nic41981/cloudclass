@@ -20,7 +20,7 @@ public interface FinalExamMapper {
 
     FinalExam findExamByPrimaryKey(@Param("id") String id);
 
-    ExamSpinner fingExamSpinnerByCourse(@Param("course") String course);
+    ExamSpinner findExamSpinnerByCourse(@Param("course") String course);
 
     int checkExamExist(@Param("id") String id);
 }

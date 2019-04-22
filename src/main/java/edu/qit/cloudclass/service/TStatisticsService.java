@@ -8,6 +8,4 @@ import edu.qit.cloudclass.tool.ServerResponse;
 public interface TStatisticsService {
     ServerResponse studentStatistics(String courseId);
     ServerResponse scoreStatistics(String examId);
-    ServerResponse getScorePercent(String examId);
-
 }

@@ -19,4 +19,8 @@ public interface StudyMapper {
     List<Study> findStudyListByCourse(@Param("course") String course);
 
     int delete(@Param("id") int id);
+
+    int checkStudyExistByCourseAndStudent(@Param("course")String course,@Param("student")String student);
+
+    int insert(@Param("study")Study study);
 }
