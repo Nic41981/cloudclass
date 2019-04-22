@@ -2,8 +2,10 @@ package edu.qit.cloudclass.service.impl;
 
 import edu.qit.cloudclass.dao.ChapterMapper;
 import edu.qit.cloudclass.dao.CourseMapper;
+import edu.qit.cloudclass.dao.NoticeMapper;
 import edu.qit.cloudclass.domain.Chapter;
 import edu.qit.cloudclass.domain.Course;
+import edu.qit.cloudclass.domain.Notice;
 import edu.qit.cloudclass.service.CourseService;
 import edu.qit.cloudclass.tool.ServerResponse;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ public class CourseServiceImpl implements CourseService {
 
     private final CourseMapper courseMapper;
     private final ChapterMapper chapterMapper;
+    private final NoticeMapper noticeMapper;
 
     @Override
     public ServerResponse<List<Course>> tagList(String tag) {
@@ -37,6 +40,12 @@ public class CourseServiceImpl implements CourseService {
         resultMap.put("chapterList", list);
         resultMap.put("finalExam", finalExam);
         return ServerResponse.createBySuccess("查询成功", resultMap);
+    }
+
+    @Override
+    public ServerResponse getNotices(String courseId) {
+        List<Notice> noticeList = noticeMapper.selectNoticeListByCourse(courseId);
+        return ServerResponse.createBySuccess("查询成功",noticeList);
     }
 
 }

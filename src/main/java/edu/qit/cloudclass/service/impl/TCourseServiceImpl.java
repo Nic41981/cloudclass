@@ -1,7 +1,9 @@
 package edu.qit.cloudclass.service.impl;
 
 import edu.qit.cloudclass.dao.CourseMapper;
+import edu.qit.cloudclass.dao.NoticeMapper;
 import edu.qit.cloudclass.domain.Course;
+import edu.qit.cloudclass.domain.Notice;
 import edu.qit.cloudclass.domain.spinner.CourseSpinner;
 import edu.qit.cloudclass.service.*;
 import edu.qit.cloudclass.tool.ServerResponse;
@@ -19,6 +21,7 @@ import java.util.*;
 public class TCourseServiceImpl implements TCourseService {
 
     private final CourseMapper courseMapper;
+    private final NoticeMapper noticeMapper;
     private final FileService fileService;
     private final TChapterService tChapterService;
     private final StudyService studyService;
@@ -34,6 +37,15 @@ public class TCourseServiceImpl implements TCourseService {
     public ServerResponse courseSpinner(String teacherId) {
         List<CourseSpinner> courseSpinnerList = courseMapper.selectCourseSpinnerListByTeacher(teacherId);
         return ServerResponse.createBySuccess("查询成功",courseSpinnerList);
+    }
+
+    @Override
+    public ServerResponse publishNotice(Notice notice) {
+        log.info("创建公告:" + notice);
+        if (noticeMapper.insert(notice) == 0){
+            return ServerResponse.createByError("创建失败");
+        }
+        return ServerResponse.createBySuccessMsg("创建成功");
     }
 
     @Override

@@ -34,7 +34,7 @@ public class WebConfigure implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(loginInterceptor).addPathPatterns("/teacher/**","/student/**","/exam/**","/upload/**","/course/chapter/list");
         registry.addInterceptor(teacherIdentifyInterceptor).addPathPatterns("/teacher/**");
-        registry.addInterceptor(teacherCourseInterceptor).addPathPatterns("/teacher/course/**").excludePathPatterns("/teacher/course/list","/teacher/course/spinner","/teacher/course");
+        registry.addInterceptor(teacherCourseInterceptor).addPathPatterns("/teacher/course/**").excludePathPatterns("/teacher/course/list","/teacher/course/spinner","/teacher/course","/teacher/course/notice");
         registry.addInterceptor(teacherChapterInterceptor).addPathPatterns("/teacher/chapter/**").excludePathPatterns("/teacher/chapter/list","/teacher/chapter");
         registry.addInterceptor(finalExamInterceptor).addPathPatterns("/exam/final/**").excludePathPatterns("/exam/final");
         registry.addInterceptor(chapterExamInterceptor).addPathPatterns("/exam/chapter/**").excludePathPatterns("/exam/chapter");

@@ -18,6 +18,8 @@
         <include refid="base_column_list"/>
         from file where id = #{id};
     </select>
-
-
+    <select id="selectRotationPictureFileListByType" resultType="edu.qit.cloudclass.domain.FileInfo">
+        select file.id, filePath, mappingPath, realName, suffix, uploadTime from file,rotation_picture
+        where file.id = rotation_picture.image and type = #{type} order by rotation_picture.id;
+    </select>
 </mapper>

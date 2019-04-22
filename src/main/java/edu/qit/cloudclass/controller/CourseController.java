@@ -42,4 +42,15 @@ public class CourseController {
         //查询课程
         return courseService.courseChapterList(courseId);
     }
+
+    @RequestMapping("/notice")
+    public ServerResponse getNotices(@RequestParam("course")String courseId){
+        if (!Tool.checkParamsNotNull(courseId)){
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+        }
+        if (!permissionService.isCourseExist(courseId)){
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"课程不存在");
+        }
+        return courseService.getNotices(courseId);
+    }
 }

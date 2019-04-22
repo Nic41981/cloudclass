@@ -11,4 +11,5 @@ public interface CourseService {
 
     ServerResponse courseChapterList(String courseId);
 
+    ServerResponse getNotices(String courseId);
 }

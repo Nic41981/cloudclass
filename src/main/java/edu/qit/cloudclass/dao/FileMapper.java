@@ -4,6 +4,8 @@ import edu.qit.cloudclass.domain.FileInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @author nic
  * @version 1.0
@@ -18,5 +20,7 @@ public interface FileMapper {
     int delete(@Param("id") String id);
 
     FileInfo findFileByPrimaryKey(@Param("id") String id);
+
+    List<FileInfo> selectRotationPictureFileListByType(@Param("type")String type);
 
 }

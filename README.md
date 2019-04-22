@@ -11,6 +11,7 @@
     3. [新建课程](#3新建课程)
     4. [修改课程](#4修改课程)
     5. [删除课程](#5删除课程)
+    5. [创建公告](#6创建公告)
 - [教师个人中心-章节部分](#教师个人中心-章节部分)
     1. [教师章节列表](#1教师章节列表)
     2. [新建章节](#2新建章节)
@@ -46,6 +47,8 @@
 - [通用部分](#首页课程分类列表)
     1. [首页课程分类列表](#1首页课程分类列表)
     2. [章节列表](#2章节列表)
+    3. [公告列表](#3公告列表)
+    4. [轮播图ID列表](#4轮播图ID列表)
 ***
 ## 用户部分
 ### 1.用户注册
@@ -271,9 +274,38 @@ URL:_http://39.107.102.246/teacher/course/{课程ID}_
 |-2|用户未登录|
 |-2|权限不足|
 |-4|课程不存在|
+### 6.创建公告
+URL:_localhost:8080/teacher/course/notice_
+
+请求方法:_POST_
+
+请求参数样例:
+```json5
+{
+	"course":"81f88387543743328b30d7b299f33c01",
+	"content":"公告"
+}
+```
+
+返回成功样例:
+```json5
+{
+    "status": 0,
+    "msg": "创建成功"
+}
+```
+失败信息:
+
+|status|msg|
+|:----:|---|
+|-1|创建失败|
+|-2|用户未登录|
+|-2|权限不足|
+|-3|缺少参数|
+|-4|课程不存在|
 ## 教师个人中心-章节部分
 ### 1.教师章节列表
-详见[章节列表](#章节列表)
+详见[章节列表](#2章节列表)
 ### 2.创建章节
 URL:_http://39.107.102.246/teacher/chapter_
 
@@ -1226,3 +1258,59 @@ URL:_http://39.107.102.246/ccourse/chapter/list_
 |-3|缺少参数|
 |-4|课程不存在|
 |-4|未参加学习|
+### 3.公告列表
+URL:_http://39.107.102.246/course/notice_
+
+请求方法:_GET_
+
+请求参数样例:_?course=81f88387543743328b30d7b299f33c01_
+
+返回成功样例:
+```json5
+{
+    "status": 0,
+    "msg": "查询成功",
+    "data": [
+        {
+            "content": "公告",
+            "createTime": "2019-04-22 22:18:20"
+        }
+    ]
+}
+```
+错误信息:_无_
+### 4.轮播图ID列表
+URL:_http://39.107.102.246/rotationPicture/list_
+
+请求方法:_Get_
+
+请求参数样例:_?tag=index_
+
+返回成功样例:
+```json5
+{
+    "status": 0,
+    "msg": "查询成功",
+    "data": [
+        {
+            "id": "rotation1",
+            "mappingPath": "/files/image/rotation/",
+            "realName": "rotation_picture_1",
+            "suffix": "jpg"
+        },
+        {
+            "id": "rotation2",
+            "mappingPath": "/files/image/rotation/",
+            "realName": "rotation_picture_2",
+            "suffix": "jpg"
+        },
+        {
+            "id": "rotation3",
+            "mappingPath": "/files/image/rotation/",
+            "realName": "rotation_picture_3",
+            "suffix": "jpg"
+        }
+    ]
+}
+```
+失败信息:_无_
