@@ -16,12 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-
-import static edu.qit.cloudclass.service.impl.FileServiceImpl.FILE_BASE_PATH;
 
 /**
  * @author nic
@@ -37,31 +34,28 @@ public class UploadServiceImpl implements UploadService {
     private final CourseMapper courseMapper;
     private final FileService fileService;
 
+    private static final String BASE_FILE_PATH = "/usr/cloudclass/files/";
+    private static final String BASE_MAPPING_PATH = "/files/";
+
     @Override
-    public ServerResponse uploadImage(MultipartFile multipartFile, String courseId) {
+    public ServerResponse uploadCourseImage(MultipartFile multipartFile, String courseId) {
         log.info("==========上传图片开始==========");
         //解析文件名信息
-        ServerResponse<FileInfo> fileInfoResult = parserFileInfo(multipartFile, FileInfo.IMAGE_FILE_TYPE);
+        ServerResponse<FileInfo> fileInfoResult = parserSimpleFileInfo(multipartFile);
         if (!fileInfoResult.isSuccess()) {
             log.error("==========文件名解析失败==========");
             return fileInfoResult;
         }
-        FileInfo fileInfo = fileInfoResult.getData();
+        FileInfo fileInfo = addCourseImagePath(fileInfoResult.getData(),courseId);
+        log.info("上传文件:" + fileInfo.toString());
         //安全检查
-        ServerResponse securityCheckResult = securityCheck(multipartFile, fileInfo);
+        ServerResponse securityCheckResult = courseImageSecurityCheck(multipartFile, fileInfo);
         if (!securityCheckResult.isSuccess()) {
             log.error("==========安全检查失败==========");
             return securityCheckResult;
         }
-        log.info("安全检查:PASS");
-        //读取图片信息
-        ServerResponse imageInfoResult = parserImageInfo(multipartFile);
-        if (!imageInfoResult.isSuccess()) {
-            log.error("==========图片信息读取失败==========");
-            return imageInfoResult;
-        }
         //文件存储
-        ServerResponse storageResult = storageFile(multipartFile, fileInfo, courseId);
+        ServerResponse storageResult = storageCourseImage(multipartFile, fileInfo, courseId);
         if (!storageResult.isSuccess()) {
             log.error("==========图片存储出错==========");
             return storageResult;
@@ -71,30 +65,24 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public ServerResponse uploadVideo(MultipartFile multipartFile, String courseId, String chapterId) {
+    public ServerResponse uploadChapterVideo(MultipartFile multipartFile, String chapterId) {
         log.info("==========上传视频开始==========");
         //解析文件名信息
-        ServerResponse<FileInfo> fileInfoResult = parserFileInfo(multipartFile, FileInfo.VIDEO_FILE_TYPE);
+        ServerResponse<FileInfo> fileInfoResult = parserSimpleFileInfo(multipartFile);
         if (!fileInfoResult.isSuccess()) {
             log.error("==========文件名解析失败==========");
             return fileInfoResult;
         }
-        FileInfo fileInfo = fileInfoResult.getData();
+        FileInfo fileInfo = addChapterVideoPath(fileInfoResult.getData(),chapterId);
+        log.info("上传文件:" + fileInfo.toString());
         //安全检查
-        ServerResponse securityCheckResult = securityCheck(multipartFile, fileInfo);
+        ServerResponse securityCheckResult = chapterVideoSecurityCheck(multipartFile, fileInfo);
         if (!securityCheckResult.isSuccess()) {
             log.error("==========安全检查失败==========");
             return securityCheckResult;
         }
-        log.info("安全检查:PASS");
-        //读取视频信息
-        ServerResponse videoInfoResult = parserVideoInfo(multipartFile);
-        if (!videoInfoResult.isSuccess()) {
-            log.error("==========图片信息读取失败==========");
-            return videoInfoResult;
-        }
         //文件存储
-        ServerResponse storageResult = storageFile(multipartFile, fileInfo, chapterId);
+        ServerResponse storageResult = storageChapterVideo(multipartFile, fileInfo, chapterId);
         if (!storageResult.isSuccess()) {
             log.error("==========视频转存失败==========");
             return storageResult;
@@ -103,115 +91,132 @@ public class UploadServiceImpl implements UploadService {
         return storageResult;
     }
 
-    @Override
-    public ServerResponse<FileInfo> parserFileInfo(MultipartFile multipartFile, String fileType) {
+    private ServerResponse<FileInfo> parserSimpleFileInfo(MultipartFile multipartFile){
         String filename = multipartFile.getOriginalFilename();
-        if (filename == null) {
+        if (filename == null || filename.length() <= 0) {
             return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "不支持的文件类型");
         }
-        log.info("文件名:" + filename);
         int suffixIndex = filename.lastIndexOf('.');
         if (suffixIndex <= 0) {
             return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "不支持的文件类型");
         }
         String realName = filename.substring(0, suffixIndex);
         String suffix = filename.substring(suffixIndex + 1);
-        log.info("文件类型:" + suffix.toUpperCase() + "文件");
         FileInfo fileInfo = new FileInfo();
         fileInfo.setId(Tool.uuid());
         fileInfo.setRealName(realName);
         fileInfo.setSuffix(suffix);
-        fileInfo.setType(fileType);
         return ServerResponse.createBySuccess(fileInfo);
     }
 
-    @Override
-    public ServerResponse securityCheck(MultipartFile multipartFile, FileInfo fileInfo) {
-        //TODO 安全检查待完善
-        switch (fileInfo.getType()) {
-            case FileInfo.IMAGE_FILE_TYPE:
-                if (!Tool.checkSupportImageType(fileInfo.getSuffix())) {
-                    return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "不支持的文件类型");
-                }
-                break;
-            case FileInfo.VIDEO_FILE_TYPE:
-                if (!Tool.checkSupportVideoType(fileInfo.getSuffix())) {
-                    return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "不支持的文件类型");
-                }
-                break;
-            default:
-                return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "不支持的文件类型");
-        }
-        return ServerResponse.createBySuccess();
+    /**
+     * BASE_FILE_PATH = /usr/cloudclass/files/
+     * BASE_MAPPING_PATH = /files/
+     * relativePath = image/course/课程ID
+     */
+    private FileInfo addCourseImagePath(FileInfo fileInfo, String courseId){
+        String relativePath = "image" + File.separator
+                + "course" + File.separator
+                + courseId + File.separator;
+        String filePath = BASE_FILE_PATH  + relativePath;
+        String mappingPath = BASE_MAPPING_PATH + relativePath;
+        fileInfo.setFilePath(filePath);
+        fileInfo.setMappingPath(mappingPath);
+        return fileInfo;
     }
 
-    @Override
-    public ServerResponse parserImageInfo(MultipartFile multipartFile) {
+    /**
+     * BASE_FILE_PATH = /usr/cloudclass/files/
+     * BASE_MAPPING_PATH = /files/
+     * relativePath = video/chapter/章节ID
+     */
+    private FileInfo addChapterVideoPath(FileInfo fileInfo, String chapterId){
+        String relativePath = "video" + File.separator
+                + "chapter" + File.separator
+                + chapterId + File.separator;
+        String filePath = BASE_FILE_PATH  + relativePath;
+        String mappingPath = BASE_MAPPING_PATH + relativePath;
+        fileInfo.setFilePath(filePath);
+        fileInfo.setMappingPath(mappingPath);
+        return fileInfo;
+    }
+
+
+    private ServerResponse courseImageSecurityCheck(MultipartFile multipartFile,FileInfo fileInfo){
         try {
+            if (!Tool.checkSupportImageType(fileInfo.getSuffix())) {
+                throw new Exception("后缀名类型不支持");
+            }
             BufferedImage image = ImageIO.read(multipartFile.getInputStream());
             if (image == null || image.getHeight(null) <= 0 || image.getWidth(null) <= 0) {
-                return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "不支持的文件类型");
+                throw new Exception("图片尺寸非法");
             }
             log.info("图片尺寸:" + image.getWidth(null) + "x" + image.getHeight(null));
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            log.error("安全检查失败", e);
             return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "不支持的文件类型");
         }
         return ServerResponse.createBySuccess();
     }
 
-    @Override
-    public ServerResponse parserVideoInfo(MultipartFile multipartFile) {
-        //TODO 视频信息读取待完善
+    private ServerResponse chapterVideoSecurityCheck(MultipartFile multipartFile,FileInfo fileInfo){
+        try {
+            if (!Tool.checkSupportVideoType(fileInfo.getSuffix())) {
+                throw new Exception("后缀名类型不支持");
+            }
+            if (multipartFile.isEmpty()){
+                throw new Exception("视频大小非法");
+            }
+        } catch (Exception e) {
+            log.error("安全检查失败", e);
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "不支持的文件类型");
+        }
         return ServerResponse.createBySuccess();
     }
 
-    public ServerResponse storageFile(MultipartFile multipartFile, FileInfo fileInfo, String target) {
-        String path = FILE_BASE_PATH + File.separator
-                + fileInfo.getType() + File.separator
-                + fileInfo.getId() + "." + fileInfo.getSuffix();
-        File file = new File(path);
-        File dir = file.getParentFile();
-        try {
-            //检查父文件夹
-            if (!dir.exists() && !dir.mkdirs()) {
-                return ServerResponse.createByError("上传失败");
+    private ServerResponse storageCourseImage(MultipartFile multipartFile, FileInfo fileInfo, String courseId){
+        File file = new File(fileInfo.getFilePath() + fileInfo.getId() + "." + fileInfo.getSuffix());
+        File dir = new File(fileInfo.getFilePath());
+        try{
+            if (!dir.exists() && !dir.mkdirs()){
+                throw new Exception("文件目录创建失败");
             }
-            switch (fileInfo.getType()) {
-                case FileInfo.IMAGE_FILE_TYPE: {
-                    //冲突处理
-                    Course course = courseMapper.findCourseByPrimaryKey(target);
-                    if (course.getImage() != null) {
-                        fileService.associateDelete(course.getImage());
-                    }
-                    //存储文件
-                    multipartFile.transferTo(file);
-                    //更新数据库
-                    fileMapper.insert(fileInfo);
-                    courseMapper.updateImageIdAfterUpload(target, fileInfo.getId());
-                    break;
-                }
-                case FileInfo.VIDEO_FILE_TYPE: {
-                    //冲突处理
-                    Chapter chapter = chapterMapper.findChapterByPrimaryKey(target);
-                    if (chapter.getVideo() != null) {
-                        fileService.associateDelete(chapter.getVideo());
-                    }
-                    //存储文件
-                    multipartFile.transferTo(file);
-                    //更新数据库
-                    fileMapper.insert(fileInfo);
-                    chapterMapper.updateVideoIdAfterUpload(target, fileInfo.getId());
-                    break;
-                }
-                default: {
-                    return ServerResponse.createByError("上传失败");
-                }
+            Course course = courseMapper.findCourseByPrimaryKey(courseId);
+            if (course.getImage() != null) {
+                fileService.associateDelete(course.getImage());
             }
-            return ServerResponse.createBySuccessMsg("上传成功");
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            //存储文件
+            multipartFile.transferTo(file);
+            //更新数据库
+            fileMapper.insert(fileInfo);
+            courseMapper.updateImageIdAfterUpload(courseId, fileInfo.getId());
+        }catch (Exception e){
+            log.error("图片存储失败",e);
+            return ServerResponse.createByError("上传失败");
         }
-        return ServerResponse.createByError("上传失败");
+        return ServerResponse.createBySuccessMsg("上传成功");
+    }
+
+    private ServerResponse storageChapterVideo(MultipartFile multipartFile, FileInfo fileInfo, String chapterId){
+        File file = new File(fileInfo.getFilePath() + fileInfo.getId() + "." + fileInfo.getSuffix());
+        File dir = new File(fileInfo.getFilePath());
+        try{
+            if (!dir.exists() && !dir.mkdirs()){
+                throw new Exception("文件目录创建失败");
+            }
+            Chapter chapter = chapterMapper.findChapterByPrimaryKey(chapterId);
+            if (chapter.getVideo() != null) {
+                fileService.associateDelete(chapter.getVideo());
+            }
+            //存储文件
+            multipartFile.transferTo(file);
+            //更新数据库
+            fileMapper.insert(fileInfo);
+            chapterMapper.updateVideoIdAfterUpload(chapterId, fileInfo.getId());
+        }catch (Exception e){
+            log.error("视频存储失败",e);
+            return ServerResponse.createByError("上传失败");
+        }
+        return ServerResponse.createBySuccessMsg("上传成功");
     }
 }

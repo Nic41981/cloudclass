@@ -1,6 +1,7 @@
 package edu.qit.cloudclass.controller;
 
 
+import edu.qit.cloudclass.service.PermissionService;
 import edu.qit.cloudclass.service.SpinnerService;
 import edu.qit.cloudclass.tool.ResponseCode;
 import edu.qit.cloudclass.tool.ServerResponse;
@@ -32,18 +33,12 @@ public class SpinnerController {
     //查询章节列表
     @RequestMapping(value = "/chapter", method = RequestMethod.GET)
     public ServerResponse getChapterList(@RequestParam(value = "course", required = false) String courseId) {
-        if (!Tool.checkParamsNotNull(courseId)) {
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
-        }
         return spinnerService.getChapterList(courseId);
     }
 
     //查询考试名称列表
-    @RequestMapping(value = "/examination", method = RequestMethod.GET)
+    @RequestMapping(value = "/exam", method = RequestMethod.GET)
     public ServerResponse getExaminationList(@RequestParam(value = "course", required = false) String courseId) {
-        if (!Tool.checkParamsNotNull(courseId)) {
-            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
-        }
         return spinnerService.getExaminationList(courseId);
     }
 }

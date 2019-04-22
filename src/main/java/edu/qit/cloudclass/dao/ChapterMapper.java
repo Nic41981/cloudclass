@@ -24,24 +24,12 @@ public interface ChapterMapper {
 
     int updateNumBeforeInsert(@Param("num") int num, @Param("course") String course);
 
-    /**
-     * 董悦
-     */
     String findCourseIdByPrimaryKey(@Param("id") String id);
 
-    /**
-     * 董悦
-     */
     int updateVideoIdAfterUpload(@Param("id") String id, @Param("video") String video);
 
-    /**
-     * 王恺
-     */
     List<ChapterSpinner> getChapterSpinnerList(@Param("course") String course);
 
-    /**
-     * 李九龙
-     */
     List<Chapter> chapterList(@Param("course") String course);
 
     int updateChapterExamAfterUpload(@Param("id") String id, @Param("chapterExam") String chapterExam);

@@ -40,6 +40,7 @@ public class ChapterExamServiceImpl implements ChapterExamService {
         if (exam.getChoiceList().isEmpty() || exam.getJudgementList().isEmpty()){
             return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "有效问题不足");
         }
+        exam = (ChapterExam) examService.parserQuestionScore(exam);
         //级联删除
         if (chapter.getChapterExam() != null) {
             associateDelete(chapter.getChapterExam());

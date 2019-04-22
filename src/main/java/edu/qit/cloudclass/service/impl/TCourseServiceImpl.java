@@ -1,7 +1,10 @@
 package edu.qit.cloudclass.service.impl;
 
 import edu.qit.cloudclass.dao.CourseMapper;
+import edu.qit.cloudclass.dao.NoticeMapper;
 import edu.qit.cloudclass.domain.Course;
+import edu.qit.cloudclass.domain.Notice;
+import edu.qit.cloudclass.domain.spinner.CourseSpinner;
 import edu.qit.cloudclass.service.*;
 import edu.qit.cloudclass.tool.ServerResponse;
 import edu.qit.cloudclass.tool.Tool;
@@ -17,23 +20,39 @@ import java.util.*;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TCourseServiceImpl implements TCourseService {
 
-    private final CourseMapper tCourseMapper;
+    private final CourseMapper courseMapper;
+    private final NoticeMapper noticeMapper;
     private final FileService fileService;
     private final TChapterService tChapterService;
     private final StudyService studyService;
     private final FinalExamService finalExamService;
 
     @Override
-    public ServerResponse<List<Course>> getCourses(String teacher) {
-        List<Course> list = tCourseMapper.coursesList(teacher);
+    public ServerResponse<List<Course>> getCourses(String teacherId) {
+        List<Course> list = courseMapper.selectCoursesListByTeacher(teacherId);
         return ServerResponse.createBySuccess("查询成功", list);
+    }
+
+    @Override
+    public ServerResponse courseSpinner(String teacherId) {
+        List<CourseSpinner> courseSpinnerList = courseMapper.selectCourseSpinnerListByTeacher(teacherId);
+        return ServerResponse.createBySuccess("查询成功",courseSpinnerList);
+    }
+
+    @Override
+    public ServerResponse publishNotice(Notice notice) {
+        log.info("创建公告:" + notice);
+        if (noticeMapper.insert(notice) == 0){
+            return ServerResponse.createByError("创建失败");
+        }
+        return ServerResponse.createBySuccessMsg("创建成功");
     }
 
     @Override
     public ServerResponse add(Course course) {
         course.setId(Tool.uuid());
         log.info("创建课程:" + course.toString());
-        if (tCourseMapper.insert(course) == 0) {
+        if (courseMapper.insert(course) == 0) {
             log.error("创建失败");
             return ServerResponse.createByError("创建失败");
         }
@@ -43,7 +62,7 @@ public class TCourseServiceImpl implements TCourseService {
     @Override
     public ServerResponse modify(Course course) {
         log.info("更新课程:" + course.toString());
-        if (tCourseMapper.modify(course) == 0) {
+        if (courseMapper.modify(course) == 0) {
             log.error("更新失败");
             return ServerResponse.createByError("更新失败");
         }
@@ -55,10 +74,10 @@ public class TCourseServiceImpl implements TCourseService {
     public ServerResponse deleteCourseById(String courseId) {
         log.info("==========删除课程开始==========");
         //查找记录
-        Course course = tCourseMapper.findCourseByPrimaryKey(courseId);
+        Course course = courseMapper.findCourseByPrimaryKey(courseId);
         //删除记录
         log.info("删除课程:" + course.toString());
-        if (tCourseMapper.delete(courseId) == 0) {
+        if (courseMapper.delete(courseId) == 0) {
             log.error("==========课程记录删除失败==========");
             return ServerResponse.createByError("删除失败");
         }

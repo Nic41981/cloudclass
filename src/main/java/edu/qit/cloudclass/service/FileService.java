@@ -9,9 +9,7 @@ import edu.qit.cloudclass.tool.ServerResponse;
  */
 public interface FileService {
 
-    ServerResponse<FileInfo> getFileInfo(String fileId);
+    ServerResponse getFileInfo(String fileId);
 
-    ServerResponse getFileNames(String fileId);
-
-    ServerResponse associateDelete(String fileId);
+    void associateDelete(String fileId);
 }

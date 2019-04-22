@@ -22,6 +22,8 @@ public class WebConfigure implements WebMvcConfigurer {
     private final TeacherChapterInterceptor teacherChapterInterceptor;
     private final FinalExamInterceptor finalExamInterceptor;
     private final ChapterExamInterceptor chapterExamInterceptor;
+    private final StudentCourseInterceptor studentCourseInterceptor;
+    private final SpinnerInterceptor spinnerInterceptor;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -30,11 +32,13 @@ public class WebConfigure implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor).addPathPatterns("/teacher/**","/exam/**");
+        registry.addInterceptor(loginInterceptor).addPathPatterns("/teacher/**","/student/**","/exam/**","/upload/**","/course/chapter/list");
         registry.addInterceptor(teacherIdentifyInterceptor).addPathPatterns("/teacher/**");
-        registry.addInterceptor(teacherCourseInterceptor).addPathPatterns("/teacher/course/**").excludePathPatterns("/teacher/course/list","/teacher/course");
+        registry.addInterceptor(teacherCourseInterceptor).addPathPatterns("/teacher/course/**").excludePathPatterns("/teacher/course/list","/teacher/course/spinner","/teacher/course","/teacher/course/notice");
         registry.addInterceptor(teacherChapterInterceptor).addPathPatterns("/teacher/chapter/**").excludePathPatterns("/teacher/chapter/list","/teacher/chapter");
         registry.addInterceptor(finalExamInterceptor).addPathPatterns("/exam/final/**").excludePathPatterns("/exam/final");
         registry.addInterceptor(chapterExamInterceptor).addPathPatterns("/exam/chapter/**").excludePathPatterns("/exam/chapter");
+        registry.addInterceptor(studentCourseInterceptor).addPathPatterns("/student/course/**").excludePathPatterns("/student/course/list","/student/course/spinner");
+        registry.addInterceptor(spinnerInterceptor).addPathPatterns("/spinner/chapter","/spinner/exam");
     }
 }

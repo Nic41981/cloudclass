@@ -1,6 +1,7 @@
 package edu.qit.cloudclass.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,7 +24,13 @@ public abstract class AbstractExam {
     @JsonIgnore
     protected Date createTime;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    protected int choiceScoreWeight;
+
     protected List<Question> choiceList;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    protected int judgementScoreWeight;
 
     protected List<Question> judgementList;
 

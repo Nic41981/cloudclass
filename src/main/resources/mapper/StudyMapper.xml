@@ -7,6 +7,10 @@
     <sql id="base_column_list">
         id,student,course,createTime
     </sql>
+    <insert id="insert">
+        insert into study(student, course, createTime)
+        value (#{study.student},#{study.course},now());
+    </insert>
     <delete id="delete">
         delete from study where id = #{id};
     </delete>
@@ -25,6 +29,9 @@
     <select id="findStudyListByCourse" resultType="edu.qit.cloudclass.domain.Study">
         select <include refid="base_column_list"/>
         from study where course = #{course};
+    </select>
+    <select id="checkStudyExistByCourseAndStudent" resultType="java.lang.Integer">
+        select count(1) from study where course = #{course} and student = #{student};
     </select>
 
 </mapper>

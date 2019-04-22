@@ -5,13 +5,15 @@ import edu.qit.cloudclass.domain.spinner.ChapterSpinner;
 import edu.qit.cloudclass.domain.spinner.CourseSpinner;
 import edu.qit.cloudclass.domain.spinner.ExamSpinner;
 import edu.qit.cloudclass.service.SpinnerService;
-import edu.qit.cloudclass.tool.ResponseCode;
 import edu.qit.cloudclass.tool.ServerResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Root
@@ -29,40 +31,23 @@ public class SpinnerServiceImpl implements SpinnerService {
 
     @Override
     public ServerResponse<List<CourseSpinner>> getCourseList() {
-        List<CourseSpinner> courseList = courseMapper.getCourseSpinnerList();
+        List<CourseSpinner> courseList = courseMapper.selectCourseSpinnerList();
         return ServerResponse.createBySuccess("查询成功", courseList);
     }
 
     @Override
     public ServerResponse getChapterList(String courseId) {
-        ServerResponse existResult = checkCourseExist(courseId);
-        if (!existResult.isSuccess()) {
-            return existResult;
-        }
         List<ChapterSpinner> courseList = chapterMapper.getChapterSpinnerList(courseId);
         return ServerResponse.createBySuccess("查询成功", courseList);
     }
 
     @Override
     public ServerResponse getExaminationList(String courseId) {
-        ServerResponse existResult = checkCourseExist(courseId);
-        if (!existResult.isSuccess()) {
-            return existResult;
-        }
-        List<ExamSpinner> examinationList = chapterExamMapper.getExamSpinnerList(courseId);
-        ExamSpinner finalExam = finalExamMapper.fingExamSpinnerByCourse(courseId);
-        if (finalExam != null){
-            examinationList.add(finalExam);
-        }
-        return ServerResponse.createBySuccess("查询成功", examinationList);
-    }
-
-    @Override
-    public ServerResponse checkCourseExist(String courseId) {
-        int flag = courseMapper.checkCourseExist(courseId);
-        if (flag == 0) {
-            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "课程不存在");
-        }
-        return ServerResponse.createBySuccess();
+        List<ExamSpinner> chapterExamList = chapterExamMapper.selectExamSpinnerListByCourse(courseId);
+        ExamSpinner finalExam = finalExamMapper.findExamSpinnerByCourse(courseId);
+        Map<String,Object> result = new LinkedHashMap<>();
+        result.put("chapterExamList",chapterExamList);
+        result.put("finalExam",finalExam);
+        return ServerResponse.createBySuccess("查询成功", result);
     }
 }

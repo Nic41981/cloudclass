@@ -15,5 +15,5 @@ public interface ScoreService {
 
     Score findScoreByStudyAndExam(int study, String exam);
 
-    void associateDelete(int scoreId);
+    void associateDelete(int studyId);
 }

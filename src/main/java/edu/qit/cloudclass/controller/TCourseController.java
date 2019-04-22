@@ -1,7 +1,9 @@
 package edu.qit.cloudclass.controller;
 
 import edu.qit.cloudclass.domain.Course;
+import edu.qit.cloudclass.domain.Notice;
 import edu.qit.cloudclass.domain.User;
+import edu.qit.cloudclass.service.PermissionService;
 import edu.qit.cloudclass.service.SCourseService;
 import edu.qit.cloudclass.service.TCourseService;
 import edu.qit.cloudclass.tool.ResponseCode;
@@ -20,11 +22,18 @@ import javax.servlet.http.HttpSession;
 public class TCourseController {
 
     private final TCourseService tCourseService;
+    private final PermissionService permissionService;
 
     @RequestMapping(value = "/course/list", method = RequestMethod.GET)
     public ServerResponse getCourses(HttpSession session) {
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
         return tCourseService.getCourses(user.getId());
+    }
+
+    @RequestMapping(value = "/course/spinner",method = RequestMethod.GET)
+    public ServerResponse courseSpinnerList(HttpSession session){
+        User user = (User) session.getAttribute(UserController.SESSION_KEY);
+        return tCourseService.courseSpinner(user.getId());
     }
 
     @RequestMapping(value = "/course", method = RequestMethod.POST)
@@ -55,5 +64,20 @@ public class TCourseController {
     public ServerResponse deleteCourseById(@PathVariable("courseId") String courseId) {
         //删除课程
         return tCourseService.deleteCourseById(courseId);
+    }
+
+    @RequestMapping(value = "/course/notice",method = RequestMethod.POST)
+    public ServerResponse publishNotice(@RequestBody(required = false)Notice notice,HttpSession session){
+        if (!Tool.checkParamsNotNull(notice.getCourse(),notice.getContent())){
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+        }
+        User user = (User)session.getAttribute(UserController.SESSION_KEY);
+        if (!permissionService.isCourseExist(notice.getCourse())){
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"课程不存在");
+        }
+        if (!permissionService.isTeacherOfCourse(user.getId(),notice.getCourse())){
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"权限不足");
+        }
+        return tCourseService.publishNotice(notice);
     }
 }

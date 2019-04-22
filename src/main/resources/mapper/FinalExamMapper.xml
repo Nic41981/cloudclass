@@ -17,7 +17,7 @@
         select <include refid="base_column_list"/>
         from final_exam where id = #{id};
     </select>
-    <select id="fingExamSpinnerByCourse" resultType="edu.qit.cloudclass.domain.spinner.ExamSpinner">
+    <select id="findExamSpinnerByCourse" resultType="edu.qit.cloudclass.domain.spinner.ExamSpinner">
         select final_exam.id,final_exam.name from final_exam,course
         where course.finalExam = final_exam.id and course.id = #{course};
     </select>

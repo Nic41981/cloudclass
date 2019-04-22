@@ -18,9 +18,9 @@ public interface QuestionMapper {
 
     List<Answer> selectAnswerListByExamAndType(@Param("exam") String exam, @Param("type") String type);
 
-    int insertList(@Param("questions") List<Question> questions);
+    int insertQuestionList(@Param("questions") List<Question> questions);
 
     int delete(@Param("id") int id);
 
-    List<Question> questionList(@Param("exam") String exam);
+    List<Question> selectQuestionListByExam(@Param("exam") String exam);
 }

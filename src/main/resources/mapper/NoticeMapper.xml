@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.qit.cloudclass.dao.NoticeMapper">
+
+    <sql id="base_column_list">
+        id,course,content,createTime
+    </sql>
+    <insert id="insert">
+        insert into notice(course, content, createTime)
+        VALUE(#{notice.course},#{notice.content},now());
+    </insert>
+    <select id="selectNoticeListByCourse" resultType="edu.qit.cloudclass.domain.Notice">
+        select <include refid="base_column_list"/>
+        from notice where course = #{course} order by createTime desc;
+    </select>
+</mapper>

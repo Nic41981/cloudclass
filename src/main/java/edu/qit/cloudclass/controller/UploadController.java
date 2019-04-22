@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpSession;
 
 /**
@@ -35,39 +34,39 @@ public class UploadController {
         if (!Tool.checkParamsNotNull(courseId) || image == null || image.isEmpty()) {
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
         }
-        //登录判断
+        //权限判断
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null) {
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "权限不足");
+        if (!permissionService.isCourseExist(courseId)){
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"课程不存在");
         }
-        //用户权限判断
-        ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(), courseId);
-        if (!permissionResult.isSuccess()) {
-            return permissionResult;
+        if (!permissionService.isTeacherOfCourse(user.getId(),courseId)){
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"权限不足");
         }
-        return uploadService.uploadImage(image, courseId);
+        return uploadService.uploadCourseImage(image, courseId);
     }
 
-    @RequestMapping(value = "/course/video")
+    @RequestMapping(value = "/chapter/video")
     public ServerResponse videoUpload(
-            @RequestParam(value = "course", required = false) String courseId,
             @RequestParam(value = "chapter", required = false) String chapterId,
             @RequestParam(value = "video", required = false) MultipartFile video,
             HttpSession session) {
         //参数检查
-        if (!Tool.checkParamsNotNull(chapterId, chapterId) || video == null || video.isEmpty()) {
+        if (!Tool.checkParamsNotNull(chapterId) || video == null || video.isEmpty()) {
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
         }
         //登录判断
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
-        if (user == null) {
-            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(), "用户未登录");
-        }
         //用户权限判断
-        ServerResponse permissionResult = permissionService.checkCourseOwnerPermission(user.getId(), courseId);
-        if (!permissionResult.isSuccess()) {
-            return permissionResult;
+        String courseId = permissionService.getCourseIdByChapterId(chapterId);
+        if (chapterId == null){
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"章节不存在");
         }
-        return uploadService.uploadVideo(video, courseId, chapterId);
+        if (!permissionService.isCourseExist(courseId)){
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"课程不存在");
+        }
+        if (!permissionService.isTeacherOfCourse(user.getId(),courseId)){
+            return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"权限不足");
+        }
+        return uploadService.uploadChapterVideo(video, chapterId);
     }
 }

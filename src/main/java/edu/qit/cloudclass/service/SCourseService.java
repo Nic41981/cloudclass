@@ -6,9 +6,11 @@ import edu.qit.cloudclass.tool.ServerResponse;
 import java.util.List;
 
 public interface SCourseService {
-    ServerResponse<List<SCourseSpinner>> scourseList(String studentId);
+    ServerResponse courseList(String studentId);
 
-    ServerResponse insertScourse(String courseId, String studentId);
+    ServerResponse courseSpinnerList(String userId);
 
-    ServerResponse deleteScourse(String courseId, String studentId);
+    ServerResponse joinCourse(String courseId, String studentId);
+
+    ServerResponse exitCourse(String courseId, String studentId);
 }
