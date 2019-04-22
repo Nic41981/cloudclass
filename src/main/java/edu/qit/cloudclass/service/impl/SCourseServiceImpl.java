@@ -24,7 +24,7 @@ public class SCourseServiceImpl implements SCourseService {
 
     @Override
     public ServerResponse courseList(String studentId) {
-        List<Course> courseList = courseMapper.getSCourseList(studentId);
+        List<Course> courseList = courseMapper.selectCourseListByStudent(studentId);
         return ServerResponse.createBySuccess("查询成功", courseList);
     }
 

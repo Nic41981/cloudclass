@@ -26,7 +26,7 @@ public class TCourseServiceImpl implements TCourseService {
 
     @Override
     public ServerResponse<List<Course>> getCourses(String teacherId) {
-        List<Course> list = courseMapper.coursesList(teacherId);
+        List<Course> list = courseMapper.selectCoursesListByTeacher(teacherId);
         return ServerResponse.createBySuccess("查询成功", list);
     }
 

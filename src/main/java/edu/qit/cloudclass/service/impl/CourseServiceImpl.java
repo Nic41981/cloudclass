@@ -25,7 +25,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public ServerResponse<List<Course>> tagList(String tag) {
-        List<Course> list = courseMapper.tagList(tag);
+        List<Course> list = courseMapper.selectCouserListByTag(tag);
         return ServerResponse.createBySuccess("查询成功", list);
     }
 

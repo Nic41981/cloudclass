@@ -5,7 +5,6 @@ import edu.qit.cloudclass.domain.spinner.ChapterSpinner;
 import edu.qit.cloudclass.domain.spinner.CourseSpinner;
 import edu.qit.cloudclass.domain.spinner.ExamSpinner;
 import edu.qit.cloudclass.service.SpinnerService;
-import edu.qit.cloudclass.tool.ResponseCode;
 import edu.qit.cloudclass.tool.ServerResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +31,7 @@ public class SpinnerServiceImpl implements SpinnerService {
 
     @Override
     public ServerResponse<List<CourseSpinner>> getCourseList() {
-        List<CourseSpinner> courseList = courseMapper.getCourseSpinnerList();
+        List<CourseSpinner> courseList = courseMapper.selectCourseSpinnerList();
         return ServerResponse.createBySuccess("查询成功", courseList);
     }
 
@@ -44,7 +43,7 @@ public class SpinnerServiceImpl implements SpinnerService {
 
     @Override
     public ServerResponse getExaminationList(String courseId) {
-        List<ExamSpinner> chapterExamList = chapterExamMapper.getExamSpinnerList(courseId);
+        List<ExamSpinner> chapterExamList = chapterExamMapper.selectExamSpinnerListByCourse(courseId);
         ExamSpinner finalExam = finalExamMapper.findExamSpinnerByCourse(courseId);
         Map<String,Object> result = new LinkedHashMap<>();
         result.put("chapterExamList",chapterExamList);

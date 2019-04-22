@@ -4,7 +4,6 @@ import edu.qit.cloudclass.dao.QuestionMapper;
 import edu.qit.cloudclass.domain.Answer;
 import edu.qit.cloudclass.domain.Question;
 import edu.qit.cloudclass.service.QuestionService;
-import edu.qit.cloudclass.tool.ServerResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public void insertList(List<Question> questions) {
-        int num = questionMapper.insertList(questions);
+        int num = questionMapper.insertQuestionList(questions);
         log.info("实际创建数目:" + num);
     }
 
@@ -47,7 +46,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public void associateDelete(String examId) {
-        List<Question> questionList = questionMapper.questionList(examId);
+        List<Question> questionList = questionMapper.selectQuestionListByExam(examId);
         if (questionList == null) {
             log.warn("题目列表获取失败");
             return;

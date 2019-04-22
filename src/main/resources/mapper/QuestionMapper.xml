@@ -7,7 +7,7 @@
     <sql id="base_column_list">
         id,exam,type,question,score,options,answer
     </sql>
-    <insert id="insertList">
+    <insert id="insertQuestionList">
         insert into question(exam, type, question, score, options, answer)
         values
         <foreach collection="questions" item="question" index="index" separator=",">
@@ -24,7 +24,7 @@
     <delete id="delete">
         delete from question where id = #{id};
     </delete>
-    <select id="questionList" resultType="edu.qit.cloudclass.domain.Question">
+    <select id="selectQuestionListByExam" resultType="edu.qit.cloudclass.domain.Question">
         select
         <include refid="base_column_list"/>
         from question where exam = #{exam};

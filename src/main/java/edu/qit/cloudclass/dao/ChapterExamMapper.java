@@ -17,7 +17,6 @@ public interface ChapterExamMapper {
     int insert(@Param("exam") ChapterExam exam);
     ChapterExam findExamByPrimaryKey(@Param("id")String id);
     int delete(@Param("id") String id);
-    List<ExamSpinner> getExamSpinnerList(@Param("course") String course);
-
+    List<ExamSpinner> selectExamSpinnerListByCourse(@Param("course") String course);
     int checkExamExist(@Param("id") String id);
 }

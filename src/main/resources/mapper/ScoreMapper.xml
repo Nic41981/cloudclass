@@ -24,28 +24,14 @@
     <delete id="delete">
         delete from score where id = #{id};
     </delete>
-    <select id="findScoreByPrimaryKey" resultType="edu.qit.cloudclass.domain.Score">
-        select
-        <include refid="base_column_list"/>
-        from score where id = #{id};
-    </select>
     <select id="findScoreByStudyAndExam" resultType="edu.qit.cloudclass.domain.Score">
         select
         <include refid="base_column_list"/>
         from score where study = #{study} and exam = #{exam};
     </select>
-
-    <select id="getScoreList" resultType="edu.qit.cloudclass.domain.StudentScore">
-        select user.name,score.score from user,score,study
-        where user.id = study.student and study.id = score.study and score.exam = #{exam};
-    </select>
     <select id="selectScoreListByStudy" resultType="edu.qit.cloudclass.domain.Score">
         select <include refid="base_column_list"/>
         from score where study = #{study};
-    </select>
-    <select id="selectScoreListByExam" resultType="edu.qit.cloudclass.domain.Score">
-        select <include refid="base_column_list"/>
-        from score where exam = #{exam} order by score desc;
     </select>
     <select id="selectScoreWithNameListByExam" resultType="edu.qit.cloudclass.domain.complex.ScoreWithName">
         select user.name,score.score from user,study,score

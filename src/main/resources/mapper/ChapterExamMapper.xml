@@ -17,7 +17,7 @@
         select <include refid="base_column_list"/>
         from chapter_exam where id = #{id};
     </select>
-    <select id="getExamSpinnerList" resultType="edu.qit.cloudclass.domain.spinner.ExamSpinner">
+    <select id="selectExamSpinnerListByCourse" resultType="edu.qit.cloudclass.domain.spinner.ExamSpinner">
         select chapter_exam.id,chapter_exam.name from chapter,chapter_exam
         where chapter.chapterExam = chapter_exam.id and chapter.course = #{course}
         order by num;
