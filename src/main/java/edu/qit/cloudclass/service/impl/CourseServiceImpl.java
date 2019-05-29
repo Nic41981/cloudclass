@@ -3,6 +3,7 @@ package edu.qit.cloudclass.service.impl;
 import edu.qit.cloudclass.dao.ChapterMapper;
 import edu.qit.cloudclass.dao.CourseMapper;
 import edu.qit.cloudclass.dao.NoticeMapper;
+import edu.qit.cloudclass.dao.UserMapper;
 import edu.qit.cloudclass.domain.Chapter;
 import edu.qit.cloudclass.domain.Course;
 import edu.qit.cloudclass.domain.Notice;
@@ -25,10 +26,14 @@ public class CourseServiceImpl implements CourseService {
     private final CourseMapper courseMapper;
     private final ChapterMapper chapterMapper;
     private final NoticeMapper noticeMapper;
+    private final UserMapper userMapper;
 
     @Override
     public ServerResponse<List<Course>> tagList(String tag) {
         List<Course> list = courseMapper.selectCouserListByTag(tag);
+        for (Course course : list){
+            course.setTeacher(userMapper.getUserNameByPrimaryKey(course.getTeacher()));
+        }
         return ServerResponse.createBySuccess("查询成功", list);
     }
 

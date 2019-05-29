@@ -38,6 +38,9 @@
     <select id="checkEmail" resultType="java.lang.Integer">
         select count(1) from user where email = #{email};
     </select>
+    <select id="getUserNameByPrimaryKey" resultType="java.lang.String">
+        select name from user where id = #{id};
+    </select>
 
 
 </mapper>

@@ -5,6 +5,7 @@
     1. [用户注册](#1用户注册)
     2. [用户登录](#2用户登录)
     3. [自动登录](#3自动登录)
+    4. [退出登录](#4退出登录)
 - [教师个人中心-课程部分](#教师个人中心-课程部分)
     1. [教师课程列表](#1教师课程列表)
     2. [教师课程下拉列表](#2教师课程下拉列表)
@@ -135,6 +136,21 @@ URL:_http://39.107.102.246/user/login/auto_
 |:----:|---|
 |-2|登录失败|
 |-3|缺少参数|
+### 4.退出登录
+URL:_http://39.107.102.246/user/logout_
+
+请求方式:_POST_
+
+请求参数样例:_无_
+
+成功返回样例:
+```json5
+{
+    "status": 0,
+    "msg": "退出登录成功"
+}
+```
+失败信息:_无_
 ## 教师个人中心-课程部分
 ### 1.教师课程列表
 URL:_http://39.107.102.246/teacher/course/list_
@@ -153,7 +169,7 @@ URL:_http://39.107.102.246/teacher/course/list_
             "id": "81f88387543743328b30d7b299f33c01",
             "name": "API开发",
             "image": "0478f16dfa5946a887ecb3b6610d8074",
-            "teacher": "16ca842a3d034ea69d69d60228536b66",
+            "teacher": "李老师",
             "tag": "web;API;开发",
             "finalExam": "d4daf49c80cb4e548b9711720c319bcb"
         }
@@ -1026,7 +1042,7 @@ URL:_http://39.107.102.246/student/course/list_
             "id": "81f88387543743328b30d7b299f33c01",
             "name": "API开发",
             "image": "0478f16dfa5946a887ecb3b6610d8074",
-            "teacher": "16ca842a3d034ea69d69d60228536b66",
+            "teacher": "李老师",
             "tag": "web;API;开发",
             "finalExam": "a0f94e7f7e9945738f3e7e52d665a1db"
         }
@@ -1207,7 +1223,7 @@ URL:_http://39.107.102.246/course/tag/{标签名}_
             "id": "81f88387543743328b30d7b299f33c01",
             "name": "API开发",
             "image": "0478f16dfa5946a887ecb3b6610d8074",
-            "teacher": "16ca842a3d034ea69d69d60228536b66",
+            "teacher": "李老师",
             "tag": "web;API;开发",
             "finalExam": "a0f94e7f7e9945738f3e7e52d665a1db"
         },
@@ -1215,7 +1231,7 @@ URL:_http://39.107.102.246/course/tag/{标签名}_
             "id": "096702b7aab44441815622f4788df63b",
             "name": "API开发",
             "image": null,
-            "teacher": "16ca842a3d034ea69d69d60228536b66",
+            "teacher": "李老师",
             "tag": "web;API;开发",
             "finalExam": null
         }

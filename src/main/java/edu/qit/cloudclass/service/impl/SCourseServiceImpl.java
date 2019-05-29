@@ -2,6 +2,7 @@ package edu.qit.cloudclass.service.impl;
 
 import edu.qit.cloudclass.dao.CourseMapper;
 import edu.qit.cloudclass.dao.StudyMapper;
+import edu.qit.cloudclass.dao.UserMapper;
 import edu.qit.cloudclass.domain.Course;
 import edu.qit.cloudclass.domain.Study;
 import edu.qit.cloudclass.domain.spinner.CourseSpinner;
@@ -19,12 +20,16 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SCourseServiceImpl implements SCourseService {
     private final CourseMapper courseMapper;
+    private final UserMapper userMapper;
     private final StudyMapper studyMapper;
     private final ScoreService scoreService;
 
     @Override
     public ServerResponse courseList(String studentId) {
         List<Course> courseList = courseMapper.selectCourseListByStudent(studentId);
+        for (Course course : courseList){
+            course.setTeacher(userMapper.getUserNameByPrimaryKey(course.getTeacher()));
+        }
         return ServerResponse.createBySuccess("查询成功", courseList);
     }
 
