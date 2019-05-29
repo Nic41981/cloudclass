@@ -91,4 +91,13 @@ public class UserController {
         return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "未找到凭证");
     }
 
+    @RequestMapping(value = "/logout",method = RequestMethod.POST)
+    public ServerResponse logout(HttpSession session,HttpServletResponse response){
+        session.removeAttribute(SESSION_KEY);
+        Cookie cookie = new Cookie(AUTO_LOGIN_KEY,null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return ServerResponse.createBySuccessMsg("退出登录成功");
+    }
+
 }

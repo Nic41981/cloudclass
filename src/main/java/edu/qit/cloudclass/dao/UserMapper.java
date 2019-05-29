@@ -39,4 +39,6 @@ public interface UserMapper {
      * 董悦
      */
     int checkEmail(@Param("email") String email);
+
+    String getUserNameByPrimaryKey(String id);
 }

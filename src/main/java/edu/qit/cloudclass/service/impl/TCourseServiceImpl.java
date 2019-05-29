@@ -2,6 +2,7 @@ package edu.qit.cloudclass.service.impl;
 
 import edu.qit.cloudclass.dao.CourseMapper;
 import edu.qit.cloudclass.dao.NoticeMapper;
+import edu.qit.cloudclass.dao.UserMapper;
 import edu.qit.cloudclass.domain.Course;
 import edu.qit.cloudclass.domain.Notice;
 import edu.qit.cloudclass.domain.spinner.CourseSpinner;
@@ -22,6 +23,7 @@ public class TCourseServiceImpl implements TCourseService {
 
     private final CourseMapper courseMapper;
     private final NoticeMapper noticeMapper;
+    private final UserMapper userMapper;
     private final FileService fileService;
     private final TChapterService tChapterService;
     private final StudyService studyService;
@@ -30,6 +32,10 @@ public class TCourseServiceImpl implements TCourseService {
     @Override
     public ServerResponse<List<Course>> getCourses(String teacherId) {
         List<Course> list = courseMapper.selectCoursesListByTeacher(teacherId);
+        String teacher = userMapper.getUserNameByPrimaryKey(teacherId);
+        for (Course course:list){
+            course.setTeacher(teacher);
+        }
         return ServerResponse.createBySuccess("查询成功", list);
     }
 
