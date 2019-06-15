@@ -89,28 +89,30 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public AbstractExam parserQuestion(AbstractExam exam) {
-        List<Question> questionList = exam.getChoiceList();
-        if (questionList != null) {
-            for (Question question : questionList) {
+        List<Question> questionList = new ArrayList<>();
+        if (exam.getChoiceList() != null) {
+            for (Question question : exam.getChoiceList()) {
                 question.setExam(exam.getId());
                 question.setType(Question.CHOICE_QUESTION);
                 if (!question.isChoiceQuestion()) {
                     log.warn("选择题解析错误:" + question);
-                    questionList.remove(question);
                 } else {
                     question.encodeOption();
+                    questionList.add(question);
                 }
             }
         }
         exam.setChoiceList(questionList);
-        questionList = exam.getJudgementList();
-        if (questionList != null) {
-            for (Question question : questionList) {
+        questionList = new ArrayList<>();
+        if (exam.getJudgementList() != null) {
+            for (Question question : exam.getJudgementList()) {
                 question.setExam(exam.getId());
                 question.setType(Question.JUDGEMENT_QUESTION);
                 if (!question.isJudgementQuestion()) {
                     log.warn("判断题解析错误:" + question);
-                    questionList.remove(question);
+                }
+                else {
+                    questionList.add(question);
                 }
             }
         }
