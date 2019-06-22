@@ -219,12 +219,13 @@ URL:_http://39.107.102.246/teacher/course_
 请求方法:_POST_
 
 请求参数样例:
-```json5
-{
-	"name":"API开发",
-	"tag":"web;API;开发"
-}
-```
+
+|参数名|参数类型|参数值|
+|:----:|:-----:|-----|
+|name|text|API开发|
+|tag|text|web;API;开发|
+|imageFile|file|image.jpg|
+
 成功返回样例:
 ```json5
 {
