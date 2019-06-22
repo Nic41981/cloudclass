@@ -1,9 +1,6 @@
 package edu.qit.cloudclass.service.impl;
 
-import edu.qit.cloudclass.dao.ChapterMapper;
-import edu.qit.cloudclass.dao.CourseMapper;
-import edu.qit.cloudclass.dao.NoticeMapper;
-import edu.qit.cloudclass.dao.UserMapper;
+import edu.qit.cloudclass.dao.*;
 import edu.qit.cloudclass.domain.Chapter;
 import edu.qit.cloudclass.domain.Course;
 import edu.qit.cloudclass.domain.Notice;
@@ -13,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
