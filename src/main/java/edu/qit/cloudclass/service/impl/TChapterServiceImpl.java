@@ -5,12 +5,15 @@ import edu.qit.cloudclass.domain.Chapter;
 import edu.qit.cloudclass.service.ChapterExamService;
 import edu.qit.cloudclass.service.FileService;
 import edu.qit.cloudclass.service.TChapterService;
+import edu.qit.cloudclass.service.UploadService;
 import edu.qit.cloudclass.tool.ServerResponse;
 import edu.qit.cloudclass.tool.Tool;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 @Slf4j
@@ -21,9 +24,10 @@ public class TChapterServiceImpl implements TChapterService {
     private final ChapterMapper chapterMapper;
     private final FileService fileService;
     private final ChapterExamService chapterExamService;
+    private final UploadService uploadService;
 
     @Override
-    public ServerResponse chapter(Chapter chapter) {
+    public ServerResponse chapter(Chapter chapter, MultipartFile video) {
         chapter.setId(Tool.uuid());
         int maxNum = chapterMapper.findMaxNum(chapter.getCourse());
         if (chapter.getNum() <= 0 || chapter.getNum() > maxNum) {
@@ -37,6 +41,9 @@ public class TChapterServiceImpl implements TChapterService {
         if (chapterMapper.insert(chapter) == 0) {
             log.error("创建失败");
             ServerResponse.createByError("创建失败");
+        }
+        if (video != null){
+            uploadService.uploadChapterVideo(video,chapter.getId());
         }
         return ServerResponse.createBySuccessMsg("创建成功");
     }

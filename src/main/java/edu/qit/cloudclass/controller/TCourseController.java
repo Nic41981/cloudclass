@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpSession;
 
 @Slf4j
@@ -37,7 +39,7 @@ public class TCourseController {
     }
 
     @RequestMapping(value = "/course", method = RequestMethod.POST)
-    public ServerResponse add(@RequestBody(required = false) Course course, HttpSession session) {
+    public ServerResponse add(Course course,@RequestParam(required = false) MultipartFile imageFile, HttpSession session) {
         //参数检查
         if (course == null || !Tool.checkParamsNotNull(course.getName())) {
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
@@ -45,7 +47,7 @@ public class TCourseController {
         User user = (User) session.getAttribute(UserController.SESSION_KEY);
         course.setTeacher(user.getId());
         //创建课程
-        return tCourseService.add(course);
+        return tCourseService.add(course,imageFile);
     }
 
     @RequestMapping(value = "/course/{courseId}", method = RequestMethod.PUT)

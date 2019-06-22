@@ -50,6 +50,7 @@
     2. [章节列表](#2章节列表)
     3. [公告列表](#3公告列表)
     4. [轮播图ID列表](#4轮播图ID列表)
+    5. [是否参加学习](#5是否参加学习)
 ***
 ## 用户部分
 ### 1.用户注册
@@ -218,12 +219,13 @@ URL:_http://39.107.102.246/teacher/course_
 请求方法:_POST_
 
 请求参数样例:
-```json5
-{
-	"name":"API开发",
-	"tag":"web;API;开发"
-}
-```
+
+|参数名|参数类型|参数值|
+|:----:|:-----:|-----|
+|name|text|API开发|
+|tag(可选)|text|web;API;开发|
+|imageFile(可选)|file|image.jpg|
+
 成功返回样例:
 ```json5
 {
@@ -328,15 +330,14 @@ URL:_http://39.107.102.246/teacher/chapter_
 请求方法:_POST_
 
 请求参数样例:
-```json5
-{
-	"num":1,
-	"course":"82ca0f2515624098b269341ea15db3a4",
-	"name":"API第一课",
-	"info":"API第一课"
-}
-//num参数可选,默认追加章节
-```
+
+|参数名|参数类型|参数值|
+|:----:|:-----:|-----|
+|num(可选)|text|1|
+|course|text|3586967d6ee645f88de5f56cf99551b8|
+|name|text|API开发|
+|info|text|web;API;开发|
+|videoFile(可选)|file|video.mp4|
 
 返回成功样例:
 ```json5
@@ -1330,3 +1331,28 @@ URL:_http://39.107.102.246/rotationPicture/list_
 }
 ```
 失败信息:_无_
+### 5.是否参加学习
+URL:_http://39.107.102.246/course/isStudent_
+
+请求方法:_GET_
+
+请求参数样例:_?course=81f88387543743328b30d7b299f33c01_
+
+返回成功样例:
+```json5
+{
+    "status": 0,
+    "msg": "查询成功",
+    "data": {
+        "isStudent": true
+    }
+}
+//成功情况包括参加课程的学生和该课程的教师
+```
+失败信息:
+
+|status|msg|
+|:----:|---|
+|-2|用户未登录|
+|-3|缺少参数|
+|-4|课程不存在|

@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpSession;
 
 @RestController
@@ -23,7 +25,7 @@ public class TChapterController {
     private final PermissionService permissionService;
 
     @RequestMapping(value = "/chapter", method = RequestMethod.POST)
-    public ServerResponse chapter(@RequestBody(required = false) Chapter chapter, HttpSession session) {
+    public ServerResponse chapter(Chapter chapter, @RequestParam(required = false)MultipartFile videoFile, HttpSession session) {
         //参数检查
         if (chapter == null || !Tool.checkParamsNotNull(chapter.getName(), chapter.getInfo(), chapter.getCourse())) {
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(), "缺少参数");
@@ -37,7 +39,7 @@ public class TChapterController {
             return ServerResponse.createByError(ResponseCode.PERMISSION_DENIED.getStatus(),"权限不足");
         }
         //创建章节
-        return TChapterService.chapter(chapter);
+        return TChapterService.chapter(chapter,videoFile);
     }
 
     @RequestMapping(value = "/chapter/{chapterId}", method = RequestMethod.PUT)

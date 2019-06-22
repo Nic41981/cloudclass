@@ -4,11 +4,12 @@ import edu.qit.cloudclass.domain.Course;
 import edu.qit.cloudclass.domain.Notice;
 import edu.qit.cloudclass.tool.ServerResponse;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface TCourseService {
-    ServerResponse add(Course course);
+    ServerResponse add(Course course, MultipartFile image);
 
     ServerResponse modify(Course course);
 

@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/course")
@@ -43,8 +45,8 @@ public class CourseController {
         return courseService.courseChapterList(courseId);
     }
 
-    @RequestMapping("/notice")
-    public ServerResponse getNotices(@RequestParam("course")String courseId){
+    @RequestMapping(value = "/notice",method = RequestMethod.GET)
+    public ServerResponse getNotices(@RequestParam(value = "course",required = false)String courseId){
         if (!Tool.checkParamsNotNull(courseId)){
             return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
         }
@@ -52,5 +54,24 @@ public class CourseController {
             return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"课程不存在");
         }
         return courseService.getNotices(courseId);
+    }
+
+    @RequestMapping(value = "/isStudent",method = RequestMethod.GET)
+    public ServerResponse isStudent(@RequestParam(value = "course",required = false)String courseId,HttpSession session){
+        if (!Tool.checkParamsNotNull(courseId)){
+            return ServerResponse.createByError(ResponseCode.MISSING_ARGUMENT.getStatus(),"缺少参数");
+        }
+        if (!permissionService.isCourseExist(courseId)){
+            return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"课程不存在");
+        }
+        User user = (User) session.getAttribute(UserController.SESSION_KEY);
+        Map<String,Object> result = new HashMap<>();
+        if (permissionService.isMemberOfCourse(user.getId(),courseId)){
+            result.put("isStudent",true);
+        }
+        else {
+            result.put("isStudent",false);
+        }
+        return ServerResponse.createBySuccess("查询成功",result);
     }
 }

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -28,6 +29,7 @@ public class TCourseServiceImpl implements TCourseService {
     private final TChapterService tChapterService;
     private final StudyService studyService;
     private final FinalExamService finalExamService;
+    private final UploadService uploadService;
 
     @Override
     public ServerResponse<List<Course>> getCourses(String teacherId) {
@@ -55,12 +57,15 @@ public class TCourseServiceImpl implements TCourseService {
     }
 
     @Override
-    public ServerResponse add(Course course) {
+    public ServerResponse add(Course course, MultipartFile image) {
         course.setId(Tool.uuid());
         log.info("创建课程:" + course.toString());
         if (courseMapper.insert(course) == 0) {
             log.error("创建失败");
             return ServerResponse.createByError("创建失败");
+        }
+        if (image != null) {
+            uploadService.uploadCourseImage(image, course.getId());
         }
         return ServerResponse.createBySuccessMsg("创建成功");
     }
