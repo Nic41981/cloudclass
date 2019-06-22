@@ -223,8 +223,8 @@ URL:_http://39.107.102.246/teacher/course_
 |参数名|参数类型|参数值|
 |:----:|:-----:|-----|
 |name|text|API开发|
-|tag|text|web;API;开发|
-|imageFile|file|image.jpg|
+|tag(可选)|text|web;API;开发|
+|imageFile(可选)|file|image.jpg|
 
 成功返回样例:
 ```json5
@@ -330,15 +330,14 @@ URL:_http://39.107.102.246/teacher/chapter_
 请求方法:_POST_
 
 请求参数样例:
-```json5
-{
-	"num":1,
-	"course":"82ca0f2515624098b269341ea15db3a4",
-	"name":"API第一课",
-	"info":"API第一课"
-}
-//num参数可选,默认追加章节
-```
+
+|参数名|参数类型|参数值|
+|:----:|:-----:|-----|
+|num(可选)|text|1|
+|course|text|3586967d6ee645f88de5f56cf99551b8|
+|name|text|API开发|
+|info|text|web;API;开发|
+|videoFile(可选)|file|video.mp4|
 
 返回成功样例:
 ```json5
