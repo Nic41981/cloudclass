@@ -37,7 +37,7 @@ public class ChapterExamServiceImpl implements ChapterExamService {
         Chapter chapter = chapterMapper.findChapterByPrimaryKey(exam.getChapter());
         //题目信息处理
         exam = (ChapterExam) examService.parserQuestion(exam);
-        if (exam.getChoiceList().isEmpty() || exam.getJudgementList().isEmpty()){
+        if (exam.getChoiceList().isEmpty() && exam.getJudgementList().isEmpty()){
             return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(), "有效问题不足");
         }
         exam = (ChapterExam) examService.parserQuestionScore(exam);
