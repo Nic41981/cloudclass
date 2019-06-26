@@ -34,7 +34,7 @@ public class FinalExamServiceImpl implements FinalExamService {
     public ServerResponse create(FinalExam exam) {
         exam.setId(Tool.uuid());
         exam = (FinalExam) examService.parserQuestion(exam);
-        if (exam.getChoiceList().isEmpty() || exam.getJudgementList().isEmpty()){
+        if (exam.getChoiceList().isEmpty() && exam.getJudgementList().isEmpty()){
             return ServerResponse.createByError(ResponseCode.ILLEGAL_ARGUMENT.getStatus(),"有效题目不足");
         }
         exam = (FinalExam) examService.parserQuestionScore(exam);
